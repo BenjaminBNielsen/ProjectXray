@@ -1,5 +1,5 @@
 
-package projectxray;
+package view;
 
 public class Main {
     String holla;
