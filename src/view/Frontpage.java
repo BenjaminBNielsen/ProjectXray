@@ -19,7 +19,8 @@ public class Frontpage extends Application {
     private Scene frontPageScene;
 
     //buttons:
-    private MenuButton createPersonButton, createQualificationButton;
+    private MenuButton createPersonButton, createQualificationButton
+            , createRoomButton;
 
     public static void main(String[] args) {
         launch(args);
@@ -39,13 +40,13 @@ public class Frontpage extends Application {
 
         //VBox layout som standard.
         VBox vMainLayout = new VBox(20);
-        HBox hMainLayout = new HBox(10);
+        HBox hMenuLayout = new HBox(10);
 
         //Tilføj knapper til hMainLayout:
-        hMainLayout.getChildren().addAll(createPersonButton, createQualificationButton);
+        hMenuLayout.getChildren().addAll(createPersonButton, createQualificationButton, createRoomButton);
 
         vMainLayout.setAlignment(Pos.TOP_LEFT);
-        vMainLayout.getChildren().addAll(hMainLayout);
+        vMainLayout.getChildren().addAll(hMenuLayout);
 
         frontPageScene = new Scene(vMainLayout, 1024, 768);
         
@@ -63,6 +64,13 @@ public class Frontpage extends Application {
         createQualificationButton.setOnAction(e -> {
             System.out.println("hej2");
         });
+        
+        createRoomButton = new MenuButton("Opret rum");
+        createRoomButton.setOnAction(e -> {
+            System.out.println("Tager dig nu til et window hvor du kan "
+                    + "lave et nyt rum");
+        });
+        
         
     }
 }
