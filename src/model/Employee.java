@@ -26,4 +26,46 @@ public class Employee extends Person{
         this.occupation = occupation;
     }
 
+    public int getCpr() {
+        return cpr;
+    }
+
+    public int getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String geteMail() {
+        return eMail;
+    }
+
+    public Occupation getOccupation() {
+        return occupation;
+    }
+
+    public void setCpr(int cpr) {
+        this.cpr = cpr;
+    }
+
+    public void setPhoneNumber(int phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void seteMail(String eMail) {
+        this.eMail = eMail;
+    }
+
+    public void setOccupation(Occupation occupation) {
+        this.occupation = occupation;
+    }
+    
+    
+
 }
