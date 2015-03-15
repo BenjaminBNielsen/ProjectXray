@@ -19,13 +19,13 @@ import model.Occupation;
 public class StudentHandler {
     //Singleton instance.
 
-    private static EmployeeHandler instance;
+    private static StudentHandler instance;
 
     //
     //Constructor
-    public static EmployeeHandler getInstance() {
+    public static StudentHandler getInstance() {
         if (instance == null) {
-            instance = new EmployeeHandler();
+            instance = new StudentHandler();
         }
         return instance;
     }
@@ -50,7 +50,7 @@ public class StudentHandler {
         stmt.close();
     }
 
-    public ArrayList<Student> getAsignees() throws SQLException, ClassNotFoundException {
+    public ArrayList<Student> getStudents() throws SQLException, ClassNotFoundException {
         ArrayList<Student> students = new ArrayList<>();
 
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();

@@ -50,7 +50,7 @@ public class EmployeeHandler {
         stmt.close();
     }
 
-    public ArrayList<Employee> getAsignees() throws SQLException, ClassNotFoundException {
+    public ArrayList<Employee> getEmployees() throws SQLException, ClassNotFoundException {
         ArrayList<Employee> employees = new ArrayList<>();
 
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
