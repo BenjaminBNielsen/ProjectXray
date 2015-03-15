@@ -18,13 +18,13 @@ import model.Room;
  * @author Yousef
  */
 public class QualificationHandler {
-    private static QualificationHandler instance;
+    private static QualificationHandler Instance;
     private ArrayList<Qualification> qualifications;
 
     private QualificationHandler() {
     }
 
-    public ArrayList<Qualification> getQualification() {
+    public ArrayList<Qualification> getQualifications() {
 
         try {
             java.sql.Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
@@ -52,7 +52,7 @@ public class QualificationHandler {
 
     }
 
-    public ArrayList<Qualification> getRoomQualification(Room selectedRoom) {
+    public ArrayList<Qualification> getRoomQualifications(Room selectedRoom) {
          ArrayList<Qualification> employeeQualifications = new ArrayList<>();
         try {
             java.sql.Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
@@ -77,7 +77,7 @@ public class QualificationHandler {
         return employeeQualifications;
     }
     
-    public ArrayList<Qualification> getEmployeeQualification(Employee selectedEmployee) {
+    public ArrayList<Qualification> getEmployeeQualifications(Employee selectedEmployee) {
          ArrayList<Qualification> employeeQualifications = new ArrayList<>();
         try {
             java.sql.Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
@@ -102,7 +102,7 @@ public class QualificationHandler {
         return employeeQualifications;
     }
     
-    public void createQualification(String qName, Boolean training) {
+    public void createQualifications(String qName, Boolean training) {
         try {
             java.sql.Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
@@ -119,10 +119,10 @@ public class QualificationHandler {
 
 
     public static QualificationHandler getInstance() {
-        if (instance == null) {
-            instance = new QualificationHandler();
+        if (Instance == null) {
+            Instance = new QualificationHandler();
         }
-        return instance;
+        return Instance;
     }
     
 }
