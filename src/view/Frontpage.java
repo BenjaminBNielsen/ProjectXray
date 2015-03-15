@@ -1,11 +1,11 @@
 package view;
 
-import com.sun.javafx.geom.Shape;
+import java.util.ArrayList;
 import javafx.application.*;
 import static javafx.application.Application.*;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.*;
-import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.*;
 
@@ -18,9 +18,12 @@ public class Frontpage extends Application {
     //scener:
     private Scene frontPageScene;
 
+    //layout-panes:
+    private VBox vMainLayout;
+    private HBox hMenuLayout;
+
     //buttons:
-    private MenuButton createPersonButton, createQualificationButton
-            , createRoomButton;
+    private MenuButton createPersonButton, createQualificationButton, createRoomButton;
 
     public static void main(String[] args) {
         launch(args);
@@ -33,44 +36,55 @@ public class Frontpage extends Application {
     }
 
     private void initNodes(Stage window) {
-        initButtons();
+        //initialiser felter:
         this.window = window;
+        vMainLayout = new VBox(20);
+        hMenuLayout = new HBox(10);
+        frontPageScene = new Scene(vMainLayout, 1024, 768);
 
         window.setTitle(TITLE);
 
-        //VBox layout som standard.
-        VBox vMainLayout = new VBox(20);
-        HBox hMenuLayout = new HBox(10);
+        //initialiser knapper:
+        initButtons();
+
+        //Sætter padding på hboxen sådan at den ikke placeres direkte op af vinduekanten.
+        hMenuLayout.setPadding(new Insets(15, 15, 15, 15));
 
         //Tilføj knapper til hMainLayout:
-        hMenuLayout.getChildren().addAll(createPersonButton, createQualificationButton, createRoomButton);
+        hMenuLayout.setAlignment(Pos.CENTER_LEFT);
 
         vMainLayout.setAlignment(Pos.TOP_LEFT);
-        vMainLayout.getChildren().addAll(hMenuLayout);
+        vMainLayout.getChildren().add(hMenuLayout);
 
-        frontPageScene = new Scene(vMainLayout, 1024, 768);
-        
         window.setScene(frontPageScene);
         window.show();
     }
 
     private void initButtons() {
+
+        ArrayList<MenuButton> menuButtons = new ArrayList<>();
+
         createPersonButton = new MenuButton("Opret ansat");
         createPersonButton.setOnAction(e -> {
             System.out.println("hej1");
         });
+        menuButtons.add(createPersonButton);
 
         createQualificationButton = new MenuButton("Opret kvalifikation");
         createQualificationButton.setOnAction(e -> {
             System.out.println("hej2");
         });
-        
+        menuButtons.add(createQualificationButton);
+
         createRoomButton = new MenuButton("Opret rum");
         createRoomButton.setOnAction(e -> {
             System.out.println("Tager dig nu til et window hvor du kan "
                     + "lave et nyt rum");
         });
-        
-        
+        menuButtons.add(createRoomButton);
+
+        for (MenuButton menuButton : menuButtons) {
+            hMenuLayout.getChildren().add(menuButton);
+        }
     }
 }
