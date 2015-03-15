@@ -63,4 +63,23 @@ public class RoomHandler {
 
         return rooms;
     }
+    
+    public String getRoomsRows() throws SQLException, ClassNotFoundException {
+        
+        Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
+        
+        String sql = "Select count (*) from room as rowNumber;";
+        
+        ResultSet rs = stmt.executeQuery(sql);
+        int roomCount = 0;
+        
+        if (rs.next()) {
+            roomCount = rs.getInt("rowNumber");
+        }
+        
+        rs.close();
+        stmt.close();
+        
+        return sql;
+    }
 }
