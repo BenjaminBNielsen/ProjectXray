@@ -16,4 +16,13 @@ public class Student extends Person {
         this.module = module;
     }
 
+    public int getModule() {
+        return module;
+    }
+
+    public void setModule(int module) {
+        this.module = module;
+    }
+
+    
 }

@@ -10,6 +10,7 @@ import handlers.StudentHandler;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import model.Employee;
+import model.Occupation;
 import model.Student;
 
 /**
@@ -18,16 +19,38 @@ import model.Student;
  */
 public class PersonControl {
 
-    public ArrayList<Employee> getEmployees() throws SQLException, ClassNotFoundException {
-        ArrayList<Employee> employees = EmployeeHandler.getInstance().getEmployees();
+    public void addEmployees(ArrayList<Employee> employees) throws SQLException, ClassNotFoundException{
+        
+        for (Employee employee : employees) {
+            String firstName = employee.getFirstName();
+            String lastName = employee.getLastName();
+            int cpr = employee.getCpr();
+            int phoneNumber = employee.getPhoneNumber();
+            String address = employee.getAddress();
+            String eMail = employee.geteMail();
+            Occupation occupation = employee.getOccupation();
+            EmployeeHandler.getInstance().addEmployee(firstName, lastName, cpr, 
+                    phoneNumber, address, eMail, occupation);
+        }
+    }
+    
+        public void addStudents(ArrayList<Student> students) throws SQLException, ClassNotFoundException{
+        
+        for (Student student : students) {
+            String firstName = student.getFirstName();
+            String lastName = student.getLastName();
+            int module = student.getModule();
 
-        return employees;
+            StudentHandler.getInstance().addStudent(firstName, lastName, module);
+        }
+    }
+    
+    public ArrayList<Employee> getEmployees() throws SQLException, ClassNotFoundException {
+        return EmployeeHandler.getInstance().getEmployees();
     }
     
         public ArrayList<Student> getStudents() throws SQLException, ClassNotFoundException {
-        ArrayList<Student> students = StudentHandler.getInstance().getStudents();
-
-        return students;
+        return StudentHandler.getInstance().getStudents();
     }
 
 }
