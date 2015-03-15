@@ -9,7 +9,9 @@ import databaseConnection.DatabaseConnection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import model.Employee;
 import model.Qualification;
+import model.Room;
 
 /**
  *
@@ -17,7 +19,6 @@ import model.Qualification;
  */
 public class QualificationHandler {
     private static QualificationHandler instance;
-    //Denne ArrayList skal indeholde alle klubber i databasen.
     private ArrayList<Qualification> qualifications;
 
     private QualificationHandler() {
@@ -26,20 +27,17 @@ public class QualificationHandler {
     public ArrayList<Qualification> getQualification() {
 
         try {
-            // Henter statementet fra den åbne forbindelse i MapperHandleren.
             java.sql.Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
-            // Henter hele tabellen ind i et resultset.
-            String SQL = "Select * from ";
+            String SQL = "Select * from qualifiction";
             ResultSet rs = stmt.executeQuery(SQL);
 
-            // Løber tabellen igennem og opretter klubobjekter løbende.
             while (rs.next()) {
                 String qName = rs.getString("qName");
                 Boolean training = rs.getBoolean("training");
 
-                // Alle klubber fra databasen fyldes ind i ArrayListen.
-                qualifications.add(new Qualification(qName, true));
+
+                qualifications.add(new Qualification(qName, false));
 
             }
 
@@ -50,12 +48,11 @@ public class QualificationHandler {
 
         }
 
-        // Returnerer ArrayListen.
         return qualifications;
 
     }
 
-    public ArrayList<Qualification> getRoomQualification(/*Room selectedRoom*/) {
+    public ArrayList<Qualification> getRoomQualification(Room selectedRoom) {
          ArrayList<Qualification> employeeQualifications = new ArrayList<>();
         try {
             java.sql.Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
@@ -80,7 +77,7 @@ public class QualificationHandler {
         return employeeQualifications;
     }
     
-    public ArrayList<Qualification> getEmployeeQualification(/*Employee selectedEmployee*/) {
+    public ArrayList<Qualification> getEmployeeQualification(Employee selectedEmployee) {
          ArrayList<Qualification> employeeQualifications = new ArrayList<>();
         try {
             java.sql.Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
@@ -92,7 +89,7 @@ public class QualificationHandler {
                 String qName = rs.getString("qname");
                 Boolean training = rs.getBoolean("training");
 
-                employeeQualifications.add(new Qualification(qName, true));
+                employeeQualifications.add(new Qualification(qName, false));
             }
             
             stmt.close();
