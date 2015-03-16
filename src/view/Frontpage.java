@@ -78,8 +78,10 @@ public class Frontpage extends Application {
 
         createRoomButton = new MenuButton("Opret rum");
         createRoomButton.setOnAction(e -> {
+            RoomWindow roomWindow = new RoomWindow();
             System.out.println("Tager dig nu til et window hvor du kan "
                     + "lave et nyt rum");
+            roomWindow.display("Rum");
         });
         menuButtons.add(createRoomButton);
 
