@@ -64,6 +64,29 @@ public class RoomHandler {
         return rooms;
     }
     
+    public Room getRoom(int roomNumbero) throws SQLException, ClassNotFoundException{
+        Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
+        Room room = null;
+        
+        String sql = "Select * from qualification where roomnumber = " + roomNumbero;
+
+        ResultSet rs = stmt.executeQuery(sql);
+
+        while (rs.next()) {
+            int roomNumber = rs.getInt("roomNumber");
+            String roomName = ("roomName");
+            boolean closed = rs.getBoolean("closed");
+
+            room = new Room(roomNumber, roomName, closed);
+            
+        }
+
+        rs.close();
+        stmt.close();
+        
+        return room;
+    }
+    
     public String getRoomsRows() throws SQLException, ClassNotFoundException {
         
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();

@@ -17,7 +17,6 @@ import model.Occupation;
 public class EmployeeHandler {
 
     //Singleton instance.
-
     private static EmployeeHandler instance;
 
     //
@@ -76,6 +75,34 @@ public class EmployeeHandler {
         stmt.close();
 
         return employees;
+    }
+
+    public Employee getEmployee(int employeeCPR) throws SQLException, ClassNotFoundException {
+        Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
+        Employee employee = null;
+
+        String sql = "Select * from qualification where employeeCPR = " + employeeCPR;
+
+        ResultSet rs = stmt.executeQuery(sql);
+
+        while (rs.next()) {
+            String firstName = ("firstName");
+            String lastName = ("lastName");
+            int cpr = rs.getInt("cpr");
+            int phoneNumber = rs.getInt("telephone");
+            String address = rs.getString("address");
+            String eMail = rs.getString("mail");
+            //String occupation = rs.getString("occupation");
+
+            employee = new Employee(firstName, lastName, cpr, phoneNumber, address, eMail, null/*occupation*/);
+
+        }
+
+        rs.close();
+        stmt.close();
+
+        return employee;
+
     }
 
 }

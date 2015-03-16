@@ -28,10 +28,10 @@ public class Xray {
         
     }
     
-    public ArrayList<Qualification> getRoomQualifications(Room selectedRoom){
-        return QualificationControl.getInstance().getRoomQualifications(selectedRoom);
-        
-    }
+//    public ArrayList<Qualification> getRoomQualifications(Room selectedRoom){
+//        return QualificationControl.getInstance().getRoomQualifications(selectedRoom);
+//        
+//    }
     
     public static Xray getInstance() {
         if (Instance == null) {
