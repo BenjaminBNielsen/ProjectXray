@@ -22,37 +22,6 @@ public class Xray {
     private QualificationControl qualificationControl;
     private PersonControl personControl;
     
-//    public void createQualification(String qName, Boolean training) throws SQLException{
-//        QualificationControl.getInstance().createQualification(qName, training);
-//        
-//    }
-//    
-//    public ArrayList<Qualification> getQualifications(){
-//        return QualificationControl.getInstance().getQualifications();
-//        
-//    }
-//    
-//    public ArrayList<Qualification> getEmployeeQualifications(Employee selectedEmployee) throws ClassNotFoundException{
-//        return QualificationControl.getInstance().getEmployeeQualifications(selectedEmployee);
-//        
-//    }
-//    
-//    public ArrayList<Qualification> getQualificationsForSeveralEmployees(ArrayList<Employee> employees) throws ClassNotFoundException{
-//        return QualificationControl.getInstance().getQualificationsForSeveralEmployees(employees);
-//        
-//    }
-//    
-//    public ArrayList<Qualification> getRoomQualifications(Room selectedRoom) throws ClassNotFoundException{
-//        return QualificationControl.getInstance().getRoomQualifications(selectedRoom);
-//        
-//    }
-//    
-//    public void setEmployeeQualifications(ArrayList<Qualification> selectedQualifications){
-//        QualificationControl.getInstance().setEmployeeQualifications(selectedQualifications);
-//    }
-    
-    
-    
     private Xray() throws SQLException, ClassNotFoundException {
         roomControl = new RoomControl();
         qualificationControl = new QualificationControl();
