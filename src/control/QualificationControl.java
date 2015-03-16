@@ -48,10 +48,10 @@ public class QualificationControl {
         QualificationHandler.getInstance().setEmployeeQualifications(selectedQualifications);
     }
     
-    public static QualificationControl getInstance() {
-        if (Instance == null) {
-            Instance = new QualificationControl();
-        }
-        return Instance;
-    }
+//    public static QualificationControl getInstance() {
+//        if (Instance == null) {
+//            Instance = new QualificationControl();
+//        }
+//        return Instance;
+//    }
 }

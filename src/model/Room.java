@@ -13,12 +13,12 @@ package model;
 public class Room {
     private int roomNumber;
     private String roomName;
-    private boolean closed;
+    private int roomState;
     
-    public Room (int roomNumber, String roomName, boolean closed) {
+    public Room (int roomNumber, String roomName, int roomState) {
         this.roomNumber = roomNumber;
         this.roomName = roomName;
-        this.closed = closed;
+        this.roomState = roomState;
     }
 
     public int getRoomNumber() {
@@ -37,12 +37,12 @@ public class Room {
         this.roomName = roomName;
     }
 
-    public boolean isClosed() {
-        return closed;
+    public int getRoomState() {
+        return roomState;
     }
 
-    public void setClosed(boolean closed) {
-        this.closed = closed;
+    public void setClosed(int roomState) {
+        this.roomState = roomState;
     }
     
     

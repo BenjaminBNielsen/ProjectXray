@@ -5,13 +5,22 @@
  */
 package view;
 
+import control.RoomControl;
+import javafx.scene.control.*;
+
 
 public class RoomWindow extends PopupWindow {
 
     private MenuButton addRoom;
+    private TextField textFieldRoomCount;
+    private TextField textFieldRoomName;
+    private TextField TextFieldRoomState;
 
     @Override
     public void display(String title) {
+        
+        textFieldRoomCount = new TextField();
+//            textFieldRoomCount.setText();
 
         addRoom = new MenuButton("Tilføj rum");
         addRoom.setOnAction(e -> {

@@ -19,6 +19,11 @@ import model.Room;
 public class RoomHandler {
     
     private static RoomHandler instance;
+    private ArrayList<Room> rooms;
+    
+    private RoomHandler() {
+         rooms = new ArrayList<>();
+    }
     
     public static RoomHandler getInstance() {
         if (instance == null) {
@@ -27,13 +32,13 @@ public class RoomHandler {
         return instance;
     }
     
-    public void addRoom(int roomNumber, String roomName, boolean closed) 
+    public void addRoom(int roomNumber, String roomName, int roomState) 
         throws SQLException, ClassNotFoundException {
         
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
         String sql = "insert into room() values(" + roomNumber + ",'"
-                + roomName + "'," + closed + ");";
+                + roomName + "'," + roomState + ");";
 
         stmt.execute(sql);
 
@@ -41,21 +46,19 @@ public class RoomHandler {
     }
     
     public ArrayList<Room> getRooms() throws SQLException, ClassNotFoundException {
-        ArrayList<Room> rooms = new ArrayList<>();
 
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
-        String sql = "select * from room where room.roomNumber = room.roomNumber"
-                + " and room.roomName = room.roomName;";
+        String sql = "select * from room;";
 
         ResultSet rs = stmt.executeQuery(sql);
 
         while (rs.next()) {
             int roomNumber = rs.getInt("roomNumber");
             String roomName = ("roomName");
-            boolean closed = rs.getBoolean("closed");
+            int roomState = rs.getInt("roomState");
 
-            rooms.add(new Room(roomNumber, roomName, closed));
+            rooms.add(new Room(roomNumber, roomName, roomState));
         }
 
         rs.close();
@@ -64,21 +67,19 @@ public class RoomHandler {
         return rooms;
     }
     
-    public Room getRoom(int roomNumbero) throws SQLException, ClassNotFoundException{
+    public Room getRoom(int roomNumber) throws SQLException, ClassNotFoundException{
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
         Room room = null;
         
-        String sql = "Select * from qualification where roomnumber = " + roomNumbero;
+        String sql = "Select * from qualification where roomnumber = " + roomNumber;
 
         ResultSet rs = stmt.executeQuery(sql);
 
-        while (rs.next()) {
-            int roomNumber = rs.getInt("roomNumber");
+        if (rs.next()) {
             String roomName = ("roomName");
-            boolean closed = rs.getBoolean("closed");
+            int roomState = rs.getInt("roomState");
 
-            room = new Room(roomNumber, roomName, closed);
-            
+            room = new Room(roomNumber, roomName, roomState); 
         }
 
         rs.close();
@@ -87,7 +88,7 @@ public class RoomHandler {
         return room;
     }
     
-    public String getRoomsRows() throws SQLException, ClassNotFoundException {
+    public int getRoomsRows() throws SQLException, ClassNotFoundException {
         
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
         
@@ -103,6 +104,6 @@ public class RoomHandler {
         rs.close();
         stmt.close();
         
-        return sql;
+        return roomCount;
     }
 }
