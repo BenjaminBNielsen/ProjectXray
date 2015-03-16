@@ -9,7 +9,7 @@ package model;
 /* @author Benjamin */
 
 public class Employee extends Person{
-    private int cpr;
+    private int id;
     private int phoneNumber;
     private String address;
     private String eMail;
@@ -19,15 +19,15 @@ public class Employee extends Person{
             String address, String eMail, Occupation occupation) {
         super(firstName, lastName);
         
-        this.cpr = cpr;
+        this.id = cpr;
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.eMail = eMail;
         this.occupation = occupation;
     }
 
-    public int getCpr() {
-        return cpr;
+    public int getId() {
+        return id;
     }
 
     public int getPhoneNumber() {
@@ -46,8 +46,8 @@ public class Employee extends Person{
         return occupation;
     }
 
-    public void setCpr(int cpr) {
-        this.cpr = cpr;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setPhoneNumber(int phoneNumber) {

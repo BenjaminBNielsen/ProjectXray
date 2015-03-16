@@ -24,7 +24,7 @@ public class PersonControl {
         for (Employee employee : employees) {
             String firstName = employee.getFirstName();
             String lastName = employee.getLastName();
-            int cpr = employee.getCpr();
+            int cpr = employee.getId();
             int phoneNumber = employee.getPhoneNumber();
             String address = employee.getAddress();
             String eMail = employee.geteMail();

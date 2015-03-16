@@ -90,7 +90,7 @@ public class QualificationHandler {
         try {
             java.sql.Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
-            String SQL = "Select * from qualification where employeeCPR = " + selectedEmployee.getCpr();
+            String SQL = "Select * from qualification where employeeCPR = " + selectedEmployee.getId();
             ResultSet rs = stmt.executeQuery(SQL);
 
             while (rs.next()) {
@@ -137,7 +137,7 @@ public class QualificationHandler {
             java.sql.Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
             String qName = selectedQualification.getqName();
-            int employeeCPR = selectedEmployee.getCpr();
+            int employeeCPR = selectedEmployee.getId();
 
             String SQL = "insert into qualification() values ('";
             SQL += qName + "'," + training + "," + employeeCPR + ")";
@@ -150,7 +150,7 @@ public class QualificationHandler {
 
     }
 
-    public void createQualifications(String qName, Boolean training) {
+    public void createQualification(String qName, Boolean training) {
         try {
             java.sql.Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 

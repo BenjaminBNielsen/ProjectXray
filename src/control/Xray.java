@@ -6,6 +6,7 @@
 package control;
 
 import handlers.QualificationHandler;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import model.Employee;
 import model.Qualification;
@@ -18,20 +19,34 @@ import model.Room;
 public class Xray {
     private static Xray Instance;
     
+    public void createQualification(String qName, Boolean training) throws SQLException{
+        QualificationControl.getInstance().createQualification(qName, training);
+        
+    }
+    
     public ArrayList<Qualification> getQualifications(){
         return QualificationControl.getInstance().getQualifications();
         
     }
     
-    public ArrayList<Qualification> getEmployeeQualifications(Employee selectedEmployee){
+    public ArrayList<Qualification> getEmployeeQualifications(Employee selectedEmployee) throws ClassNotFoundException{
         return QualificationControl.getInstance().getEmployeeQualifications(selectedEmployee);
         
     }
     
-//    public ArrayList<Qualification> getRoomQualifications(Room selectedRoom){
-//        return QualificationControl.getInstance().getRoomQualifications(selectedRoom);
-//        
-//    }
+    public ArrayList<Qualification> getQualificationsForSeveralEmployees(ArrayList<Employee> employees) throws ClassNotFoundException{
+        return QualificationControl.getInstance().getQualificationsForSeveralEmployees(employees);
+        
+    }
+    
+    public ArrayList<Qualification> getRoomQualifications(Room selectedRoom) throws ClassNotFoundException{
+        return QualificationControl.getInstance().getRoomQualifications(selectedRoom);
+        
+    }
+    
+    public void setEmployeeQualifications(ArrayList<Qualification> selectedQualifications){
+        QualificationControl.getInstance().setEmployeeQualifications(selectedQualifications);
+    }
     
     public static Xray getInstance() {
         if (Instance == null) {

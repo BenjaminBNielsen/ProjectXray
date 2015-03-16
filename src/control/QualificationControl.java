@@ -20,7 +20,7 @@ public class QualificationControl {
     private static QualificationControl Instance;
     
     public void createQualification(String qName, Boolean training) throws SQLException{
-        QualificationHandler.getInstance().createQualifications(qName, training);
+        QualificationHandler.getInstance().createQualification(qName, training);
         
     }
     
