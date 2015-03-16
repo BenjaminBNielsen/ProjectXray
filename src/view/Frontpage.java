@@ -39,7 +39,7 @@ public class Frontpage extends Application {
         //initialiser felter:
         this.window = window;
         vMainLayout = new VBox(20);
-        hMenuLayout = new HBox(10);
+        hMenuLayout = new HBox(15);
         frontPageScene = new Scene(vMainLayout, 1024, 768);
 
         window.setTitle(TITLE);
