@@ -23,7 +23,7 @@ public class PopupWindow {
     public PopupWindow() {
         window = new Stage();
         roomBorderPane = new BorderPane();
-        roomScene = new Scene(roomBorderPane, 512, 384);
+        roomScene = new Scene(roomBorderPane);
         bottomHBox = new HBox(15);
     }
     
@@ -71,5 +71,17 @@ public class PopupWindow {
     
     public void addToBottom(Node node) {
         roomBorderPane.setBottom(node);
+    }
+    
+    public Scene getRoomScene(){
+        return roomScene;
+    }
+    
+    public void setScene(Scene scene){
+        window.setScene(scene);
+    }
+    
+    public Stage getStage(){
+        return window;
     }
 }
