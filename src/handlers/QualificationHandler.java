@@ -12,6 +12,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import model.Employee;
 import model.Qualification;
+import model.QualificationType;
 import model.Room;
 
 /**
@@ -35,12 +36,12 @@ public class QualificationHandler {
             ResultSet rs = stmt.executeQuery(SQL);
 
             while (rs.next()) {
-                String qName = rs.getString("qName");
+                QualificationType type = (QualificationType) rs.getObject("type");
                 Boolean training = rs.getBoolean("training");
                 Employee employee = null;
                 Room room = null;
 
-                qualifications.add(new Qualification(qName, false, employee, room));
+                qualifications.add(new Qualification(type, false, employee, room));
 
             }
 
@@ -66,13 +67,12 @@ public class QualificationHandler {
             ResultSet rs = stmt.executeQuery(SQL);
 
             while (rs.next()) {
-                String qName = rs.getString("qname");
+                QualificationType type = (QualificationType) rs.getObject("type");
                 Boolean training = rs.getBoolean("training");
-                Employee placeholderEmployee = null;
-                int roomNr = rs.getInt("roomnumber");
-                Room gottenRoom = RoomHandler.getInstance().getRoom(roomNr);
+                int id = rs.getInt("employeeid");
+                Employee employee = null;
 
-                roomQualifications.add(new Qualification(qName, training, placeholderEmployee, gottenRoom));
+                roomQualifications.add(new Qualification(type, training, employee, room));
             }
 
             stmt.close();
@@ -85,22 +85,22 @@ public class QualificationHandler {
         return roomQualifications;
     }
 
-    public ArrayList<Qualification> getEmployeeQualifications(Employee selectedEmployee) throws ClassNotFoundException {
+    public ArrayList<Qualification> getEmployeeQualifications(Employee employee) throws ClassNotFoundException {
         ArrayList<Qualification> employeeQualifications = new ArrayList<>();
         try {
             java.sql.Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
-            String SQL = "Select * from qualification where employeeCPR = " + selectedEmployee.getId();
+            String SQL = "Select * from qualification where employeeid = " + employee.getId();
             ResultSet rs = stmt.executeQuery(SQL);
 
             while (rs.next()) {
-                String qName = rs.getString("qname");
+                QualificationType type = (QualificationType) rs.getObject("type");
                 Boolean training = rs.getBoolean("training");
-                int employeeCPR = rs.getInt("employeeCPR");
-                Employee employee = EmployeeHandler.getInstance().getEmployee(employeeCPR);
-                Room placeholderRoom = null;
+                int employeeCPR = rs.getInt("employeeid");
+                int roomNr = rs.getInt("roomnumber");
+                Room room = RoomHandler.getInstance().getRoom(roomNr);
 
-                employeeQualifications.add(new Qualification(qName, training, employee, placeholderRoom));
+                employeeQualifications.add(new Qualification(type, training, employee, room));
             }
 
             stmt.close();
@@ -132,15 +132,15 @@ public class QualificationHandler {
         }
     }
 
-    public void setEmployeeQualification(Qualification selectedQualification, Boolean training, Employee selectedEmployee) {
+    public void setEmployeeQualification(Qualification qualification, Boolean training, Employee employee) {
         try {
             java.sql.Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
-            String qName = selectedQualification.getqName();
-            int employeeCPR = selectedEmployee.getId();
+            QualificationType type = qualification.getType();
+            int id = employee.getId();
 
-            String SQL = "insert into qualification() values ('";
-            SQL += qName + "'," + training + "," + employeeCPR + ")";
+            String SQL = "insert into qualification(type, training, employeeid) values (";
+            SQL += type + "," + training + "," + id + ")";
 
             stmt.execute(SQL);
             stmt.close();
@@ -150,12 +150,12 @@ public class QualificationHandler {
 
     }
 
-    public void createQualification(String qName, Boolean training) {
+    public void createQualification(QualificationType type, Boolean training) {
         try {
             java.sql.Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
-            String SQL = "insert into qualification() values ('";
-            SQL += qName + "'," + training + ")";
+            String SQL = "insert into qualification(type, training) values (";
+            SQL += type + "," + training + ")";
 
             stmt.execute(SQL);
             stmt.close();

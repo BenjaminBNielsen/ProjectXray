@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import model.Employee;
 import model.Qualification;
+import model.QualificationType;
 import model.Room;
 
 /**
@@ -17,10 +18,12 @@ import model.Room;
  * @author Yousef
  */
 public class QualificationControl {
-    private static QualificationControl Instance;
+    public QualificationControl() throws SQLException, ClassNotFoundException {
+        
+    }
     
-    public void createQualification(String qName, Boolean training) throws SQLException{
-        QualificationHandler.getInstance().createQualification(qName, training);
+    public void createQualification(QualificationType type, Boolean training) throws SQLException{
+        QualificationHandler.getInstance().createQualification(type, training);
         
     }
     
@@ -39,8 +42,8 @@ public class QualificationControl {
         
     }
     
-    public ArrayList<Qualification> getRoomQualifications(Room selectedRoom) throws ClassNotFoundException{
-        return QualificationHandler.getInstance().getRoomQualifications(selectedRoom);
+    public ArrayList<Qualification> getRoomQualifications(Room room) throws ClassNotFoundException{
+        return QualificationHandler.getInstance().getRoomQualifications(room);
         
     }
     
@@ -48,10 +51,5 @@ public class QualificationControl {
         QualificationHandler.getInstance().setEmployeeQualifications(selectedQualifications);
     }
     
-//    public static QualificationControl getInstance() {
-//        if (Instance == null) {
-//            Instance = new QualificationControl();
-//        }
-//        return Instance;
-//    }
+    
 }

@@ -15,11 +15,11 @@ public class Employee extends Person{
     private String eMail;
     private Occupation occupation;
 
-    public Employee(String firstName, String lastName, int cpr, int phoneNumber,
+    public Employee(String firstName, String lastName, int id, int phoneNumber,
             String address, String eMail, Occupation occupation) {
         super(firstName, lastName);
         
-        this.id = cpr;
+        this.id = id;
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.eMail = eMail;

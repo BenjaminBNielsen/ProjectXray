@@ -11,18 +11,18 @@ package model;
  */
 public class Qualification {
 
-    private String qName;
+    private QualificationType type;
     private boolean training;
     private Employee employee;
     private Room room;
 
-    public Qualification(String qName, boolean training) {
-        this.qName = qName;
+    public Qualification(QualificationType type, boolean training) {
+        this.type = type;
         this.training = training;
     }
 
-    public Qualification(String qName, boolean training, Employee employee, Room room) {
-        this.qName = qName;
+    public Qualification(QualificationType type, boolean training, Employee employee, Room room) {
+        this.type = type;
         this.training = training;
         this.employee = employee;
         this.room = room;
@@ -44,21 +44,20 @@ public class Qualification {
         return employee;
     }
 
-    public String getqName() {
-        return qName;
+    public QualificationType getType() {
+        return type;
     }
 
     public boolean isTraining() {
         return training;
     }
 
-    public void setqName(String qName) {
-        this.qName = qName;
+    public void setqName(QualificationType type) {
+        this.type = type;
     }
 
     public void setTraining(boolean training) {
         this.training = training;
     }
 
-    //EtELLLER ANDETGJTORM
 }
