@@ -60,4 +60,5 @@ public class Qualification {
         this.training = training;
     }
 
+    //EtELLLER ANDETGJTORM
 }
