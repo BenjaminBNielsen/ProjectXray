@@ -5,6 +5,7 @@
  */
 package view;
 
+import view.buttons.MenuButton;
 import control.*;
 import java.sql.*;
 import java.util.logging.*;

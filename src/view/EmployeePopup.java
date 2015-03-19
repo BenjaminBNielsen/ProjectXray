@@ -1,6 +1,6 @@
 package view;
 
-import java.util.ArrayList;
+import view.buttons.MenuButton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -9,11 +9,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import model.Employee;
 import model.Occupation;
+import view.buttons.AddButton;
+import view.buttons.SettingsButton;
 
 public class EmployeePopup extends PopupWindow {
 
@@ -29,7 +29,8 @@ public class EmployeePopup extends PopupWindow {
 
     //Knapper
     private MenuButton addEmployee;
-    private Button addEmpToList, changeEmpOnList;
+    private AddButton addEmpToList;
+    private SettingsButton changeEmpOnList;
 
     //Listview
     private ListView<Employee> employeeView;
@@ -71,19 +72,15 @@ public class EmployeePopup extends PopupWindow {
         });
         super.addToBottomHBox(addEmployee);
 
-        addEmpToList = new Button(">>>");
-        addEmpToList.setPrefSize(42, 30);
+        addEmpToList = new AddButton();
         addEmpToList.setOnAction(e -> {
             addEmpToList();
         });
-        //knap med settings icon
-        Image settingIcon = new Image("pictures/settings.png");
-        changeEmpOnList = new Button();
+
+        changeEmpOnList = new SettingsButton();
         changeEmpOnList.setOnAction(e -> {
             System.out.println(employeeView.getSelectionModel().getSelectedIndex());
         });
-        
-        changeEmpOnList.setGraphic(new ImageView(settingIcon));
         
         middleContentPane.getChildren().addAll(addEmpToList,changeEmpOnList);
 

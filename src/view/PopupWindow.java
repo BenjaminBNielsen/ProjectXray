@@ -7,6 +7,7 @@
 package view;
 
 
+import view.buttons.MenuButton;
 import javafx.geometry.*;
 import javafx.scene.*;
 import javafx.scene.layout.*;

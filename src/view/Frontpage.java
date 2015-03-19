@@ -1,5 +1,6 @@
 package view;
 
+import view.buttons.MenuButton;
 import java.util.ArrayList;
 import javafx.application.*;
 import static javafx.application.Application.*;

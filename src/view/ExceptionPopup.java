@@ -6,6 +6,7 @@
 
 package view;
 
+import view.buttons.MenuButton;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
