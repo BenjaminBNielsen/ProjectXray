@@ -84,4 +84,8 @@ public class PopupWindow {
     public Stage getStage(){
         return window;
     }
+    
+    public void setBottomHBoxPadding(int first,int second,int third,int fourth) {
+        bottomHBox.setPadding(new Insets(first, second, third, fourth));
+    }
 }
