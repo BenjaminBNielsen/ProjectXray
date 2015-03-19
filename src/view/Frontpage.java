@@ -73,7 +73,9 @@ public class Frontpage extends Application {
 
         createQualificationButton = new MenuButton("Opret kvalifikation");
         createQualificationButton.setOnAction(e -> {
-            System.out.println("hej2");
+            QualificationWindow qualificationWindow = new QualificationWindow();
+            qualificationWindow.display("Kvalifikationer");
+            
         });
         menuButtons.add(createQualificationButton);
 
