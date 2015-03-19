@@ -1,6 +1,10 @@
 package view;
 
+import control.Xray;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.*;
 import static javafx.application.Application.*;
 import javafx.geometry.Insets;
@@ -24,15 +28,25 @@ public class Frontpage extends Application {
 
     //buttons:
     private MenuButton createPersonButton, createQualificationButton, createRoomButton;
-
+    
+    
     public static void main(String[] args) {
         launch(args);
+        
+
     }
 
     //Hovedmetoden der bliver kørt i gui'en.
     @Override
     public void start(Stage window) {
         initNodes(window);
+        try {
+            Xray.getInstance().createConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(Frontpage.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Frontpage.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void initNodes(Stage window) {

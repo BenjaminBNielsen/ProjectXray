@@ -5,27 +5,53 @@
  */
 package control;
 
-import handlers.QualificationHandler;
+import dbc.DatabaseConnection;
+import java.io.FileNotFoundException;
+import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import model.Employee;
-import model.Qualification;
-import model.Room;
+import view.DatabasePopup;
 
 /**
  *
  * @author Yousef
  */
 public class Xray {
+
     private static Xray Instance;
     private RoomControl roomControl;
     private QualificationControl qualificationControl;
     private PersonControl personControl;
-    
+    private Connection databaseConnection;
+
     private Xray() throws SQLException, ClassNotFoundException {
-        roomControl = new RoomControl();
+
+        
+    }
+
+    public void createConnection(){
+                //Opret forbindelse til databasen
+        if (!DatabaseConnection.getInstance().hasConnection()) {
+            try {
+                System.out.println("heheheh");
+                DatabaseConnection.getInstance().createConnection();
+                                roomControl = new RoomControl();
         qualificationControl = new QualificationControl();
         personControl = new PersonControl();
+
+            } catch (FileNotFoundException ex) {
+                DatabasePopup dbp = new DatabasePopup();
+                dbp.display("1");
+            } catch (ClassNotFoundException ex) {
+                DatabasePopup dbp = new DatabasePopup();
+                dbp.display("2");
+            } catch (SQLException ex) {
+                DatabasePopup dbp = new DatabasePopup();
+                dbp.display("3");
+            }
+        }
+
+        databaseConnection = DatabaseConnection.getInstance().getConnection();
+        
     }
     
     public static Xray getInstance() throws SQLException, ClassNotFoundException {
@@ -50,6 +76,5 @@ public class Xray {
     public void setQualificationControl(QualificationControl qualificationControl) {
         this.qualificationControl = qualificationControl;
     }
-    
-    
+
 }

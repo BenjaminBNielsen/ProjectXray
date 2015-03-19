@@ -1,0 +1,10 @@
+Host:
+localhost
+Port:
+3306
+Dbnavn:
+xraydb
+User:
+root
+Password:
+root
