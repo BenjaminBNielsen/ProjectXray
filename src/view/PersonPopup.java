@@ -19,7 +19,7 @@ public class PersonPopup extends PopupWindow {
     private TextField tPersonNummer, tNavn, tEfternavn, tTelefon, tAddresse, tEmail;
 
     //Knapper
-    private MenuButton addEmployee, addStudent;
+    private MenuButton addEmployee;
 
     @Override
     public void display(String title) {
@@ -29,6 +29,8 @@ public class PersonPopup extends PopupWindow {
         setupEmployeeScreen();
         initButtons();
 
+        super.addToCenter(contentEmployee);
+        super.getStage().sizeToScene();
         super.display(title);
     }
 
@@ -44,16 +46,9 @@ public class PersonPopup extends PopupWindow {
 
         addEmployee = new MenuButton("Tilføj ansat");
         addEmployee.setOnAction(e -> {
-            super.addToCenter(contentEmployee);
-            super.getStage().sizeToScene();
+            System.out.println("IT WORKED");
         });
         buttons.add(addEmployee);
-
-        addStudent = new MenuButton("Tilføj student");
-        addStudent.setOnAction(e -> {
-
-        });
-        buttons.add(addStudent);
 
         for (MenuButton button : buttons) {
             super.addToBottomHBox(button);
@@ -64,8 +59,7 @@ public class PersonPopup extends PopupWindow {
     public void initLayouts() {
         //Labels og textbokse i midten.
         contentEmployee = new VBox(15);
-        contentEmployee.setPadding(new Insets(15,15,15,15));
-
+        contentEmployee.setPadding(new Insets(15, 0, 15, 0));
     }
 
     public void initLabels() {
