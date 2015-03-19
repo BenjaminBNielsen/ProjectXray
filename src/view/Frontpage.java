@@ -80,14 +80,16 @@ public class Frontpage extends Application {
 
         createPersonButton = new MenuButton("Opret ansat");
         createPersonButton.setOnAction(e -> {
-            PersonPopup personPopup = new PersonPopup();
+            EmployeePopup personPopup = new EmployeePopup();
             personPopup.display("Opret ansat");
         });
         menuButtons.add(createPersonButton);
 
         createQualificationButton = new MenuButton("Opret kvalifikation");
         createQualificationButton.setOnAction(e -> {
-            System.out.println("hej2");
+            QualificationWindow qualificationWindow = new QualificationWindow();
+            qualificationWindow.display("Kvalifikationer");
+            
         });
         menuButtons.add(createQualificationButton);
 
