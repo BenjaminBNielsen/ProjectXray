@@ -66,7 +66,7 @@ public class Frontpage extends Application {
 
         createPersonButton = new MenuButton("Opret ansat");
         createPersonButton.setOnAction(e -> {
-            PersonPopup personPopup = new PersonPopup();
+            EmployeePopup personPopup = new EmployeePopup();
             personPopup.display("Opret ansat");
         });
         menuButtons.add(createPersonButton);
