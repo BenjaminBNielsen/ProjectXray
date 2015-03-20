@@ -20,7 +20,7 @@ public class RoomControl {
     private ArrayList<Room> rooms;
     
     public RoomControl() throws SQLException, ClassNotFoundException {
-        roomCount = RoomHandler.getInstance().getRoomsRows();
+        //roomCount = RoomHandler.getInstance().getRoomsRows();
         rooms = new ArrayList<Room>();
     }
 
