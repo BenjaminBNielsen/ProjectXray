@@ -12,6 +12,7 @@ import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.layout.*;
 import javafx.stage.*;
+import view.buttons.MenuButton;
 
 public class Frontpage extends Application {
 
