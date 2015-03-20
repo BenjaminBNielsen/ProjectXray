@@ -5,15 +5,20 @@
  */
 package view;
 
-import view.buttons.MenuButton;
 import control.*;
 import java.sql.*;
 import java.util.logging.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
+import model.Room;
+import view.buttons.AddButton;
+import view.buttons.MenuButton;
+import view.buttons.SettingsButton;
 
 public class RoomWindow extends PopupWindow {
 
@@ -22,6 +27,8 @@ public class RoomWindow extends PopupWindow {
     private int /*roomCount,*/ roomCountInsert, roomStateInsert;
     private Label lRoomCount, lRoomName, lRoomState;
     private String roomNameInsert;
+    private SettingsButton settingsButton;
+    private AddButton addButton;
 
     @Override
     public void display(String title) {
@@ -49,23 +56,31 @@ public class RoomWindow extends PopupWindow {
 
         lRoomState = new Label("Skriv rum status her, brug tal\n 1 = åbent, 2 = lukket, 3 = under service");
         lRoomState.setTextAlignment(TextAlignment.CENTER);
-        ListView listView = new ListView();
+        ListView<Room> roomView = new ListView();                                   //List
+        ObservableList<Room> rooms = FXCollections.observableArrayList();           //List
         setBottomHBoxPadding(15, 15, 15, 15);
+        settingsButton = new SettingsButton();
+        addButton = new AddButton();
         VBox vBoxLeft = new VBox(20);
         VBox vBoxRight = new VBox(20);
+        VBox vBoxCenter = new VBox(20);
         vBoxLeft.setAlignment(Pos.CENTER);
         vBoxRight.setAlignment(Pos.CENTER);
-        vBoxLeft.setPadding(new Insets(15,15,15,7.5));
-        vBoxRight.setPadding(new Insets(15,7.5,15,15));
+        vBoxCenter.setAlignment(Pos.CENTER);
+        vBoxLeft.setPadding(new Insets(15, 15, 15, 7.5));
+        vBoxRight.setPadding(new Insets(15, 7.5, 15, 15));
+        vBoxCenter.setPadding(new Insets(15, 7.5, 15, 7.5));
         super.addToLeft(vBoxLeft);
         super.addToRight(vBoxRight);
+        super.addToCenter(vBoxCenter);
         vBoxLeft.getChildren().addAll(lRoomCount, tFRoomCount,
                 lRoomName, tFRoomName,
                 lRoomState, tFRoomState);
 
-        vBoxRight.getChildren().addAll(listView);
-        addRoom = new MenuButton("Tilføj rum");
-        addRoom.setOnAction(e -> {
+        vBoxRight.getChildren().addAll(roomView);
+        vBoxCenter.getChildren().addAll(addButton, settingsButton);
+
+        addButton.setOnAction(e -> {
             int count = 0;
             int count2 = 0;
             try {
@@ -83,30 +98,44 @@ public class RoomWindow extends PopupWindow {
                     exceptionPopup.display("der kan kun skrives 1,2 eller 3 i 'rum status'");
                     count = 1;
                 }
-            
-            if (count != 1) {
-                if (roomStateInsert >= 1) {
-                    if (roomStateInsert <= 3) {
-                        try {
-                            Xray.getInstance().getRoomControl().addRoom(roomCountInsert, roomNameInsert, roomStateInsert);
-                        } catch (SQLException ex) {
-                            exceptionPopup.display("mySQL gav følgende fejlbesked: " + ex.getMessage());
-                        } catch (ClassNotFoundException ex) {
-                            exceptionPopup.display("mySQL gav følgende fejlbesked: " + ex.getMessage());
+
+                if (count != 1) {
+                    if (roomStateInsert >= 1) {
+                        if (roomStateInsert <= 3) {       
+                            rooms.add(new Room(roomCountInsert, roomNameInsert, roomStateInsert));
+                            roomView.setItems(rooms);
+                        } else {
+                            System.out.println("Fejl, roomStateInsert er højere end 3");
+                            exceptionPopup.display("Det indtastede tal i 'rum status' er højere end 3");
+                            tFRoomState.setText("");
                         }
-                        System.out.println(roomCountInsert + "\n" + roomNameInsert + "\n" + roomStateInsert);
                     } else {
-                        System.out.println("Fejl, roomStateInsert er højere end 3");
-                        exceptionPopup.display("Det indtastede tal i 'rum status' er højere end 3");
+                        System.out.println("Fejl, roomStateInsert er lavere end 1");
+                        exceptionPopup.display("Det indtastede tal i 'rum status' er lavere end 1");
                         tFRoomState.setText("");
                     }
-                } else {
-                    System.out.println("Fejl, roomStateInsert er lavere end 1");
-                    exceptionPopup.display("Det indtastede tal i 'rum status' er lavere end 1");
-                    tFRoomState.setText("");
                 }
             }
+        });
+
+//        settingsButton.setOnAction(e -> {
+//            roomView.getSelectionModel().getSelectedItem();
+//        });
+        
+        addRoom = new MenuButton("Tilføj rum"); // Her skal listen køres igennem og der indsættes data i databasen
+        addRoom.setOnAction(e -> {
+            try {
+                Xray.getInstance().getRoomControl().addRooms(rooms);
+            } catch (SQLException ex) {
+                exceptionPopup.display("mySQL gav følgende fejlbesked: " + ex.getMessage());
+                System.out.println(ex.getMessage());
+            } catch (ClassNotFoundException ex) {
+                exceptionPopup.display("mySQL gav følgende fejlbesked: " + ex.getMessage());
+            } catch (NullPointerException ex) {
+                exceptionPopup.display("mySQL gav følgende fejlbesked: " + ex.getMessage());
             }
+            System.out.println(roomCountInsert + "\n" + roomNameInsert + "\n" + roomStateInsert);
+            rooms.removeAll(rooms);
         });
 
         super.addToBottomHBox(addRoom);
