@@ -45,5 +45,10 @@ public class Room {
         this.roomState = roomState;
     }
     
+    public String toString() {
+        return "Rummets nummer: " + roomNumber + "\nRummets navn: " + roomName 
+                + "\nRummets status: " + roomState;
+    }
+    
     
 }
