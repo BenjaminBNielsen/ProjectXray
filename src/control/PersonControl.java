@@ -9,6 +9,7 @@ import handlers.EmployeeHandler;
 import handlers.StudentHandler;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import javafx.collections.ObservableList;
 import model.Employee;
 import model.Occupation;
 import model.Student;
@@ -19,19 +20,10 @@ import model.Student;
  */
 public class PersonControl {
 
-    public void addEmployees(ArrayList<Employee> employees) throws SQLException, ClassNotFoundException{
+    public void addEmployees(ObservableList<Employee> employees) throws SQLException, ClassNotFoundException{
         
-        for (Employee employee : employees) {
-            String firstName = employee.getFirstName();
-            String lastName = employee.getLastName();
-            int id = employee.getId();
-            int phoneNumber = employee.getPhoneNumber();
-            String address = employee.getAddress();
-            String eMail = employee.geteMail();
-            Occupation occupation = employee.getOccupation();
-            EmployeeHandler.getInstance().addEmployee(firstName, lastName, id, 
-                    phoneNumber, address, eMail, occupation);
-        }
+
+            EmployeeHandler.getInstance().addEmployees(employees);
     }
     
         public void addStudents(ArrayList<Student> students) throws SQLException, ClassNotFoundException{

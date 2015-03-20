@@ -1,6 +1,10 @@
 package view;
 
-import view.buttons.PopupMenuButton;
+import control.Xray;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import view.buttons.MenuButton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -36,6 +40,9 @@ public class EmployeePopup extends PopupWindow {
     private ListView<Employee> employeeView;
     private ObservableList<Employee> employees = FXCollections.observableArrayList();
 
+    //ExceptionPopup
+    private ExceptionPopup exceptionPopup = new ExceptionPopup();
+
     @Override
     public void display(String title) {
         initLayouts();
@@ -61,14 +68,18 @@ public class EmployeePopup extends PopupWindow {
         //Tilføj til højre side
         addEmployeePane.setAlignment(Pos.CENTER_LEFT);
         addEmployeePane.getChildren().addAll(lAddPersons);
-        
+
         middleContentPane.setAlignment(Pos.CENTER);
     }
 
     private void initButtons() {
         addEmployee = new PopupMenuButton("Tilføj ansatte");
         addEmployee.setOnAction(e -> {
-
+            try {
+                Xray.getInstance().getPersonControl().addEmployees(employees);
+            } catch (SQLException ex) {
+            } catch (ClassNotFoundException ex) {
+            }
         });
         super.addToBottomHBox(addEmployee);
 
@@ -81,21 +92,38 @@ public class EmployeePopup extends PopupWindow {
         changeEmpOnList.setOnAction(e -> {
             System.out.println(employeeView.getSelectionModel().getSelectedIndex());
         });
-        
-        middleContentPane.getChildren().addAll(addEmpToList,changeEmpOnList);
+
+        middleContentPane.getChildren().addAll(addEmpToList, changeEmpOnList);
 
     }
-    
-    private void addEmpToList(){
-        int id = Integer.parseInt(tPersonNumber.getText());
+
+    private void addEmpToList() {
+        boolean noError = true;
+        int id = 0;
+        int phone = 0;
+        try {
+            id = Integer.parseInt(tPersonNumber.getText());
+        } catch (NumberFormatException ex) {
+            exceptionPopup.display("Du skal indtaste et tal.");
+            noError = false;
+        }
         String fName = tName.getText();
         String lName = tLastName.getText();
-        int phone = Integer.parseInt(tPhone.getText());
+        try {
+            phone = Integer.parseInt(tPhone.getText());
+        } catch (NumberFormatException ex) {
+            if (noError) {
+                exceptionPopup.display("Du skal indtaste et telefonnummer.");
+                noError = false;
+            }
+        }
         String address = tAddress.getText();
         String eMail = tEmail.getText();
-        
-        employees.add(new Employee(fName, lName, id, phone, address, eMail, new Occupation()));
-        employeeView.setItems(employees);
+
+        if (noError) {
+            employees.add(new Employee(fName, lName, id, phone, address, eMail, new Occupation()));
+            employeeView.setItems(employees);
+        }
     }
 
     private void initListViews() {

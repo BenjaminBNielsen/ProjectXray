@@ -65,7 +65,7 @@ public class StudentHandler {
             String lastName = ("lastName");
             int module = rs.getInt("module");
 
-            students.add(new Student(firstName, lastName, module));
+            //students.add(new Student(firstName, lastName, module));
         }
 
         rs.close();

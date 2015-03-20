@@ -66,5 +66,9 @@ public class Xray {
     public void setQualificationControl(QualificationControl qualificationControl) {
         this.qualificationControl = qualificationControl;
     }
-
+    
+    public PersonControl getPersonControl(){
+        return personControl;
+    }
+    
 }
