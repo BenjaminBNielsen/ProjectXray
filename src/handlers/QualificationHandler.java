@@ -5,7 +5,7 @@
  */
 package handlers;
 
-import databaseConnection.DatabaseConnection;
+import dbc.DatabaseConnection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;

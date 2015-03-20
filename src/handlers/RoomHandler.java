@@ -6,7 +6,7 @@
 
 package handlers;
 
-import databaseConnection.DatabaseConnection;
+import dbc.DatabaseConnection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -92,7 +92,7 @@ public class RoomHandler {
         
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
         
-        String sql = "Select count (*) from room as rowNumber;";
+        String sql = "select count(*) from room as rowNumber;";
         
         ResultSet rs = stmt.executeQuery(sql);
         int roomCount = 0;
