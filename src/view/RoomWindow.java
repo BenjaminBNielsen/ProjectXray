@@ -67,9 +67,9 @@ public class RoomWindow extends PopupWindow {
         vBoxLeft.setAlignment(Pos.CENTER);
         vBoxRight.setAlignment(Pos.CENTER);
         vBoxCenter.setAlignment(Pos.CENTER);
-        vBoxLeft.setPadding(new Insets(15,15,15,7.5));
-        vBoxRight.setPadding(new Insets(15,7.5,15,15));
-        vBoxCenter.setPadding(new Insets(15,7.5,15,7.5));
+        vBoxLeft.setPadding(new Insets(15, 15, 15, 7.5));
+        vBoxRight.setPadding(new Insets(15, 7.5, 15, 15));
+        vBoxCenter.setPadding(new Insets(15, 7.5, 15, 7.5));
         super.addToLeft(vBoxLeft);
         super.addToRight(vBoxRight);
         super.addToCenter(vBoxCenter);
@@ -79,7 +79,7 @@ public class RoomWindow extends PopupWindow {
 
         vBoxRight.getChildren().addAll(roomView);
         vBoxCenter.getChildren().addAll(addButton, settingsButton);
-        
+
         addButton.setOnAction(e -> {
             int count = 0;
             int count2 = 0;
@@ -98,36 +98,44 @@ public class RoomWindow extends PopupWindow {
                     exceptionPopup.display("der kan kun skrives 1,2 eller 3 i 'rum status'");
                     count = 1;
                 }
-            
-            if (count != 1) {
-                if (roomStateInsert >= 1) {
-                    if (roomStateInsert <= 3) {
-//                        try {
+
+                if (count != 1) {
+                    if (roomStateInsert >= 1) {
+                        if (roomStateInsert <= 3) {       
                             rooms.add(new Room(roomCountInsert, roomNameInsert, roomStateInsert));
                             roomView.setItems(rooms);
-//                        } catch (SQLException ex) {
-//                            exceptionPopup.display("mySQL gav følgende fejlbesked: " + ex.getMessage());
-//                        } catch (ClassNotFoundException ex) {
-//                            exceptionPopup.display("mySQL gav følgende fejlbesked: " + ex.getMessage());
-//                        }
-//                        System.out.println(roomCountInsert + "\n" + roomNameInsert + "\n" + roomStateInsert);
+                        } else {
+                            System.out.println("Fejl, roomStateInsert er højere end 3");
+                            exceptionPopup.display("Det indtastede tal i 'rum status' er højere end 3");
+                            tFRoomState.setText("");
+                        }
                     } else {
-                        System.out.println("Fejl, roomStateInsert er højere end 3");
-                        exceptionPopup.display("Det indtastede tal i 'rum status' er højere end 3");
+                        System.out.println("Fejl, roomStateInsert er lavere end 1");
+                        exceptionPopup.display("Det indtastede tal i 'rum status' er lavere end 1");
                         tFRoomState.setText("");
                     }
-                } else {
-                    System.out.println("Fejl, roomStateInsert er lavere end 1");
-                    exceptionPopup.display("Det indtastede tal i 'rum status' er lavere end 1");
-                    tFRoomState.setText("");
                 }
             }
-            }
         });
+
+//        settingsButton.setOnAction(e -> {
+//            roomView.getSelectionModel().getSelectedItem();
+//        });
         
         addRoom = new MenuButton("Tilføj rum"); // Her skal listen køres igennem og der indsættes data i databasen
         addRoom.setOnAction(e -> {
-            //Xray.getInstance().getRoomControl().addRoom(roomCountInsert, roomNameInsert, roomStateInsert);
+            try {
+                Xray.getInstance().getRoomControl().addRooms(rooms);
+            } catch (SQLException ex) {
+                exceptionPopup.display("mySQL gav følgende fejlbesked: " + ex.getMessage());
+                System.out.println(ex.getMessage());
+            } catch (ClassNotFoundException ex) {
+                exceptionPopup.display("mySQL gav følgende fejlbesked: " + ex.getMessage());
+            } catch (NullPointerException ex) {
+                exceptionPopup.display("mySQL gav følgende fejlbesked: " + ex.getMessage());
+            }
+            System.out.println(roomCountInsert + "\n" + roomNameInsert + "\n" + roomStateInsert);
+            rooms.removeAll(rooms);
         });
 
         super.addToBottomHBox(addRoom);

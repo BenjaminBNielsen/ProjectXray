@@ -9,6 +9,8 @@ package control;
 import handlers.RoomHandler;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Observable;
+import javafx.collections.ObservableList;
 import model.Room;
 
 /**
@@ -28,8 +30,8 @@ public class RoomControl {
         return RoomHandler.getInstance().getRoomsRows();
     }
     
-    public void addRoom(int roomNumber, String roomName, int roomState) throws SQLException, ClassNotFoundException {
-        RoomHandler.getInstance().addRoom(roomNumber, roomName, roomState);
+    public void addRooms(ObservableList<Room> rooms) throws SQLException, ClassNotFoundException {
+        RoomHandler.getInstance().addRooms(rooms);
     }
     
     public ArrayList getRooms(ArrayList<Room> rooms) throws SQLException, ClassNotFoundException {

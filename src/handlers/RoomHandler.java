@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javafx.collections.ObservableList;
 import model.Room;
 /**
  *
@@ -32,13 +33,25 @@ public class RoomHandler {
         return instance;
     }
     
-    public void addRoom(int roomNumber, String roomName, int roomState) 
+    public void addRooms(ObservableList<Room> rooms) 
         throws SQLException, ClassNotFoundException {
         
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
-        String sql = "insert into room() values(" + roomNumber + ",'"
-                + roomName + "'," + roomState + ");";
+        String sql = "insert into room(roomNumber, roomName, roomState) values";
+        //String sql = "insert into room() values(" + roomNumber + ",'"
+        //        + roomName + "'," + roomState + ");";
+        
+        for (int i = 0; i < rooms.size(); i++) {
+                Room tempRoom = rooms.get(i);
+                sql += "(" + tempRoom.getRoomNumber() + ",' " + tempRoom.getRoomName();
+                sql += "'," + tempRoom.getRoomState();
+                if (i == rooms.size() - 1) {
+                    sql += ");";
+                } else {
+                    sql += "),\n";
+                }
+            }
 
         stmt.execute(sql);
 
