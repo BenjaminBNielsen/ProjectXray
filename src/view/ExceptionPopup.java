@@ -6,7 +6,7 @@
 
 package view;
 
-import view.buttons.MenuButton;
+import view.buttons.PopupMenuButton;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -24,7 +24,7 @@ import javafx.stage.Stage;
 public class ExceptionPopup {
     private Stage window;
     private Scene exceptionScene;
-    private MenuButton button;
+    private PopupMenuButton button;
     private BorderPane borderPane;
     private HBox hBox;
     
@@ -32,7 +32,7 @@ public class ExceptionPopup {
         window = new Stage();
         borderPane = new BorderPane();
         exceptionScene = new Scene(borderPane);
-        button = new MenuButton("Forstået");
+        button = new PopupMenuButton("Forstået");
         window.initModality(Modality.APPLICATION_MODAL);
         hBox = new HBox(15);
         hBox.getChildren().add(button);

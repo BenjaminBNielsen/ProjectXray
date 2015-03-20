@@ -1,6 +1,6 @@
 package view;
 
-import view.buttons.MenuButton;
+import view.buttons.PopupMenuButton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -28,7 +28,7 @@ public class EmployeePopup extends PopupWindow {
     private TextField tPersonNumber, tName, tLastName, tPhone, tAddress, tEmail;
 
     //Knapper
-    private MenuButton addEmployee;
+    private PopupMenuButton addEmployee;
     private AddButton addEmpToList;
     private SettingsButton changeEmpOnList;
 
@@ -66,7 +66,7 @@ public class EmployeePopup extends PopupWindow {
     }
 
     private void initButtons() {
-        addEmployee = new MenuButton("Tilføj ansatte");
+        addEmployee = new PopupMenuButton("Tilføj ansatte");
         addEmployee.setOnAction(e -> {
 
         });

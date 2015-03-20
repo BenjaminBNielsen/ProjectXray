@@ -28,26 +28,16 @@ public class Xray {
         
     }
 
-    public void createConnection(){
+    public void createConnection() throws FileNotFoundException, SQLException, ClassNotFoundException{
                 //Opret forbindelse til databasen
         if (!DatabaseConnection.getInstance().hasConnection()) {
-            try {
                 System.out.println("heheheh");
                 DatabaseConnection.getInstance().createConnection();
                                 roomControl = new RoomControl();
         qualificationControl = new QualificationControl();
         personControl = new PersonControl();
 
-            } catch (FileNotFoundException ex) {
-                DatabasePopup dbp = new DatabasePopup();
-                dbp.display("1");
-            } catch (ClassNotFoundException ex) {
-                DatabasePopup dbp = new DatabasePopup();
-                dbp.display("2");
-            } catch (SQLException ex) {
-                DatabasePopup dbp = new DatabasePopup();
-                dbp.display("3");
-            }
+            
         }
 
         databaseConnection = DatabaseConnection.getInstance().getConnection();

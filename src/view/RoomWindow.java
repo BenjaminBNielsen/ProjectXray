@@ -17,12 +17,12 @@ import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
 import model.Room;
 import view.buttons.AddButton;
-import view.buttons.MenuButton;
+import view.buttons.PopupMenuButton;
 import view.buttons.SettingsButton;
 
 public class RoomWindow extends PopupWindow {
 
-    private MenuButton addRoom;
+    private PopupMenuButton addRoom;
     private TextField tFRoomCount, tFRoomName, tFRoomState;
     private int /*roomCount,*/ roomCountInsert, roomStateInsert;
     private Label lRoomCount, lRoomName, lRoomState;
@@ -122,7 +122,7 @@ public class RoomWindow extends PopupWindow {
 //            roomView.getSelectionModel().getSelectedItem();
 //        });
         
-        addRoom = new MenuButton("Tilføj rum"); // Her skal listen køres igennem og der indsættes data i databasen
+        addRoom = new PopupMenuButton("Tilføj rum"); // Her skal listen køres igennem og der indsættes data i databasen
         addRoom.setOnAction(e -> {
             try {
                 Xray.getInstance().getRoomControl().addRooms(rooms);
