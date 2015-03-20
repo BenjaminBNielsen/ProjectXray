@@ -66,6 +66,10 @@ public class Employee extends Person{
         this.occupation = occupation;
     }
     
-    
+    @Override
+    public String toString(){
+        String str = id + ": " + super.getFirstName() + " " + super.getLastName();
+        return str;
+    }
 
 }

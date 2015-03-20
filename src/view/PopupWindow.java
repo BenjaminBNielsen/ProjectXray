@@ -7,6 +7,7 @@
 package view;
 
 
+import view.buttons.MenuButton;
 import javafx.geometry.*;
 import javafx.scene.*;
 import javafx.scene.layout.*;
@@ -83,5 +84,9 @@ public class PopupWindow {
     
     public Stage getStage(){
         return window;
+    }
+    
+    public void setBottomHBoxPadding(int first,int second,int third,int fourth) {
+        bottomHBox.setPadding(new Insets(first, second, third, fourth));
     }
 }
