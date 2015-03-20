@@ -150,12 +150,12 @@ public class QualificationHandler {
 
     }
 
-    public void createQualification(QualificationType type, Boolean training) {
+    public void createQualification(QualificationType type, Boolean training, Room room) {
         try {
             java.sql.Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
-            String SQL = "insert into qualification(type, training) values (";
-            SQL += type + "," + training + ")";
+            String SQL = "insert into qualification(type, training, room) values (";
+            SQL += type + "," + training + "," + room +")";
 
             stmt.execute(SQL);
             stmt.close();
