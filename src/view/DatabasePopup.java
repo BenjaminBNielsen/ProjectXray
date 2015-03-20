@@ -97,7 +97,7 @@ public class DatabasePopup extends PopupWindow {
             }
             if (DatabaseConnection.getInstance().hasConnection() == true) {
                 
-               lErrorMessage.setText("Der er forbindelse, vend tilbage til forsiden");
+               lErrorMessage.setText("Der er forbindelse, tryk vend tilbage til forsiden");
             }
             else{
                 lErrorMessage.setText("Forkerte oplysninger, prøv igen");
