@@ -4,7 +4,6 @@ import control.Xray;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import view.buttons.MenuButton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -17,6 +16,7 @@ import javafx.scene.layout.VBox;
 import model.Employee;
 import model.Occupation;
 import view.buttons.AddButton;
+import view.buttons.PopupMenuButton;
 import view.buttons.SettingsButton;
 
 public class EmployeePopup extends PopupWindow {
