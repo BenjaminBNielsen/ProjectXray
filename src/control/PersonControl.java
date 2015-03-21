@@ -6,6 +6,7 @@
 package control;
 
 import handlers.EmployeeHandler;
+import handlers.OccupationHandler;
 import handlers.StudentHandler;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -20,14 +21,13 @@ import model.Student;
  */
 public class PersonControl {
 
-    public void addEmployees(ObservableList<Employee> employees) throws SQLException, ClassNotFoundException{
-        
+    public void addEmployees(ObservableList<Employee> employees) throws SQLException, ClassNotFoundException {
 
-            EmployeeHandler.getInstance().addEmployees(employees);
+        EmployeeHandler.getInstance().addEmployees(employees);
     }
-    
-        public void addStudents(ArrayList<Student> students) throws SQLException, ClassNotFoundException{
-        
+
+    public void addStudents(ArrayList<Student> students) throws SQLException, ClassNotFoundException {
+
         for (Student student : students) {
             String firstName = student.getFirstName();
             String lastName = student.getLastName();
@@ -36,13 +36,17 @@ public class PersonControl {
             StudentHandler.getInstance().addStudent(firstName, lastName, module);
         }
     }
-    
+
     public ArrayList<Employee> getEmployees() throws SQLException, ClassNotFoundException {
         return EmployeeHandler.getInstance().getEmployees();
     }
-    
-        public ArrayList<Student> getStudents() throws SQLException, ClassNotFoundException {
+
+    public ArrayList<Student> getStudents() throws SQLException, ClassNotFoundException {
         return StudentHandler.getInstance().getStudents();
+    }
+    
+    public ObservableList<Occupation> getOccupations() throws SQLException, ClassNotFoundException {
+        return OccupationHandler.getInstance().getOccupations();
     }
 
 }

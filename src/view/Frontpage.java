@@ -28,7 +28,8 @@ public class Frontpage extends Application {
     private HBox hMenuLayout;
 
     //buttons:
-    private MenuButton createPersonButton, createQualificationButton, createRoomButton;
+    private MenuButton createEmployee, createQualificationButton, createRoomButton,
+            createStudent;
     
     
     public static void main(String[] args) {
@@ -79,13 +80,19 @@ public class Frontpage extends Application {
 
         ArrayList<MenuButton> menuButtons = new ArrayList<>();
 
-        createPersonButton = new MenuButton("Opret ansat");
-        createPersonButton.setOnAction(e -> {
+        createEmployee = new MenuButton("Opret ansat");
+        createEmployee.setOnAction(e -> {
             EmployeePopup personPopup = new EmployeePopup();
             personPopup.display("Opret ansat");
         });
-        menuButtons.add(createPersonButton);
-
+        menuButtons.add(createEmployee);
+        
+        createStudent = new MenuButton("Opret studerende");
+        createStudent.setOnAction(e -> {
+            System.out.println("hey");
+        });
+        menuButtons.add(createStudent);
+        
         createQualificationButton = new MenuButton("Opret kvalifikation");
         createQualificationButton.setOnAction(e -> {
             QualificationWindow qualificationWindow = new QualificationWindow();

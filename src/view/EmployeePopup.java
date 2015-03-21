@@ -10,6 +10,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -20,13 +21,17 @@ import view.buttons.AddButton;
 import view.buttons.SettingsButton;
 
 public class EmployeePopup extends PopupWindow {
+    public static final int COLUMN_STANDARD_WIDTH = 200;
 
     //Layouts
     private VBox contentEmployee, addEmployeePane, middleContentPane;
 
     //Labels
     private Label lPersonNumber, lName, lLastName, lPhone, lAddress, lEmail,
-            lAddPersons;
+            lAddPersons, lOccupation;
+    
+    //Combobox
+    private ComboBox cOccupation;
 
     //Textboxes
     private TextField tPersonNumber, tName, tLastName, tPhone, tAddress, tEmail;
@@ -48,6 +53,7 @@ public class EmployeePopup extends PopupWindow {
         initLayouts();
         initLabels();
         initTextFields();
+        initComboBoxes();
         setupEmployeeScreen();
         initListViews();
         initButtons();
@@ -60,13 +66,13 @@ public class EmployeePopup extends PopupWindow {
 
     private void setupEmployeeScreen() {
         //Tilføj til venstre side
-        contentEmployee.setAlignment(Pos.CENTER_LEFT);
+        contentEmployee.setAlignment(Pos.TOP_LEFT);
         contentEmployee.getChildren().addAll(lPersonNumber, tPersonNumber, lName,
                 tName, lLastName, tLastName, lPhone, tPhone, lAddress,
-                tAddress, lEmail, tEmail);
+                tAddress, lEmail, tEmail, lOccupation, cOccupation);
 
         //Tilføj til højre side
-        addEmployeePane.setAlignment(Pos.CENTER_LEFT);
+        addEmployeePane.setAlignment(Pos.TOP_LEFT);
         addEmployeePane.getChildren().addAll(lAddPersons);
 
         middleContentPane.setAlignment(Pos.CENTER);
@@ -121,7 +127,7 @@ public class EmployeePopup extends PopupWindow {
         String eMail = tEmail.getText();
 
         if (noError) {
-            employees.add(new Employee(fName, lName, id, phone, address, eMail, new Occupation()));
+            employees.add(new Employee(fName, lName, id, phone, address, eMail, new Occupation(1,"earew")));
             employeeView.setItems(employees);
         }
     }
@@ -134,16 +140,18 @@ public class EmployeePopup extends PopupWindow {
     private void initLayouts() {
         //til venstre hvor der er indtastningsfelter til at oprette ansatte
         contentEmployee = new VBox(15);
-        contentEmployee.setPadding(new Insets(15, 0, 15, 0));
+        contentEmployee.setPadding(new Insets(0, 0, 15, 0));
+        contentEmployee.setPrefWidth(COLUMN_STANDARD_WIDTH);
 
         //Til højre side hvor der er en liste af medarbejdere til tilføjelse
         addEmployeePane = new VBox(15);
-        addEmployeePane.setPadding(new Insets(15, 0, 15, 15));
+        addEmployeePane.setPadding(new Insets(0, 0, 15, 0));
+        addEmployeePane.setPrefWidth(COLUMN_STANDARD_WIDTH);
 
         //I midten hvor man tilføjer personer til listen på højre side, eller
         //ændrer personer som er valgt på listen
         middleContentPane = new VBox(15);
-        middleContentPane.setPadding(new Insets(0, 0, 0, 15));
+        middleContentPane.setPadding(new Insets(0, 15, 0, 15));
     }
 
     private void initLabels() {
@@ -154,6 +162,7 @@ public class EmployeePopup extends PopupWindow {
         lAddress = new Label("Addresse");
         lEmail = new Label("Email addresse");
         lAddPersons = new Label("Tilføj personer her");
+        lOccupation = new Label("Stilling");
     }
 
     private void initTextFields() {
@@ -163,5 +172,17 @@ public class EmployeePopup extends PopupWindow {
         tPhone = new TextField();
         tAddress = new TextField();
         tEmail = new TextField();
+    }
+
+    private void initComboBoxes() {
+        ObservableList<Occupation> occupations = FXCollections.observableArrayList();
+        try {
+            occupations = Xray.getInstance().getPersonControl().getOccupations();
+        } catch (SQLException ex) {
+        } catch (ClassNotFoundException ex) {
+        }
+        cOccupation = new ComboBox(occupations);
+        cOccupation.getSelectionModel().selectFirst();
+        cOccupation.setPrefWidth(COLUMN_STANDARD_WIDTH);
     }
 }

@@ -43,7 +43,7 @@ public class EmployeeHandler {
         //indsætter som medarbejder.
         sql = "insert into employee() values(" + cpr + ",";
         sql += phoneNumber + ",'" + address + "','" + eMail + "','"
-                + firstName + "','" + lastName + "');";
+                + firstName + "','" + lastName + "'," + occupation.getId() + ");";
 
         stmt.execute(sql);
 
@@ -68,8 +68,8 @@ public class EmployeeHandler {
             String address = rs.getString("address");
             String eMail = rs.getString("mail");
 
-            employees.add(new Employee(firstName, lastName, cpr, phoneNumber, address,
-                    eMail, new Occupation()));
+//            employees.add(new Employee(firstName, lastName, cpr, phoneNumber, address,
+//                    eMail, new Occupation()));
         }
 
         rs.close();
@@ -129,7 +129,6 @@ public class EmployeeHandler {
         //Eksekver sql statementen
         System.out.println(sql);
         stmt.execute(sql);
-        stmt.close();
         
         //Lav en ny statement
         stmt = DatabaseConnection.getInstance().getConnection().createStatement();
@@ -140,13 +139,16 @@ public class EmployeeHandler {
             //indsætter som medarbejder.
             if(i != employees.size()-1){
             sql +="(" + employee.getId() + "," + employee.getPhoneNumber() + ",'" 
-                    + employee.getAddress() + "','" + employee.geteMail() + "'),";
+                    + employee.getAddress() + "','" + employee.geteMail() + "'," +
+                        employee.getOccupation().getId() + ");";
             }else{
                 sql +="(" + employee.getId() + "," + employee.getPhoneNumber() + ",'" 
-                    + employee.getAddress() + "','" + employee.geteMail() + "');";
+                    + employee.getAddress() + "','" + employee.geteMail() + "'," +
+                        employee.getOccupation().getId() + ");";
             }
             System.out.println(employee.getFirstName() + " " + " indsat successfuldt.");
         }
+        System.out.println(sql);
 
         stmt.execute(sql);
         stmt.close();
