@@ -43,6 +43,9 @@ public class OccupationHandler {
             occupations.add(new Occupation(id, description));
         }
         
+        for (Occupation occupation : occupations) {
+            System.out.println(occupation);
+        }
         return occupations;
     }
 }

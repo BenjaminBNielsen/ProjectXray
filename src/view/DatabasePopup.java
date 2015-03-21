@@ -6,7 +6,6 @@
 package view;
 
 
-import control.Xray;
 import dbc.DatabaseConnection;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,10 +15,11 @@ import java.sql.SQLException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.stage.StageStyle;
+import javafx.scene.paint.Color;
 import view.buttons.PopupMenuButton;
 
 
@@ -35,8 +35,6 @@ public class DatabasePopup extends PopupWindow {
     @Override
     public void display(String title) {
         
-        
-
         tHost = new TextField();
         tPort = new TextField();
         tDbName = new TextField();
@@ -49,9 +47,12 @@ public class DatabasePopup extends PopupWindow {
         lUser = new Label("Indtast Databasebruger");
         lPassword = new Label("Indtast Databasepassword");
         lErrorMessage = new Label("");
+        lErrorMessage.setTextFill(new Color(1,0.3,0.3,1));
         
-        VBox vBox = new VBox(20);
+        VBox vBox = new VBox(15);
         vBox.setAlignment(Pos.BOTTOM_CENTER);
+        vBox.setPadding(new Insets(0,0,15,0));
+        
         super.addToCenter(vBox);
         vBox.getChildren().addAll(  lHost, tHost,  
                                     lPort, tPort, 
@@ -89,15 +90,12 @@ public class DatabasePopup extends PopupWindow {
             try {   
                 DatabaseConnection.getInstance().createConnection();
             } catch (FileNotFoundException ex) {
-                Logger.getLogger(DatabasePopup.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
-                Logger.getLogger(DatabasePopup.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ClassNotFoundException ex) {
-                Logger.getLogger(DatabasePopup.class.getName()).log(Level.SEVERE, null, ex);
             }
             if (DatabaseConnection.getInstance().hasConnection() == true) {
                 
-               lErrorMessage.setText("Der er forbindelse, tryk vend tilbage til forsiden");
+               super.getStage().close();
             }
             else{
                 lErrorMessage.setText("Forkerte oplysninger, prøv igen");
