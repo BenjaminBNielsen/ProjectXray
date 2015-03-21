@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package view;
+package view.popups;
 
+import view.popups.PopupWindow;
 import view.buttons.PopupMenuButton;
 import javafx.scene.control.TextField;
 
@@ -12,7 +13,7 @@ import javafx.scene.control.TextField;
  *
  * @author Yousef
  */
-public class QualificationWindow extends PopupWindow{
+public class QualificationPopup extends PopupWindow{
     private PopupMenuButton createQualification;
     private TextField textFieldQualifications;
     

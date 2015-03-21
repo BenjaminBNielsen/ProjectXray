@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package view;
+package view.popups;
 
+import view.popups.PopupWindow;
+import view.popups.ExceptionPopup;
 import control.*;
 import java.sql.*;
 import java.util.logging.*;
@@ -20,7 +22,7 @@ import view.buttons.AddButton;
 import view.buttons.PopupMenuButton;
 import view.buttons.SettingsButton;
 
-public class RoomWindow extends PopupWindow {
+public class RoomPopup extends PopupWindow {
 
     private PopupMenuButton addRoom;
     private TextField tFRoomCount, tFRoomName, tFRoomState;

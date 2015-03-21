@@ -1,5 +1,9 @@
 package view;
 
+import view.popups.RoomPopup;
+import view.popups.QualificationPopup;
+import view.popups.EmployeePopup;
+import view.popups.DatabasePopup;
 import control.Xray;
 import dbc.DatabaseConnection;
 import java.io.FileNotFoundException;
@@ -109,7 +113,7 @@ public class Frontpage extends Application {
         
         createQualificationButton = new PopupMenuButton("Opret kvalifikation");
         createQualificationButton.setOnAction(e -> {
-            QualificationWindow qualificationWindow = new QualificationWindow();
+            QualificationPopup qualificationWindow = new QualificationPopup();
             qualificationWindow.display("Kvalifikationer");
 
         });
@@ -117,7 +121,7 @@ public class Frontpage extends Application {
 
         createRoomButton = new PopupMenuButton("Opret rum");
         createRoomButton.setOnAction(e -> {
-            RoomWindow roomWindow = new RoomWindow();
+            RoomPopup roomWindow = new RoomPopup();
             roomWindow.display("Rum");
         });
         menuButtons.add(createRoomButton);

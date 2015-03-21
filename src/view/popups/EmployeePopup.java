@@ -1,4 +1,4 @@
-package view;
+package view.popups;
 
 import control.Xray;
 import java.sql.SQLException;

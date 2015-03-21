@@ -9,7 +9,7 @@ import dbc.DatabaseConnection;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import view.DatabasePopup;
+import view.popups.DatabasePopup;
 
 /**
  *

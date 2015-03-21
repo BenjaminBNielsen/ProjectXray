@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package view;
+package view.popups;
 
 import view.buttons.PopupMenuButton;
 import javafx.geometry.Insets;
