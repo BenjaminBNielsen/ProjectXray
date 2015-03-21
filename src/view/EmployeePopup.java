@@ -4,7 +4,7 @@ import control.Xray;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import view.buttons.MenuButton;
+import view.buttons.PopupMenuButton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -37,7 +37,7 @@ public class EmployeePopup extends PopupWindow {
     private TextField tPersonNumber, tName, tLastName, tPhone, tAddress, tEmail;
 
     //Knapper
-    private MenuButton addEmployee;
+    private PopupMenuButton addEmployee;
     private AddButton addEmpToList;
     private SettingsButton changeEmpOnList;
 
@@ -79,7 +79,7 @@ public class EmployeePopup extends PopupWindow {
     }
 
     private void initButtons() {
-        addEmployee = new MenuButton("Tilføj ansatte");
+        addEmployee = new PopupMenuButton("Tilføj ansatte");
         addEmployee.setOnAction(e -> {
             try {
                 Xray.getInstance().getPersonControl().addEmployees(employees);
@@ -127,7 +127,8 @@ public class EmployeePopup extends PopupWindow {
         String eMail = tEmail.getText();
 
         if (noError) {
-            employees.add(new Employee(fName, lName, id, phone, address, eMail, new Occupation(1,"earew")));
+            employees.add(new Employee(fName, lName, id, phone, address, eMail, 
+                    (Occupation)cOccupation.getSelectionModel().getSelectedItem()));
             employeeView.setItems(employees);
         }
     }

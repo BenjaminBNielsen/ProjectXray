@@ -5,7 +5,7 @@
  */
 package view;
 
-import view.buttons.MenuButton;
+import view.buttons.PopupMenuButton;
 import javafx.scene.control.TextField;
 
 /**
@@ -13,7 +13,7 @@ import javafx.scene.control.TextField;
  * @author Yousef
  */
 public class QualificationWindow extends PopupWindow{
-    private MenuButton createQualification;
+    private PopupMenuButton createQualification;
     private TextField textFieldQualifications;
     
     @Override
@@ -21,7 +21,7 @@ public class QualificationWindow extends PopupWindow{
         
         textFieldQualifications = new TextField();
 
-        createQualification = new MenuButton("Dan en ny kvalifikation");
+        createQualification = new PopupMenuButton("Dan en ny kvalifikation");
         createQualification.setOnAction(e -> {
             createQualification.setText("Wow!");
         });

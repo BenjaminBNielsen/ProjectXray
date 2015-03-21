@@ -1,6 +1,8 @@
 package view;
 
 import control.Xray;
+import dbc.DatabaseConnection;
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -12,7 +14,7 @@ import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.layout.*;
 import javafx.stage.*;
-import view.buttons.MenuButton;
+import view.buttons.PopupMenuButton;
 
 public class Frontpage extends Application {
 
@@ -22,6 +24,7 @@ public class Frontpage extends Application {
 
     //scener:
     private Scene frontPageScene;
+    private Scene noConnectionScene;
 
     //layout-panes:
     private VBox vMainLayout;
@@ -34,21 +37,30 @@ public class Frontpage extends Application {
     
     public static void main(String[] args) {
         launch(args);
-        
 
     }
 
     //Hovedmetoden der bliver kørt i gui'en.
     @Override
     public void start(Stage window) {
-        initNodes(window);
+        
         try {
             Xray.getInstance().createConnection();
         } catch (SQLException ex) {
-            Logger.getLogger(Frontpage.class.getName()).log(Level.SEVERE, null, ex);
+            DatabasePopup dbp = new DatabasePopup();
+            dbp.display("1");
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Frontpage.class.getName()).log(Level.SEVERE, null, ex);
+            DatabasePopup dbp = new DatabasePopup();
+            dbp.display("2");
+        } catch (FileNotFoundException ex) {
+            DatabasePopup dbp = new DatabasePopup();
+            dbp.display("3");
+            dbp.getStage().initStyle(StageStyle.UTILITY);
         }
+        if (DatabaseConnection.getInstance().hasConnection()) {
+            initNodes(window);
+        }
+        
     }
 
     private void initNodes(Stage window) {
@@ -57,7 +69,7 @@ public class Frontpage extends Application {
         vMainLayout = new VBox(20);
         hMenuLayout = new HBox(15);
         frontPageScene = new Scene(vMainLayout, 1024, 768);
-
+        
         window.setTitle(TITLE);
 
         //initialiser knapper:
@@ -74,11 +86,13 @@ public class Frontpage extends Application {
 
         window.setScene(frontPageScene);
         window.show();
+        
+        
     }
 
     private void initButtons() {
 
-        ArrayList<MenuButton> menuButtons = new ArrayList<>();
+        ArrayList<PopupMenuButton> menuButtons = new ArrayList<>();
 
         createEmployee = new MenuButton("Opret ansat");
         createEmployee.setOnAction(e -> {
@@ -97,18 +111,18 @@ public class Frontpage extends Application {
         createQualificationButton.setOnAction(e -> {
             QualificationWindow qualificationWindow = new QualificationWindow();
             qualificationWindow.display("Kvalifikationer");
-            
+
         });
         menuButtons.add(createQualificationButton);
 
-        createRoomButton = new MenuButton("Opret rum");
+        createRoomButton = new PopupMenuButton("Opret rum");
         createRoomButton.setOnAction(e -> {
             RoomWindow roomWindow = new RoomWindow();
             roomWindow.display("Rum");
         });
         menuButtons.add(createRoomButton);
 
-        for (MenuButton menuButton : menuButtons) {
+        for (PopupMenuButton menuButton : menuButtons) {
             hMenuLayout.getChildren().add(menuButton);
         }
     }
