@@ -11,8 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javafx.collections.ObservableList;
 import model.Student;
-import model.Occupation;
 
 /* @author Benjamin */
 
@@ -28,6 +28,49 @@ public class StudentHandler {
             instance = new StudentHandler();
         }
         return instance;
+    }
+    
+    public void addStudents(ObservableList<Student> students) throws SQLException{
+                Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
+
+        String sql = "insert into person() values";
+        for (int i = 0; i < students.size(); i++) {
+            int id = students.get(i).getId();
+            String firstName = students.get(i).getFirstName();
+            String lastName = students.get(i).getLastName();
+
+            //Hvis det ikk er den sidste employee indsættes den i sql statementet
+            //med et "," til sidst så flere personer kan tilføjes
+            if (i != students.size() - 1) {
+                sql += "(" + id + ",'" + firstName + "','" + lastName + "'),";
+            } else {
+                sql += "(" + id + ",'" + firstName + "','" + lastName + "');";
+            }
+
+        }
+
+        //Eksekver sql statementen
+        System.out.println(sql);
+        stmt.execute(sql);
+        
+        //Lav en ny statement
+        stmt = DatabaseConnection.getInstance().getConnection().createStatement();
+        sql = "insert into student() values";
+        for (int i = 0; i < students.size(); i++) {
+            Student student = students.get(i);
+            
+            //indsætter som medarbejder.
+            if(i != students.size()-1){
+            sql +="(" + student.getId() + "," + student.getModule() + "),";
+            }else{
+                sql +="(" + student.getId() + "," + student.getModule() + ");";
+            }
+            System.out.println(student.getFirstName() + " " + " indsat successfuldt.");
+        }
+        System.out.println(sql);
+
+        stmt.execute(sql);
+        stmt.close();
     }
 
     public void addStudent(String firstName, String lastName, int module) 
@@ -73,4 +116,5 @@ public class StudentHandler {
 
         return students;
     }
+
 }

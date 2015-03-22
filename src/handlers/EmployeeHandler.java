@@ -111,17 +111,16 @@ public class EmployeeHandler {
 
         String sql = "insert into person() values";
         for (int i = 0; i < employees.size(); i++) {
+            int id = employees.get(i).getId();
             String firstName = employees.get(i).getFirstName();
             String lastName = employees.get(i).getLastName();
 
             //Hvis det ikk er den sidste employee indsættes den i sql statementet
             //med et "," til sidst så flere personer kan tilføjes
             if (i != employees.size() - 1) {
-                sql += "(" + employees.get(i).getId() + ",'" + firstName + "','" 
-                        + lastName + "'),";
+                sql += "(" + id + ",'" + firstName + "','" + lastName + "'),";
             } else {
-                sql += "(" + employees.get(i).getId() + ",'" + firstName + "','" 
-                        + lastName + "');";
+                sql += "(" + id + ",'" + firstName + "','" + lastName + "');";
             }
 
         }

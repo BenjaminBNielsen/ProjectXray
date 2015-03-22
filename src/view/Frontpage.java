@@ -19,6 +19,7 @@ import javafx.scene.*;
 import javafx.scene.layout.*;
 import javafx.stage.*;
 import view.buttons.PopupMenuButton;
+import view.popups.StudentPopup;
 
 public class Frontpage extends Application {
 
@@ -107,7 +108,8 @@ public class Frontpage extends Application {
         
         createStudent = new PopupMenuButton("Opret studerende");
         createStudent.setOnAction(e -> {
-            System.out.println("hey");
+            StudentPopup studentPopup = new StudentPopup();
+            studentPopup.display("Opret studerende");
         });
         menuButtons.add(createStudent);
         
