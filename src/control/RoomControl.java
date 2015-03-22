@@ -16,6 +16,7 @@ import model.Room;
  * @author Jonas
  */
 public class RoomControl {
+    private static RoomControl instance;
     private int roomCount;
     private ArrayList<Room> rooms;
     
@@ -23,6 +24,13 @@ public class RoomControl {
         roomCount = RoomHandler.getInstance().getRoomsRows();
         rooms = new ArrayList<Room>();
     }
+    
+//    public static RoomControl getInstance() throws SQLException, ClassNotFoundException {
+//        if (instance == null) {
+//            instance = new RoomControl();
+//        }
+//        return instance;
+//    }
 
     public int getRoomCount() throws SQLException, ClassNotFoundException {
         return RoomHandler.getInstance().getRoomsRows();
