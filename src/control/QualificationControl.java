@@ -6,8 +6,10 @@
 package control;
 
 import handlers.QualificationHandler;
+import handlers.QualificationTypeHandler;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import javafx.collections.ObservableList;
 import model.Employee;
 import model.Qualification;
 import model.QualificationType;
@@ -21,7 +23,17 @@ public class QualificationControl {
     public QualificationControl() throws SQLException, ClassNotFoundException {
         
     }
+   
+    public void addQualificationTypes(ObservableList<QualificationType> qualificationTypes) 
+            throws SQLException{
+        QualificationTypeHandler.getInstance().addQualificationTypes(qualificationTypes);
+        
+    }
     
+    public ArrayList<QualificationType> getQualificationTypes() throws SQLException, ClassNotFoundException{
+        return QualificationTypeHandler.getInstance().getQualificationTypes();
+    }
+   
     public void createQualification(QualificationType type, Boolean training, Room room) throws SQLException{
         QualificationHandler.getInstance().createQualification(type, training, room);
         

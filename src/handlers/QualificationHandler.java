@@ -22,7 +22,7 @@ import model.Room;
  */
 public class QualificationHandler {
 
-    private static QualificationHandler Instance;
+    private static QualificationHandler instance;
     private ArrayList<Qualification> qualifications;
 
     private QualificationHandler() {
@@ -167,10 +167,10 @@ public class QualificationHandler {
     }
 
     public static QualificationHandler getInstance() {
-        if (Instance == null) {
-            Instance = new QualificationHandler();
+        if (instance == null) {
+            instance = new QualificationHandler();
         }
-        return Instance;
+        return instance;
     }
 
 }

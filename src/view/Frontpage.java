@@ -19,6 +19,7 @@ import javafx.scene.*;
 import javafx.scene.layout.*;
 import javafx.stage.*;
 import view.buttons.PopupMenuButton;
+import view.popups.QualificationTypePopup;
 
 public class Frontpage extends Application {
 
@@ -113,8 +114,8 @@ public class Frontpage extends Application {
         
         createQualificationButton = new PopupMenuButton("Opret kvalifikation");
         createQualificationButton.setOnAction(e -> {
-            QualificationPopup qualificationWindow = new QualificationPopup();
-            qualificationWindow.display("Kvalifikationer");
+            QualificationTypePopup qualificationTypeWindow = new QualificationTypePopup();
+            qualificationTypeWindow.display("Kvalifikationer");
 
         });
         menuButtons.add(createQualificationButton);
