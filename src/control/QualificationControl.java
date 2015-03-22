@@ -22,8 +22,8 @@ public class QualificationControl {
         
     }
     
-    public void createQualification(QualificationType type, Boolean training) throws SQLException{
-        QualificationHandler.getInstance().createQualification(type, training);
+    public void createQualification(QualificationType type, Boolean training, Room room) throws SQLException{
+        QualificationHandler.getInstance().createQualification(type, training, room);
         
     }
     
