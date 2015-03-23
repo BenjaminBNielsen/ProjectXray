@@ -6,9 +6,11 @@
 package control;
 
 import handlers.EmployeeHandler;
+import handlers.OccupationHandler;
 import handlers.StudentHandler;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import javafx.collections.ObservableList;
 import model.Employee;
 import model.Occupation;
 import model.Student;
@@ -19,23 +21,13 @@ import model.Student;
  */
 public class PersonControl {
 
-    public void addEmployees(ArrayList<Employee> employees) throws SQLException, ClassNotFoundException{
-        
-        for (Employee employee : employees) {
-            String firstName = employee.getFirstName();
-            String lastName = employee.getLastName();
-            int id = employee.getId();
-            int phoneNumber = employee.getPhoneNumber();
-            String address = employee.getAddress();
-            String eMail = employee.geteMail();
-            Occupation occupation = employee.getOccupation();
-            EmployeeHandler.getInstance().addEmployee(firstName, lastName, id, 
-                    phoneNumber, address, eMail, occupation);
-        }
+    public void addEmployees(ObservableList<Employee> employees) throws SQLException, ClassNotFoundException {
+
+        EmployeeHandler.getInstance().addEmployees(employees);
     }
-    
-        public void addStudents(ArrayList<Student> students) throws SQLException, ClassNotFoundException{
-        
+
+    public void addStudents(ArrayList<Student> students) throws SQLException, ClassNotFoundException {
+
         for (Student student : students) {
             String firstName = student.getFirstName();
             String lastName = student.getLastName();
@@ -44,13 +36,17 @@ public class PersonControl {
             StudentHandler.getInstance().addStudent(firstName, lastName, module);
         }
     }
-    
+
     public ArrayList<Employee> getEmployees() throws SQLException, ClassNotFoundException {
         return EmployeeHandler.getInstance().getEmployees();
     }
-    
-        public ArrayList<Student> getStudents() throws SQLException, ClassNotFoundException {
+
+    public ArrayList<Student> getStudents() throws SQLException, ClassNotFoundException {
         return StudentHandler.getInstance().getStudents();
+    }
+    
+    public ObservableList<Occupation> getOccupations() throws SQLException, ClassNotFoundException {
+        return OccupationHandler.getInstance().getOccupations();
     }
 
 }

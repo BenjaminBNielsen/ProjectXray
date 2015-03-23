@@ -5,6 +5,7 @@
  */
 package handlers;
 
+
 import dbc.DatabaseConnection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,7 +22,7 @@ import model.Room;
  */
 public class QualificationHandler {
 
-    private static QualificationHandler Instance;
+    private static QualificationHandler instance;
     private ArrayList<Qualification> qualifications;
 
     private QualificationHandler() {
@@ -63,7 +64,7 @@ public class QualificationHandler {
 
 
             int roomNumber = room.getRoomNumber();
-            String SQL = "Select * from qualification where roomnumber = " + roomNumber;
+            String SQL = "Select * from qualification where roomId = " + roomNumber;
             ResultSet rs = stmt.executeQuery(SQL);
 
             while (rs.next()) {
@@ -150,12 +151,12 @@ public class QualificationHandler {
 
     }
 
-    public void createQualification(QualificationType type, Boolean training) {
+    public void createQualification(QualificationType type, Boolean training, Room room) {
         try {
             java.sql.Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
-            String SQL = "insert into qualification(type, training) values (";
-            SQL += type + "," + training + ")";
+            String SQL = "insert into qualification(qualiTypeId, training, roomId) values (";
+            SQL += type + "," + training + "," + room +")";
 
             stmt.execute(SQL);
             stmt.close();
@@ -166,10 +167,10 @@ public class QualificationHandler {
     }
 
     public static QualificationHandler getInstance() {
-        if (Instance == null) {
-            Instance = new QualificationHandler();
+        if (instance == null) {
+            instance = new QualificationHandler();
         }
-        return Instance;
+        return instance;
     }
 
 }

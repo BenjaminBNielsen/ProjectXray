@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javafx.collections.ObservableList;
 import model.Employee;
 import model.Occupation;
 
@@ -42,7 +43,7 @@ public class EmployeeHandler {
         //indsætter som medarbejder.
         sql = "insert into employee() values(" + cpr + ",";
         sql += phoneNumber + ",'" + address + "','" + eMail + "','"
-                + firstName + "','" + lastName + "');";
+                + firstName + "','" + lastName + "'," + occupation.getId() + ");";
 
         stmt.execute(sql);
 
@@ -67,8 +68,8 @@ public class EmployeeHandler {
             String address = rs.getString("address");
             String eMail = rs.getString("mail");
 
-            employees.add(new Employee(firstName, lastName, cpr, phoneNumber, address,
-                    eMail, new Occupation()));
+//            employees.add(new Employee(firstName, lastName, cpr, phoneNumber, address,
+//                    eMail, new Occupation()));
         }
 
         rs.close();
@@ -103,6 +104,55 @@ public class EmployeeHandler {
 
         return employee;
 
+    }
+
+    public void addEmployees(ObservableList<Employee> employees) throws SQLException {
+        Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
+
+        String sql = "insert into person() values";
+        for (int i = 0; i < employees.size(); i++) {
+            String firstName = employees.get(i).getFirstName();
+            String lastName = employees.get(i).getLastName();
+
+            //Hvis det ikk er den sidste employee indsættes den i sql statementet
+            //med et "," til sidst så flere personer kan tilføjes
+            if (i != employees.size() - 1) {
+                sql += "(" + employees.get(i).getId() + ",'" + firstName + "','" 
+                        + lastName + "'),";
+            } else {
+                sql += "(" + employees.get(i).getId() + ",'" + firstName + "','" 
+                        + lastName + "');";
+            }
+
+        }
+
+        //Eksekver sql statementen
+        System.out.println(sql);
+        stmt.execute(sql);
+        
+        //Lav en ny statement
+        stmt = DatabaseConnection.getInstance().getConnection().createStatement();
+        sql = "insert into employee() values";
+        for (int i = 0; i < employees.size(); i++) {
+            Employee employee = employees.get(i);
+            
+            //indsætter som medarbejder.
+            if(i != employees.size()-1){
+            sql +="(" + employee.getId() + "," + employee.getPhoneNumber() + ",'" 
+                    + employee.getAddress() + "','" + employee.geteMail() + "'," +
+                        employee.getOccupation().getId() + ");";
+            }else{
+                sql +="(" + employee.getId() + "," + employee.getPhoneNumber() + ",'" 
+                    + employee.getAddress() + "','" + employee.geteMail() + "'," +
+                        employee.getOccupation().getId() + ");";
+            }
+            System.out.println(employee.getFirstName() + " " + " indsat successfuldt.");
+        }
+        System.out.println(sql);
+
+        stmt.execute(sql);
+        stmt.close();
+        
     }
 
 }

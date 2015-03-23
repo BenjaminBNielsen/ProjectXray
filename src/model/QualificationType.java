@@ -11,9 +11,11 @@ package model;
  */
 public class QualificationType {
     private String type;
+    private int id;
 
-    public QualificationType(String type) {
+    public QualificationType(int id, String type) {
         this.type = type;
+        this.id = id;
     }
 
     public String getType() {
@@ -23,5 +25,19 @@ public class QualificationType {
     public void setType(String type) {
         this.type = type;
     }
+    
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Kvalifikation: " + type + ", ID: " + id;
+    }
+    
     
 }

@@ -1,6 +1,12 @@
 package view;
 
+import view.popups.RoomPopup;
+import view.popups.QualificationPopup;
+import view.popups.EmployeePopup;
+import view.popups.DatabasePopup;
 import control.Xray;
+import dbc.DatabaseConnection;
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -12,7 +18,8 @@ import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.layout.*;
 import javafx.stage.*;
-import view.buttons.MenuButton;
+import view.buttons.PopupMenuButton;
+import view.popups.QualificationTypePopup;
 
 public class Frontpage extends Application {
 
@@ -22,32 +29,43 @@ public class Frontpage extends Application {
 
     //scener:
     private Scene frontPageScene;
+    private Scene noConnectionScene;
 
     //layout-panes:
     private VBox vMainLayout;
     private HBox hMenuLayout;
 
     //buttons:
-    private MenuButton createPersonButton, createQualificationButton, createRoomButton;
+    private PopupMenuButton createEmployee, createQualificationButton, createRoomButton,
+            createStudent;
     
     
     public static void main(String[] args) {
         launch(args);
-        
 
     }
 
     //Hovedmetoden der bliver kørt i gui'en.
     @Override
     public void start(Stage window) {
-        initNodes(window);
+        
         try {
             Xray.getInstance().createConnection();
         } catch (SQLException ex) {
-            Logger.getLogger(Frontpage.class.getName()).log(Level.SEVERE, null, ex);
+            DatabasePopup dbp = new DatabasePopup();
+            dbp.display("1");
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Frontpage.class.getName()).log(Level.SEVERE, null, ex);
+            DatabasePopup dbp = new DatabasePopup();
+            dbp.display("2");
+        } catch (FileNotFoundException ex) {
+            DatabasePopup dbp = new DatabasePopup();
+            dbp.display("3");
+            dbp.getStage().initStyle(StageStyle.UTILITY);
         }
+        if (DatabaseConnection.getInstance().hasConnection()) {
+            initNodes(window);
+        }
+        
     }
 
     private void initNodes(Stage window) {
@@ -56,7 +74,7 @@ public class Frontpage extends Application {
         vMainLayout = new VBox(20);
         hMenuLayout = new HBox(15);
         frontPageScene = new Scene(vMainLayout, 1024, 768);
-
+        
         window.setTitle(TITLE);
 
         //initialiser knapper:
@@ -73,35 +91,43 @@ public class Frontpage extends Application {
 
         window.setScene(frontPageScene);
         window.show();
+        
+        
     }
 
     private void initButtons() {
 
-        ArrayList<MenuButton> menuButtons = new ArrayList<>();
+        ArrayList<PopupMenuButton> menuButtons = new ArrayList<>();
 
-        createPersonButton = new MenuButton("Opret ansat");
-        createPersonButton.setOnAction(e -> {
+        createEmployee = new PopupMenuButton("Opret ansat");
+        createEmployee.setOnAction(e -> {
             EmployeePopup personPopup = new EmployeePopup();
             personPopup.display("Opret ansat");
         });
-        menuButtons.add(createPersonButton);
-
-        createQualificationButton = new MenuButton("Opret kvalifikation");
+        menuButtons.add(createEmployee);
+        
+        createStudent = new PopupMenuButton("Opret studerende");
+        createStudent.setOnAction(e -> {
+            System.out.println("hey");
+        });
+        menuButtons.add(createStudent);
+        
+        createQualificationButton = new PopupMenuButton("Opret kvalifikation");
         createQualificationButton.setOnAction(e -> {
-            QualificationWindow qualificationWindow = new QualificationWindow();
-            qualificationWindow.display("Kvalifikationer");
-            
+            QualificationTypePopup qualificationTypeWindow = new QualificationTypePopup();
+            qualificationTypeWindow.display("Kvalifikationer");
+
         });
         menuButtons.add(createQualificationButton);
 
-        createRoomButton = new MenuButton("Opret rum");
+        createRoomButton = new PopupMenuButton("Opret rum");
         createRoomButton.setOnAction(e -> {
-            RoomWindow roomWindow = new RoomWindow();
+            RoomPopup roomWindow = new RoomPopup();
             roomWindow.display("Rum");
         });
         menuButtons.add(createRoomButton);
 
-        for (MenuButton menuButton : menuButtons) {
+        for (PopupMenuButton menuButton : menuButtons) {
             hMenuLayout.getChildren().add(menuButton);
         }
     }

@@ -4,10 +4,10 @@
  * and open the template in the editor.
  */
 
-package view;
+package view.popups;
 
 
-import view.buttons.MenuButton;
+import view.buttons.PopupMenuButton;
 import javafx.geometry.*;
 import javafx.scene.*;
 import javafx.scene.layout.*;
@@ -18,7 +18,7 @@ public class PopupWindow {
     private Stage window;
     private Scene roomScene;
     private BorderPane roomBorderPane;
-    private MenuButton tilbageTilHovedmenu;
+    private PopupMenuButton tilbageTilHovedmenu;
     private HBox bottomHBox;
     
     public PopupWindow() {
@@ -37,7 +37,7 @@ public class PopupWindow {
         roomBorderPane.setPadding(new Insets(15, 15, 15, 15));
         roomBorderPane.setBottom(bottomHBox);
         
-        tilbageTilHovedmenu = new MenuButton("Tilbage til forsiden");
+        tilbageTilHovedmenu = new PopupMenuButton("Tilbage til forsiden");
         tilbageTilHovedmenu.setOnAction(e -> {
             window.close();
         });
