@@ -19,6 +19,7 @@ import javafx.scene.*;
 import javafx.scene.layout.*;
 import javafx.stage.*;
 import view.buttons.PopupMenuButton;
+import view.popups.QualificationTypePopup;
 import view.popups.StudentPopup;
 
 public class Frontpage extends Application {
@@ -60,7 +61,6 @@ public class Frontpage extends Application {
         } catch (FileNotFoundException ex) {
             DatabasePopup dbp = new DatabasePopup();
             dbp.display("3");
-            dbp.getStage().initStyle(StageStyle.UTILITY);
         }
         if (DatabaseConnection.getInstance().hasConnection()) {
             initNodes(window);
@@ -115,8 +115,8 @@ public class Frontpage extends Application {
         
         createQualificationButton = new PopupMenuButton("Opret kvalifikation");
         createQualificationButton.setOnAction(e -> {
-            QualificationPopup qualificationWindow = new QualificationPopup();
-            qualificationWindow.display("Kvalifikationer");
+            QualificationTypePopup qualificationTypeWindow = new QualificationTypePopup();
+            qualificationTypeWindow.display("Kvalifikationer");
 
         });
         menuButtons.add(createQualificationButton);
