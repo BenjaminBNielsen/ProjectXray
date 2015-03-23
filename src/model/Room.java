@@ -11,6 +11,8 @@ package model;
  * @author Jonas
  */
 public class Room {
+
+    
     private int roomNumber;
     private String roomName;
     private int roomState;
@@ -45,5 +47,8 @@ public class Room {
         this.roomState = roomState;
     }
     
-    
+    @Override
+    public String toString() {
+        return roomNumber + " - " + roomName;
+    }
 }

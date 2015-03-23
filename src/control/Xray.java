@@ -28,7 +28,7 @@ public class Xray {
         personControl = new PersonControl();
     }
     
-    private static Xray getInstance() throws SQLException, ClassNotFoundException {
+    public static Xray getInstance() throws SQLException, ClassNotFoundException {
         if (Instance == null) {
             Instance = new Xray();
         }

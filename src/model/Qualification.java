@@ -60,4 +60,22 @@ public class Qualification {
         this.training = training;
     }
 
+    @Override
+    public String toString() {
+        String qName = type.getType();
+        String train, emp;
+        if(training == true){
+            train = " | Træning";
+        }else{
+            train = "";
+        }
+        if(employee == null){
+            emp = "";
+        }else{
+            emp = " | " + employee.toString();
+        }
+        
+        
+        return qName + train + emp + " | " + room.toString() + ".";
+    }
 }
