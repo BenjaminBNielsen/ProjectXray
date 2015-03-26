@@ -74,7 +74,6 @@ public class QualificationHandler {
                 Room room = RoomHandler.getInstance().getRoomName(roomName);
                 
 
-                singleQualifications.add(new RoomQualification(id, training, employee, room));
             }
 
             stmt.close();
@@ -147,3 +146,4 @@ public class QualificationHandler {
     }
 
 }
+                singleQualifications.add(new RoomQualification(id, training, employee, room));

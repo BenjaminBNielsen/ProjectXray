@@ -25,9 +25,9 @@ import view.buttons.SettingsButton;
 public class RoomPopup extends PopupWindow {
 
     private PopupMenuButton addRoom;
-    private TextField tFRoomCount, tFRoomName/*, tFRoomState*/;
-    private int /*roomCount,*/ roomCountInsert, roomStateInsert;
-    private Label lRoomCount, lRoomName, lRoomState;
+    private TextField tFRoomName;
+    private int roomStateInsert;
+    private Label lRoomName, lRoomState;
     private String roomNameInsert;
     private SettingsButton settingsButton;
     private AddButton addButton;
@@ -36,18 +36,6 @@ public class RoomPopup extends PopupWindow {
     @Override
     public void display(String title) {
         ExceptionPopup exceptionPopup = new ExceptionPopup(); //Til exceptionhandling.
-        //De udkommenterede ting der har relevans til nedenstående metode er til at få programmet
-        //til at skrive et autogeneret tal ind i en textfield baseret på antallet af rum
-        //i databasen.
-//        try {
-//            roomCount = Xray.getInstance().getRoomControl().getRoomCount();
-//        } catch (SQLException ex) {
-//            //Skriv code til exception handling
-//        } catch (ClassNotFoundException ex) {
-//            //Skriv code til exception handling
-//        }
-        tFRoomCount = new TextField();
-        //textFieldRoomCount.setText("" + roomCount);
 
         tFRoomName = new TextField();
 
@@ -60,14 +48,11 @@ public class RoomPopup extends PopupWindow {
         
         cBRoomState = new ComboBox(cBOptions);
         cBRoomState.setValue("Åbent");
-        //tFRoomState = new TextField();
-
-        lRoomCount = new Label("Skriv rum nr. her");
 
         lRoomName = new Label("Skriv rum navn her");
 
         lRoomState = new Label("Sæt rum status her");
-        //lRoomState = new Label("Skriv rum status her, brug tal\n 1 = åbent, 2 = lukket, 3 = under service");
+        
         lRoomState.setTextAlignment(TextAlignment.CENTER);
         ListView<Room> roomView = new ListView();                                   //List
         ObservableList<Room> rooms = FXCollections.observableArrayList();           //List
@@ -86,9 +71,9 @@ public class RoomPopup extends PopupWindow {
         super.addToLeft(vBoxLeft);
         super.addToRight(vBoxRight);
         super.addToCenter(vBoxCenter);
-        vBoxLeft.getChildren().addAll(lRoomCount, tFRoomCount,
+        vBoxLeft.getChildren().addAll(
                 lRoomName, tFRoomName,
-                lRoomState, cBRoomState/*tFRoomState*/);
+                lRoomState, cBRoomState);
 
         vBoxRight.getChildren().addAll(roomView);
         vBoxCenter.getChildren().addAll(addButton, settingsButton);
@@ -96,43 +81,14 @@ public class RoomPopup extends PopupWindow {
         addButton.setOnAction(e -> {
             int count = 0;
             int count2 = 0;
-            try {
-                roomCountInsert = Integer.parseInt(tFRoomCount.getText());
-            } catch (NumberFormatException ex) {
-                exceptionPopup.display("Der kan kun indtastes tal i 'rum nr'");
-                count = 1;
-//                count2 = 1;
-                tFRoomCount.setText("");
-            }
+
             roomNameInsert = tFRoomName.getText();
-            if (count2 != 1) {
-//                try {
-//                    roomStateInsert = Integer.parseInt(tFRoomState.getText());
-//
-//                } catch (NumberFormatException ex) {
-//                    exceptionPopup.display("der kan kun skrives 1,2 eller 3 i 'rum status'");
-//                    tFRoomState.setText("");
-//                    count = 1;
-//                }
-//
-                if (count != 1) {
-//                    if (roomStateInsert >= 1) {
-//                        if (roomStateInsert <= 3) {       
+
                             roomStateInsert = cBRoomState.getSelectionModel().getSelectedIndex() + 1;
-                            rooms.add(new Room(roomCountInsert, roomNameInsert, roomStateInsert));
+                            rooms.add(new Room(roomNameInsert, roomStateInsert));
                             roomView.setItems(rooms);
-//                        } else {
-//                            System.out.println("Fejl, roomStateInsert er højere end 3");
-//                            exceptionPopup.display("Det indtastede tal i 'rum status' er højere end 3");
-//                            tFRoomState.setText("");
-//                        }
-//                    } else {
-//                        System.out.println("Fejl, roomStateInsert er lavere end 1");
-//                        exceptionPopup.display("Det indtastede tal i 'rum status' er lavere end 1");
-//                        tFRoomState.setText("");
-//                    }
-                }
-            }
+
+
         });
 
         settingsButton.setOnAction(e -> {
@@ -150,14 +106,14 @@ public class RoomPopup extends PopupWindow {
                     Xray.getInstance().getRoomControl().addRooms(rooms);
                     rooms.removeAll(rooms);
                 } catch (SQLException ex) {
-                    exceptionPopup.display("Der findes allerede et rum med det rum nummer");
+                    exceptionPopup.display("Der findes allerede et rum med det navn");
                     System.out.println(ex.getMessage());
                 } catch (ClassNotFoundException ex) {
                     exceptionPopup.display("mySQL gav følgende fejlbesked: " + ex.getMessage());
                 } catch (NullPointerException ex) {
                     exceptionPopup.display("mySQL gav følgende fejlbesked: " + ex.getMessage());
                 }
-                System.out.println(roomCountInsert + "\n" + roomNameInsert + "\n" + roomStateInsert);
+                System.out.println(roomNameInsert + "\n" + roomStateInsert);
             } else {
                 exceptionPopup.display("Der er ingen rum i listen der skal indsættes");
             }

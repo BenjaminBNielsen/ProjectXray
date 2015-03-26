@@ -54,10 +54,10 @@ public class QualificationControl {
         
     }
     
-    public ArrayList<Qualification> getRoomQualifications(Room room) throws ClassNotFoundException{
-        return QualificationHandler.getInstance().getRoomQualifications(room);
-        
-    }
+//    public ArrayList<Qualification> getRoomQualifications(Room room) throws ClassNotFoundException{
+//        return QualificationHandler.getInstance().getRoomQualifications(room);
+//        
+//    }
     
     public void setEmployeeQualifications(ArrayList<Qualification> selectedQualifications){
         QualificationHandler.getInstance().setEmployeeQualifications(selectedQualifications);
