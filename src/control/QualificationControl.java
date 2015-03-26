@@ -67,5 +67,9 @@ public class QualificationControl {
 //        QualificationHandler.getInstance().setEmployeeQualifications(selectedQualifications);
 //    }
 //    
+        
+        public int getQTRow() throws SQLException, ClassNotFoundException{
+            return QualificationTypeHandler.getInstance().getQTRow();
+        }
     
 }

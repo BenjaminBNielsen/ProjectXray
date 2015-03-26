@@ -58,7 +58,7 @@ public class QualificationTypePopup extends PopupWindow {
 
     public void addQualifictionTypeToList() {
         try {
-            System.out.println(""+Xray.getInstance().getQualificationControl().getQualificationTypes().size());
+            System.out.println(""+Xray.getInstance().getQualificationControl().getQTRow() +1);
 //            String qTName = textQTName.getText();
 //            int id = 1;
 //            
