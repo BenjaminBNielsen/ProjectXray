@@ -53,9 +53,9 @@ public class QualificationTypeHandler {
 
         ResultSet rs = stmt.executeQuery(sql);
 
-        while (rs.next()) {
+        if (rs.next()) {
             int id = rs.getInt("id");
-            String type = ("type");
+            String type = ("qtype");
 
             qualificationTypes.add(new QualificationType(id, type));
         }

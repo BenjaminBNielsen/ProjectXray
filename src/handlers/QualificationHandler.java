@@ -15,6 +15,7 @@ import model.Employee;
 import model.Qualification;
 import model.QualificationType;
 import model.Room;
+import model.RoomQualification;
 
 /**
  *
@@ -28,52 +29,24 @@ public class QualificationHandler {
     private QualificationHandler() {
     }
 
-    public ArrayList<Qualification> getQualifications() {
-
-        try {
-            java.sql.Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
-
-            String SQL = "Select * from qualifiction";
-            ResultSet rs = stmt.executeQuery(SQL);
-
-            while (rs.next()) {
-                QualificationType type = (QualificationType) rs.getObject("type");
-                Boolean training = rs.getBoolean("training");
-                Employee employee = null;
-                Room room = null;
-
-                qualifications.add(new Qualification(type, false, employee, room));
-
-            }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException ex) {
-            System.out.println("SQL Fejl: " + ex.getMessage());
-
-        }
-
-        return qualifications;
-
-    }
-
     public ArrayList<Qualification> getRoomQualifications(Room room) throws ClassNotFoundException {
         ArrayList<Qualification> roomQualifications = new ArrayList<>();
         try {
             java.sql.Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
 
-            int roomNumber = room.getRoomNumber();
-            String SQL = "Select * from qualification where roomId = " + roomNumber;
+            String roomName = room.getRoomName();
+            String SQL = "Select * from qualification where roomId = " + roomName;
             ResultSet rs = stmt.executeQuery(SQL);
 
             while (rs.next()) {
-                QualificationType type = (QualificationType) rs.getObject("type");
+                int id = rs.getInt("id");
                 Boolean training = rs.getBoolean("training");
-                int id = rs.getInt("employeeid");
-                Employee employee = null;
+                int employeeId = rs.getInt("employeeid");
+                Employee employee = EmployeeHandler.getInstance().getEmployee(employeeId);
+                
 
-                roomQualifications.add(new Qualification(type, training, employee, room));
+                roomQualifications.add(new RoomQualification(id, training, employee, room));
             }
 
             stmt.close();
@@ -86,8 +59,8 @@ public class QualificationHandler {
         return roomQualifications;
     }
 
-    public ArrayList<Qualification> getEmployeeQualifications(Employee employee) throws ClassNotFoundException {
-        ArrayList<Qualification> employeeQualifications = new ArrayList<>();
+    public ArrayList<Qualification> getSingleQualifications(Employee employee) throws ClassNotFoundException {
+        ArrayList<Qualification> singleQualifications = new ArrayList<>();
         try {
             java.sql.Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
@@ -95,13 +68,13 @@ public class QualificationHandler {
             ResultSet rs = stmt.executeQuery(SQL);
 
             while (rs.next()) {
-                QualificationType type = (QualificationType) rs.getObject("type");
+                int id = rs.getInt("id");
                 Boolean training = rs.getBoolean("training");
-                int employeeCPR = rs.getInt("employeeid");
-                int roomNr = rs.getInt("roomnumber");
-                Room room = RoomHandler.getInstance().getRoom(roomNr);
+                String roomName = ("roomname");
+                Room room = RoomHandler.getInstance().getRoomName(roomName);
+                
 
-                employeeQualifications.add(new Qualification(type, training, employee, room));
+                singleQualifications.add(new RoomQualification(id, training, employee, room));
             }
 
             stmt.close();
@@ -111,7 +84,7 @@ public class QualificationHandler {
 
         }
 
-        return employeeQualifications;
+        return singleQualifications;
     }
 
     public ArrayList<Qualification> getQualificationsForSeveralEmployees(ArrayList<Employee> employees) throws ClassNotFoundException {
@@ -137,7 +110,7 @@ public class QualificationHandler {
         try {
             java.sql.Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
-            QualificationType type = qualification.getType();
+            QualificationType type = qualification.getId();
             int id = employee.getId();
 
             String SQL = "insert into qualification(type, training, employeeid) values (";
