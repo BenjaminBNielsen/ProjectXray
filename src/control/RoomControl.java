@@ -38,8 +38,8 @@ public class RoomControl {
         return RoomHandler.getInstance().getRooms();
     }
     
-    public Room getRoom(int roomNumber) throws SQLException, ClassNotFoundException {
-        return RoomHandler.getInstance().getRoom(roomNumber);
-    }
+//    public Room getRoom(int roomNumber) throws SQLException, ClassNotFoundException {
+//        return RoomHandler.getInstance().getRoom(roomNumber);
+//    }
     
 }

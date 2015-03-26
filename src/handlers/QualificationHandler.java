@@ -57,34 +57,34 @@ public class QualificationHandler {
 
     }
 
-    public ArrayList<Qualification> getRoomQualifications(Room room) throws ClassNotFoundException {
-        ArrayList<Qualification> roomQualifications = new ArrayList<>();
-        try {
-            java.sql.Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
-
-
-            int roomNumber = room.getRoomNumber();
-            String SQL = "Select * from qualification where roomId = " + roomNumber;
-            ResultSet rs = stmt.executeQuery(SQL);
-
-            while (rs.next()) {
-                QualificationType type = (QualificationType) rs.getObject("type");
-                Boolean training = rs.getBoolean("training");
-                int id = rs.getInt("employeeid");
-                Employee employee = null;
-
-                roomQualifications.add(new Qualification(type, training, employee, room));
-            }
-
-            stmt.close();
-            rs.close();
-        } catch (SQLException ex) {
-            System.out.println("SQL Fejl: " + ex.getMessage());
-
-        }
-
-        return roomQualifications;
-    }
+//    public ArrayList<Qualification> getRoomQualifications(Room room) throws ClassNotFoundException {
+//        ArrayList<Qualification> roomQualifications = new ArrayList<>();
+//        try {
+//            java.sql.Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
+//
+//
+//            int roomNumber = room.getRoomNumber();
+//            String SQL = "Select * from qualification where roomId = " + roomNumber;
+//            ResultSet rs = stmt.executeQuery(SQL);
+//
+//            while (rs.next()) {
+//                QualificationType type = (QualificationType) rs.getObject("type");
+//                Boolean training = rs.getBoolean("training");
+//                int id = rs.getInt("employeeid");
+//                Employee employee = null;
+//
+//                roomQualifications.add(new Qualification(type, training, employee, room));
+//            }
+//
+//            stmt.close();
+//            rs.close();
+//        } catch (SQLException ex) {
+//            System.out.println("SQL Fejl: " + ex.getMessage());
+//
+//        }
+//
+//        return roomQualifications;
+//    }
 
     public ArrayList<Qualification> getEmployeeQualifications(Employee employee) throws ClassNotFoundException {
         ArrayList<Qualification> employeeQualifications = new ArrayList<>();
@@ -99,9 +99,9 @@ public class QualificationHandler {
                 Boolean training = rs.getBoolean("training");
                 int employeeCPR = rs.getInt("employeeid");
                 int roomNr = rs.getInt("roomnumber");
-                Room room = RoomHandler.getInstance().getRoom(roomNr);
+//                Room room = RoomHandler.getInstance().getRoom(roomNr);
 
-                employeeQualifications.add(new Qualification(type, training, employee, room));
+//                employeeQualifications.add(new Qualification(type, training, employee, room));
             }
 
             stmt.close();
