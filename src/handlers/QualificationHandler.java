@@ -16,6 +16,7 @@ import model.Qualification;
 import model.QualificationType;
 import model.Room;
 import model.RoomQualification;
+import model.SingleQualification;
 
 /**
  *
@@ -29,8 +30,8 @@ public class QualificationHandler {
     private QualificationHandler() {
     }
 
-    public ArrayList<Qualification> getRoomQualifications(Room room) throws ClassNotFoundException {
-        ArrayList<Qualification> roomQualifications = new ArrayList<>();
+    public ArrayList<RoomQualification> getRoomQualifications(Room room) throws ClassNotFoundException {
+        ArrayList<RoomQualification> roomQualifications = new ArrayList<>();
         try {
             java.sql.Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
@@ -59,8 +60,8 @@ public class QualificationHandler {
         return roomQualifications;
     }
 
-    public ArrayList<Qualification> getSingleQualifications(Employee employee) throws ClassNotFoundException {
-        ArrayList<Qualification> singleQualifications = new ArrayList<>();
+    public ArrayList<SingleQualification> getSingleQualifications(Employee employee) throws ClassNotFoundException {
+        ArrayList<SingleQualification> singleQualifications = new ArrayList<>();
         try {
             java.sql.Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
@@ -70,10 +71,8 @@ public class QualificationHandler {
             while (rs.next()) {
                 int id = rs.getInt("id");
                 Boolean training = rs.getBoolean("training");
-                String roomName = ("roomname");
-                Room room = RoomHandler.getInstance().getRoomName(roomName);
                 
-
+                singleQualifications.add(new SingleQualification(id, training, employee));
             }
 
             stmt.close();
@@ -86,42 +85,42 @@ public class QualificationHandler {
         return singleQualifications;
     }
 
-    public ArrayList<Qualification> getQualificationsForSeveralEmployees(ArrayList<Employee> employees) throws ClassNotFoundException {
-        ArrayList<Qualification> employeesQualifications = new ArrayList<>();
-        for (int i = 0; i < employees.size(); i++) {
-            Employee selectedEmployees = employees.get(i);
-            employeesQualifications.add(getEmployeeQualifications(selectedEmployees).get(i));
-        }
-        return employeesQualifications;
-    }
+//    public ArrayList<Qualification> getQualificationsForSeveralEmployees(ArrayList<Employee> employees) throws ClassNotFoundException {
+//        ArrayList<Qualification> employeesQualifications = new ArrayList<>();
+//        for (int i = 0; i < employees.size(); i++) {
+//            Employee selectedEmployees = employees.get(i);
+//            employeesQualifications.add(getEmployeeQualifications(selectedEmployees).get(i));
+//        }
+//        return employeesQualifications;
+//    }
 
-    public void setEmployeeQualifications(ArrayList<Qualification> selectedQualifications) {
-        for (int i = 0; i < selectedQualifications.size(); i++) {
-            Qualification selectedQualification = selectedQualifications.get(i);
-            Boolean training = selectedQualifications.get(i).isTraining();
-            Employee selectedEmployee = selectedQualifications.get(i).getEmployee();
+//    public void setEmployeeQualifications(ArrayList<Qualification> selectedQualifications) {
+//        for (int i = 0; i < selectedQualifications.size(); i++) {
+//            Qualification selectedQualification = selectedQualifications.get(i);
+//            Boolean training = selectedQualifications.get(i).isTraining();
+//            Employee selectedEmployee = selectedQualifications.get(i).getEmployee();
+//
+//            setEmployeeQualification(selectedQualification, training, selectedEmployee);
+//        }
+//    }
 
-            setEmployeeQualification(selectedQualification, training, selectedEmployee);
-        }
-    }
-
-    public void setEmployeeQualification(Qualification qualification, Boolean training, Employee employee) {
-        try {
-            java.sql.Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
-
-            QualificationType type = qualification.getId();
-            int id = employee.getId();
-
-            String SQL = "insert into qualification(type, training, employeeid) values (";
-            SQL += type + "," + training + "," + id + ")";
-
-            stmt.execute(SQL);
-            stmt.close();
-        } catch (SQLException ex) {
-            System.out.println("SQL FEJL: " + ex.getMessage());
-        }
-
-    }
+//    public void setEmployeeQualification(Qualification qualification, Boolean training, Employee employee) {
+//        try {
+//            java.sql.Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
+//
+//            QualificationType type = qualification.getId();
+//            int id = employee.getId();
+//
+//            String SQL = "insert into qualification(type, training, employeeid) values (";
+//            SQL += type + "," + training + "," + id + ")";
+//
+//            stmt.execute(SQL);
+//            stmt.close();
+//        } catch (SQLException ex) {
+//            System.out.println("SQL FEJL: " + ex.getMessage());
+//        }
+//
+//    }
 
     public void createQualification(QualificationType type, Boolean training, Room room) {
         try {
@@ -146,4 +145,3 @@ public class QualificationHandler {
     }
 
 }
-                singleQualifications.add(new RoomQualification(id, training, employee, room));
