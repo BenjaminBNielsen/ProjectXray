@@ -36,7 +36,7 @@ public class QualificationType {
 
     @Override
     public String toString() {
-        return "Kvalifikation: " + type + ", ID: " + id;
+        return type + ": " + id;
     }
     
     

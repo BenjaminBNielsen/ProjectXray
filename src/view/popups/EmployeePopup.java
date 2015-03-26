@@ -176,13 +176,12 @@ public class EmployeePopup extends PopupWindow {
     }
 
     private void initComboBoxes() {
-        ObservableList<Occupation> occupations = FXCollections.observableArrayList();
         try {
-            occupations = Xray.getInstance().getPersonControl().getOccupations();
+            cOccupation = new ComboBox(Xray.getInstance().getPersonControl().getOccupations());
         } catch (SQLException ex) {
         } catch (ClassNotFoundException ex) {
         }
-        cOccupation = new ComboBox(occupations);
+        
         cOccupation.getSelectionModel().selectFirst();
         cOccupation.setPrefWidth(COLUMN_STANDARD_WIDTH);
     }
