@@ -7,7 +7,6 @@
 package model;
 
 import org.joda.time.Hours;
-import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Minutes;
 
@@ -20,13 +19,13 @@ public class Shift {
     private int id;
     private Minutes minutes;
     private Hours hours;
-    private LocalDateTime localDate;
+    private LocalDateTime localDateTime;
     
-    public Shift(int id, Hours hours, Minutes minutes, LocalDateTime localDate) {
+    public Shift(int id, Hours hours, Minutes minutes, LocalDateTime localDateTime) {
         this.id = id;
         this.hours = hours;
         this.minutes = minutes;
-        this.localDate = localDate;
+        this.localDateTime = localDateTime;
     }
 
     public int getId() {
@@ -54,11 +53,11 @@ public class Shift {
     }
 
     public LocalDateTime getLocalDate() {
-        return localDate;
+        return localDateTime;
     }
 
-    public void setLocalDate(LocalDateTime localDate) {
-        this.localDate = localDate;
+    public void setLocalDate(LocalDateTime localDateTime) {
+        this.localDateTime = localDateTime;
     }
 
 }
