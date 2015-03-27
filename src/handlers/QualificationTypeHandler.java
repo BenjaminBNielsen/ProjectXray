@@ -53,9 +53,9 @@ public class QualificationTypeHandler {
 
         ResultSet rs = stmt.executeQuery(sql);
 
-        while (rs.next()) {
+        if (rs.next()) {
             int id = rs.getInt("id");
-            String type = ("type");
+            String type = ("qtype");
 
             qualificationTypes.add(new QualificationType(id, type));
         }
@@ -65,8 +65,28 @@ public class QualificationTypeHandler {
 
         return qualificationTypes;
     }
-
-    public static QualificationTypeHandler getInstance() {
+    
+    public int getQTRow() throws SQLException, ClassNotFoundException {
+        
+        Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
+        
+        String sql = "select count(*) from qualificationtype as rowNumber;";
+        
+        ResultSet rs = stmt.executeQuery(sql);
+        int QTCount = 0;
+        
+        if (rs.next()) {
+            QTCount = rs.getInt("rowNumber");
+        }
+        
+        rs.close();
+        stmt.close();
+        
+        return QTCount;
+    }
+    
+    
+public static QualificationTypeHandler getInstance() {
         if (instance == null) {
             instance = new QualificationTypeHandler();
         }
@@ -74,3 +94,7 @@ public class QualificationTypeHandler {
     }
 
 }
+
+    
+
+

@@ -57,14 +57,21 @@ public class QualificationTypePopup extends PopupWindow {
     }
 
     public void addQualifictionTypeToList() {
-            String qTName = textQTName.getText();
-            int id = 1;
-            
-           // id = Xray.getInstance().getQualificationControl().getQualificationTypes().size() + 1;
-
-            QualificationType qualificationType = new QualificationType(id, qTName);
-            qTItems.add(qualificationType);
-            qTList.setItems(qTItems);
+        try {
+            System.out.println(""+Xray.getInstance().getQualificationControl().getQTRow() +1);
+//            String qTName = textQTName.getText();
+//            int id = 1;
+//            
+//           // id = Xray.getInstance().getQualificationControl().getQualificationTypes().size() + 1;
+//
+//            QualificationType qualificationType = new QualificationType(id, qTName);
+//            qTItems.add(qualificationType);
+//            qTList.setItems(qTItems);
+        } catch (SQLException ex) {
+            Logger.getLogger(QualificationTypePopup.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(QualificationTypePopup.class.getName()).log(Level.SEVERE, null, ex);
+        }
             
     }
 
