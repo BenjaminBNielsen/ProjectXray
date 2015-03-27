@@ -15,6 +15,8 @@ import javafx.stage.*;
 
 
 public class PopupWindow {
+    public static final int COLUMN_STANDARD_WIDTH = 200;
+    
     private Stage window;
     private Scene roomScene;
     private BorderPane roomBorderPane;
