@@ -21,6 +21,7 @@ import javafx.stage.*;
 import view.buttons.PopupMenuButton;
 import view.popups.QualificationTypePopup;
 import view.popups.StudentPopup;
+import view.popups.shift.ShiftPopup;
 
 public class Frontpage extends Application {
 
@@ -38,7 +39,7 @@ public class Frontpage extends Application {
 
     //buttons:
     private PopupMenuButton createEmployee, createQualificationButton, createRoomButton,
-            createStudent;
+            createStudent, createShift;
     
     
     public static void main(String[] args) {
@@ -127,7 +128,14 @@ public class Frontpage extends Application {
             roomWindow.display("Rum");
         });
         menuButtons.add(createRoomButton);
-
+        
+        createShift = new PopupMenuButton("Opret vagter");
+        createShift.setOnAction(e -> {
+            ShiftPopup shiftPopup = new ShiftPopup();
+            shiftPopup.display("Vagter");
+        });
+        menuButtons.add(createShift);
+        
         for (PopupMenuButton menuButton : menuButtons) {
             hMenuLayout.getChildren().add(menuButton);
         }
