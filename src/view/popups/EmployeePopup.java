@@ -21,8 +21,6 @@ import view.buttons.AddButton;
 import view.buttons.SettingsButton;
 
 public class EmployeePopup extends PopupWindow {
-    public static final int COLUMN_STANDARD_WIDTH = 200;
-
     //Layouts
     private VBox contentEmployee, addEmployeePane, middleContentPane;
 
