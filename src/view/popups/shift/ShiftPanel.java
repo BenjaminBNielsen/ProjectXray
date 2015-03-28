@@ -5,6 +5,7 @@
  */
 package view.popups.shift;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -44,10 +45,12 @@ public class ShiftPanel extends HBox {
     ShiftPanelConfig configPanel;
 
     public ShiftPanel(int dayOfWeek, String dayName, /*Vil altid være en mandag*/ LocalDateTime startTime) {
+        super(15);
         configPanel = new ShiftPanelConfig();
         lDayName = new Label(dayName);
         this.dayOfWeek = dayOfWeek;
         this.startTime = startTime;
+        
         initButtons();
         setup();
 

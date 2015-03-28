@@ -5,7 +5,7 @@
  */
 package view.popups.shift;
 
-import javafx.scene.control.Button;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -49,7 +49,9 @@ public class ShiftPanelConfig extends PopupWindow {
     private void initLayouts() {
         mainContent = new HBox(15);
         leftTextboxes = new HBox(7.5);
+        leftTextboxes.setPadding(new Insets(0, 0, 15, 0));
         rightTextboxes = new HBox(7.5);
+        rightTextboxes.setPadding(new Insets(0, 0, 15, 0));
 
         leftPane = new VBox(25);
         rightPane = new VBox(25);
@@ -179,7 +181,7 @@ public class ShiftPanelConfig extends PopupWindow {
     private void setup() {
         super.addToTop(mainContent);
         super.addToBottomHBox(changeButton);
-        
+
         mainContent.getChildren().addAll(leftPane, rightPane);
         leftPane.getChildren().addAll(lStartTime, leftTextboxes);
         rightPane.getChildren().addAll(lEndTime, rightTextboxes);
