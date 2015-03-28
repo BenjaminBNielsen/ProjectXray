@@ -78,9 +78,9 @@ public class ShiftPopup extends PopupWindow {
         cDate.setPrefWidth(170);
 
         //testdata
-        LocalDateTime ldt1 = new LocalDateTime(2015, 3, 27, 8, 30);
-        LocalDateTime ldt2 = new LocalDateTime(2015, 3, 27, 15, 15);
-        LocalDateTime ldt3 = new LocalDateTime(2015, 3, 27, 23, 30);
+        LocalDateTime ldt1 = new LocalDateTime(2015, 3, 23, 0, 0);
+        LocalDateTime ldt2 = new LocalDateTime(2015, 3, 30, 0, 0);
+        LocalDateTime ldt3 = new LocalDateTime(2015, 4, 6, 0, 0);
         cDate.getItems().addAll(ldt1, ldt2, ldt3);
         
         cEmployee = new ComboBox();
@@ -95,13 +95,14 @@ public class ShiftPopup extends PopupWindow {
     private void initButtons() {
         addShifts = new PopupMenuButton("Tilføj vagter");
         addShifts.setOnAction(e -> {
-            
+            for (ShiftPanel shiftPanel : shiftPanels) {
+                System.out.println(shiftPanel.getShift());
+            }
         });
     }
     
     private void initShiftPanels() {
-//        LocalDateTime ldt = (LocalDateTime) cDate.getSelectionModel().getSelectedItem();
-        LocalDateTime ldt = new LocalDateTime(2015, 3, 27, 8, 30);
+        LocalDateTime ldt = (LocalDateTime) cDate.getSelectionModel().getSelectedItem();
         
         shiftPanels[0] = new ShiftPanel(1, "Mandag", ldt);
         shiftPanels[1] = new ShiftPanel(2, "Tirsdag", ldt);
@@ -145,6 +146,10 @@ public class ShiftPopup extends PopupWindow {
                 public void changed(ObservableValue observable, LocalDateTime oldValue, LocalDateTime newValue) {
                     if (newValue != null) {
                         cEmployee.setDisable(false);
+                        
+                        for (ShiftPanel shiftPanel : shiftPanels) {
+                            shiftPanel.setStartTime((LocalDateTime) cDate.getSelectionModel().getSelectedItem());
+                        }
                     }
                 }
                 

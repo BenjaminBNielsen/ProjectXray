@@ -20,8 +20,9 @@ public class Shift {
     private Minutes minutes;
     private Hours hours;
     private LocalDateTime localDateTime;
+    //private Employee employee
     
-    public Shift(int id, Hours hours, Minutes minutes, LocalDateTime localDateTime) {
+    public Shift(int id, Hours hours, Minutes minutes, LocalDateTime localDateTime /*, Employee employee*/) {
         this.id = id;
         this.hours = hours;
         this.minutes = minutes;
@@ -60,4 +61,11 @@ public class Shift {
         this.localDateTime = localDateTime;
     }
 
+    @Override
+    public String toString(){
+        LocalDateTime endTime = localDateTime.plusHours(hours.getHours());
+        endTime = endTime.plusMinutes(minutes.getMinutes());
+        return /*employee.getName() + */ "'s vagt starter " + localDateTime 
+                + " og slutter " + endTime;
+    }
 }

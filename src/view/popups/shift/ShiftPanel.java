@@ -90,6 +90,7 @@ public class ShiftPanel extends HBox {
 
             settingsButton.setDisable(false);
         });
+        
         eveningShift = new Button("Aftenvagt");
         eveningShift.setOnAction(e -> {
             int id = 1;
@@ -100,6 +101,7 @@ public class ShiftPanel extends HBox {
 
             settingsButton.setDisable(false);
         });
+        
         nightShift = new Button("Nattevagt");
         nightShift.setOnAction(e -> {
             int id = 1;
@@ -123,19 +125,37 @@ public class ShiftPanel extends HBox {
             
             //Dernæst skal det som der er indtastet i configpopuppen tilføjes til 
             //den nulstillede dato.
-            int modifiedHour = Integer.parseInt(configPanel.gettStartHour().getText());
+            int modifiedStartHour = Integer.parseInt(configPanel.gettStartHour().getText());
             
-            ld = ld.plusHours(modifiedHour);
+            ld = ld.plusHours(modifiedStartHour);
             
-            int modifiedMinute = Integer.parseInt(configPanel.gettStartMinute().getText());
+            int modifiedStartMinute = Integer.parseInt(configPanel.gettStartMinute().getText());
             
-            ld = ld.plusMinutes(modifiedMinute);
+            ld = ld.plusMinutes(modifiedStartMinute);
             
             shift.setLocalDate(ld);
+            
+            //Dernæst udregnes vagttiden, altså hvor mange timer og minutter
+            //vagten tager fra starttidspunktet.
+            int modifiedEndHour = Integer.parseInt(configPanel.gettEndHour().getText());
+            int modifiedEndMinute = Integer.parseInt(configPanel.gettEndMinute().getText());
+            
+            shift.setHours(Hours.hours(modifiedEndHour - modifiedStartHour));
+            shift.setMinutes(Minutes.minutes(modifiedEndMinute - modifiedStartMinute));
         });
     }
 
     private void setup() {
         super.getChildren().addAll(dayShift, eveningShift, nightShift, settingsButton);
     }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+    
+    
 }
