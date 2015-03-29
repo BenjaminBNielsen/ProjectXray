@@ -157,5 +157,4 @@ public class ShiftPanel extends HBox {
         this.startTime = startTime;
     }
     
-    
 }
