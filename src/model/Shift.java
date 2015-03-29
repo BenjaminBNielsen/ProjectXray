@@ -9,6 +9,8 @@ package model;
 import org.joda.time.Hours;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Minutes;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 
 /**
@@ -66,7 +68,10 @@ public class Shift {
     public String toString(){
         LocalDateTime endTime = localDateTime.plusHours(hours.getHours());
         endTime = endTime.plusMinutes(minutes.getMinutes());
-        return employee.getFirstName() +  " " + employee.getLastName() + "'s vagt starter " + localDateTime 
-                + " og slutter " + endTime;
+        //Sørger for at strengen printes i det rigtige format.
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-dd-mm: hh:mm");
+        
+        return /*employee.getName() + */ "'s vagt starter " + localDateTime.toString(fmt) 
+                + " og slutter " + endTime.toString(fmt);
     }
 }

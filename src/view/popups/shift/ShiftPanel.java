@@ -168,5 +168,4 @@ public class ShiftPanel extends HBox {
         this.employee = employee;
     }
     
-    
 }
