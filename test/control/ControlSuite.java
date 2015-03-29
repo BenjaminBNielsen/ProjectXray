@@ -7,19 +7,18 @@ package control;
 
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
 /**
  *
  * @author Benjamin
  */
-public class PersonControlTest {
-    
-    public PersonControlTest() {
-    }
+@RunWith(Suite.class)
+@Suite.SuiteClasses({control.PersonControlTest.class, control.ShiftControlTest.class, control.QualificationControlTest.class, control.XrayTest.class, control.RoomControlTest.class})
+public class ControlSuite {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -35,30 +34,6 @@ public class PersonControlTest {
 
     @After
     public void tearDown() throws Exception {
-    }
-
-    @Test
-    public void testNoNullsAddEmployees() throws Exception {
-    }
-
-    @Test
-    public void testAddStudents() throws Exception {
-    }
-
-    @Test
-    public void testGetEmployees() throws Exception {
-    }
-
-    @Test
-    public void testGetStudents() throws Exception {
-    }
-
-    @Test
-    public void testAddEmployees() throws Exception {
-    }
-
-    @Test
-    public void testGetOccupations() throws Exception {
     }
     
 }

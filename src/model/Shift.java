@@ -69,7 +69,7 @@ public class Shift {
         LocalDateTime endTime = localDateTime.plusHours(hours.getHours());
         endTime = endTime.plusMinutes(minutes.getMinutes());
         //Sørger for at strengen printes i det rigtige format.
-        DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-dd-mm: hh:mm");
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("YYYY-dd-MM: HH:mm");
         
         return /*employee.getName() + */ "'s vagt starter " + localDateTime.toString(fmt) 
                 + " og slutter " + endTime.toString(fmt);

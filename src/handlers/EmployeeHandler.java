@@ -56,21 +56,25 @@ public class EmployeeHandler {
 
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
-        String sql = "select * from person,employee where person.firstName = employee.firstName"
-                + " and person.lastName = employee.lastName;";
+        String sql = "select * from person,employee where id= nr";
 
         ResultSet rs = stmt.executeQuery(sql);
 
         while (rs.next()) {
-            String firstName = ("firstName");
-            String lastName = ("lastName");
-            int cpr = rs.getInt("cpr");
+            String firstName = rs.getString("firstName");
+            String lastName = rs.getString("lastName");
+            int nr = rs.getInt("nr");
             int phoneNumber = rs.getInt("telephone");
             String address = rs.getString("address");
             String eMail = rs.getString("mail");
 
-//            employees.add(new Employee(firstName, lastName, cpr, phoneNumber, address,
-//                    eMail, new Occupation()));
+            employees.add(new Employee(firstName, lastName, nr, phoneNumber, address,
+                    eMail, new Occupation(1, "eare")));
+            
+        }
+        
+        for (Employee employee1 : employees) {
+            System.out.println(employee1);
         }
 
         rs.close();
@@ -165,7 +169,7 @@ public class EmployeeHandler {
             if(i != employees.size()-1){
             sql +="(" + employee.getId() + "," + employee.getPhoneNumber() + ",'" 
                     + employee.getAddress() + "','" + employee.geteMail() + "'," +
-                        employee.getOccupation().getId() + ");";
+                        employee.getOccupation().getId() + "),";
             }else{
                 sql +="(" + employee.getId() + "," + employee.getPhoneNumber() + ",'" 
                     + employee.getAddress() + "','" + employee.geteMail() + "'," +

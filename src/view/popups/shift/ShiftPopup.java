@@ -5,6 +5,11 @@
  */
 package view.popups.shift;
 
+import control.Xray;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
@@ -14,10 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.Employee;
-import model.Occupation;
 import org.joda.time.LocalDateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import view.buttons.PopupMenuButton;
 import view.popups.ExceptionPopup;
 import view.popups.PopupWindow;
@@ -51,7 +53,7 @@ public class ShiftPopup extends PopupWindow {
     {
         shiftPanels = new ShiftPanel[7];
     }
-    
+
     public ShiftPopup() {
         initLayouts();
         initLabels();
@@ -64,7 +66,7 @@ public class ShiftPopup extends PopupWindow {
         //Gør at brugeren ikke kan ændre vinduets størrelse:
         super.getStage().setResizable(false);
     }
-    
+
     private void initLayouts() {
         contentPane = new VBox(20);
         contentPane.setPadding(new Insets(0, 0, 15, 0));
@@ -74,7 +76,7 @@ public class ShiftPopup extends PopupWindow {
         employeePicker = new HBox(25);
         employeePicker.setAlignment(Pos.CENTER);
     }
-    
+
     private void initComboboxes() {
         cDate = new ComboBox();
         cDate.setPrefWidth(170);
@@ -84,16 +86,13 @@ public class ShiftPopup extends PopupWindow {
         LocalDateTime ldt2 = new LocalDateTime(2015, 3, 30, 0, 0);
         LocalDateTime ldt3 = new LocalDateTime(2015, 4, 6, 0, 0);
         cDate.getItems().addAll(ldt1, ldt2, ldt3);
-        
+
         cEmployee = new ComboBox();
         cEmployee.setPrefWidth(170);
         cEmployee.setDisable(true);
-                
-        //Mere testdata
-        Employee emp1 = new Employee("eare", "aeraeraer", 1, 2, "ea", "we", new Occupation(1, "earewr"));
-        cEmployee.getItems().add(emp1);
+
     }
-    
+
     private void initButtons() {
         addShifts = new PopupMenuButton("Tilføj vagter");
         addShifts.setOnAction(e -> {
@@ -102,11 +101,11 @@ public class ShiftPopup extends PopupWindow {
             }
         });
     }
-    
+
     private void initShiftPanels() {
         LocalDateTime ldt = (LocalDateTime) cDate.getSelectionModel().getSelectedItem();
         Employee emp = (Employee) cEmployee.getSelectionModel().getSelectedItem();
-        
+
         shiftPanels[0] = new ShiftPanel(1, "Mandag", ldt, emp);
         shiftPanels[1] = new ShiftPanel(2, "Tirsdag", ldt, emp);
         shiftPanels[2] = new ShiftPanel(3, "Onsdag", ldt, emp);
@@ -114,53 +113,71 @@ public class ShiftPopup extends PopupWindow {
         shiftPanels[4] = new ShiftPanel(5, "Fredag", ldt, emp);
         shiftPanels[5] = new ShiftPanel(6, "Lørdag", ldt, emp);
         shiftPanels[6] = new ShiftPanel(7, "Søndag", ldt, emp);
-        
+
         for (ShiftPanel shiftPanel : shiftPanels) {
             shiftPanel.setAlignment(Pos.CENTER);
             shiftPanel.setDisable(true);
         }
     }
-    
+
     private void setup() {
         super.addToCenter(contentPane);
         contentPane.getChildren().addAll(datePicker, employeePicker);
-        
+
         datePicker.getChildren().addAll(lDate, cDate);
         employeePicker.getChildren().addAll(lEmployee, cEmployee);
-        
+
         contentPane.getChildren().addAll(shiftPanels);
-        
+
         super.addToBottomHBox(addShifts);
-        
+
     }
-    
+
     private void initLabels() {
         lDate = new Label("Vælg dato");
         lDate.setPrefWidth(85);
         lEmployee = new Label("Vælg ansat");
         lEmployee.setPrefWidth(85);
     }
-    
+
     private void initChangeListeners() {
         if (cDate != null) {
             cDate.valueProperty().addListener(new ChangeListener<LocalDateTime>() {
-                
+
                 @Override
                 public void changed(ObservableValue observable, LocalDateTime oldValue, LocalDateTime newValue) {
                     if (newValue != null) {
-                        cEmployee.setDisable(false);
-                        
+
                         for (ShiftPanel shiftPanel : shiftPanels) {
                             shiftPanel.setStartTime((LocalDateTime) cDate.getSelectionModel().getSelectedItem());
                         }
+
+                        try {
+                            //Indsæt alle ansatte i comboboxen
+                            ArrayList<Employee> employees;
+
+                            //Fejlhåndter exceptions og giv ordentlige fejlbeskeder.
+                            employees = Xray.getInstance().getPersonControl().getEmployees();
+
+                            //Hver employee tilføjes til comboboksen
+                            for (Employee employee : employees) {
+                                cEmployee.getItems().add(employee);
+                            }
+                        } catch (SQLException ex) {
+                            System.out.println(ex.getMessage());
+                        } catch (ClassNotFoundException ex) {
+                            System.out.println("2");
+                        }
+                        //Når man har valgt en dato skal comboboksen med ansatte komme frem
+                        cEmployee.setDisable(false);
                     }
                 }
-                
+
             });
         }
         if (cEmployee != null) {
             cEmployee.valueProperty().addListener(new ChangeListener<Employee>() {
-                
+
                 @Override
                 public void changed(ObservableValue observable, Employee oldValue, Employee newValue) {
                     if (newValue != null) {
