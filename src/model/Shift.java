@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package model;
 
 import org.joda.time.Hours;
@@ -12,18 +11,18 @@ import org.joda.time.Minutes;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-
 /**
  *
  * @author Jonas
  */
 public class Shift {
+
     private int id;
     private Minutes minutes;
     private Hours hours;
     private LocalDateTime localDateTime;
     private Employee employee;
-    
+
     public Shift(int id, Hours hours, Minutes minutes, LocalDateTime localDateTime, Employee employee) {
         this.employee = employee;
         this.id = id;
@@ -65,13 +64,13 @@ public class Shift {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         LocalDateTime endTime = localDateTime.plusHours(hours.getHours());
         endTime = endTime.plusMinutes(minutes.getMinutes());
         //Sørger for at strengen printes i det rigtige format.
         DateTimeFormatter fmt = DateTimeFormat.forPattern("YYYY-dd-MM: HH:mm");
-        
-        return /*employee.getName() + */ "'s vagt starter " + localDateTime.toString(fmt) 
-                + " og slutter " + endTime.toString(fmt);
+
+        return employee.getFirstName() + " " + employee.getLastName() + "'s vagt starter "
+                + localDateTime.toString(fmt) + " og slutter " + endTime.toString(fmt);
     }
 }
