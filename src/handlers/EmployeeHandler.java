@@ -5,6 +5,7 @@
  */
 package handlers;
 
+import control.Xray;
 import dbc.DatabaseConnection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -83,58 +84,59 @@ public class EmployeeHandler {
         return employees;
     }
 
-    public Employee getEmployee(int employeeCPR) throws SQLException, ClassNotFoundException {
-        Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
-        Employee employee = null;
-
-        String sql = "Select * from qualification where employeeCPR = " + employeeCPR;
-
-        ResultSet rs = stmt.executeQuery(sql);
-
-        while (rs.next()) {
-            String firstName = ("firstName");
-            String lastName = ("lastName");
-            int cpr = rs.getInt("cpr");
-            int phoneNumber = rs.getInt("telephone");
-            String address = rs.getString("address");
-            String eMail = rs.getString("mail");
-            //String occupation = rs.getString("occupation");
-
-            employee = new Employee(firstName, lastName, cpr, phoneNumber, address, eMail, null/*occupation*/);
-
-        }
-
-        rs.close();
-        stmt.close();
-
-        return employee;
-
-    }
-    
-//    public Employee getEmployee(int employeeNr) throws SQLException, ClassNotFoundException {
-//        
+//    public Employee getEmployee(int employeeCPR) throws SQLException, ClassNotFoundException {
 //        Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
-//        employee = null;
-//        
-//        String sql = "Select * from employee,person where id = nr" + 
-//                        "and nr = " + employeeNr;
-//        
+//        Employee employee = null;
+//
+//        String sql = "Select * from qualification where employeeCPR = " + employeeCPR;
+//
 //        ResultSet rs = stmt.executeQuery(sql);
 //
-//        if (rs.next()) {
+//        while (rs.next()) {
 //            String firstName = ("firstName");
 //            String lastName = ("lastName");
-//            int telephone = rs.getInt("telephone");
-//            String address = ("adress");
-//            String mail = ("mail");
+//            int cpr = rs.getInt("cpr");
+//            int phoneNumber = rs.getInt("telephone");
+//            String address = rs.getString("address");
+//            String eMail = rs.getString("mail");
+//            //String occupation = rs.getString("occupation");
 //
-//            employee = new Employee(firstName, lastName, employeeNr, telephone, address, mail); 
+//            employee = new Employee(firstName, lastName, cpr, phoneNumber, address, eMail, null/*occupation*/);
+//
 //        }
 //
 //        rs.close();
 //        stmt.close();
+//
 //        return employee;
+//
 //    }
+    
+    public Employee getEmployee(int employeeNr) throws SQLException, ClassNotFoundException {
+        
+        Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
+        employee = null;
+        
+        String sql = "Select * from employee,person where id = nr" + 
+                        "and nr = " + employeeNr;
+        
+        ResultSet rs = stmt.executeQuery(sql);
+
+        if (rs.next()) {
+            String firstName = ("firstName");
+            String lastName = ("lastName");
+            int telephone = rs.getInt("telephone");
+            String address = ("adress");
+            String mail = ("mail");
+            Occupation occupation = OccupationHandler.getInstance().
+                    getOccupation(rs.getInt("occupationId"));
+            employee = new Employee(firstName, lastName, employeeNr, telephone, address, mail, occupation); 
+        }
+
+        rs.close();
+        stmt.close();
+        return employee;
+    }
 
     public void addEmployees(ObservableList<Employee> employees) throws SQLException {
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();

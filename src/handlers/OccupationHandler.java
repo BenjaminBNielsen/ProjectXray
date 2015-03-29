@@ -48,4 +48,22 @@ public class OccupationHandler {
         }
         return occupations;
     }
+    
+    public Occupation getOccupation(int id) throws SQLException {
+        Occupation occupation = null;
+        
+        Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
+        
+        String sql = "select * from occupation where id = " + id;
+        
+        ResultSet rs = stmt.executeQuery(sql);
+        
+        if (rs.next()) {
+            String desc = rs.getString("description");
+            occupation = new Occupation(id, desc);
+        }
+        
+        
+        return occupation;
+    }
 }
