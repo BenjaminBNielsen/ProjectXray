@@ -9,6 +9,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import model.Employee;
 import model.Shift;
 import org.joda.time.Hours;
 import org.joda.time.LocalDate;
@@ -30,6 +31,7 @@ public class ShiftPanel extends HBox {
     public static final Minutes NIGHT_MINUTES = Minutes.minutes(0);
 
     private LocalDateTime startTime;
+    private Employee employee;
     private int dayOfWeek;
 
     //Buttons:
@@ -44,8 +46,9 @@ public class ShiftPanel extends HBox {
     //SettingsPopup
     ShiftPanelConfig configPanel;
 
-    public ShiftPanel(int dayOfWeek, String dayName, /*Vil altid være en mandag*/ LocalDateTime startTime) {
+    public ShiftPanel(int dayOfWeek, String dayName, /*Vil altid være en mandag*/ LocalDateTime startTime, Employee employee) {
         super(15);
+        this.employee = employee;
         configPanel = new ShiftPanelConfig();
         lDayName = new Label(dayName);
         this.dayOfWeek = dayOfWeek;
@@ -86,7 +89,7 @@ public class ShiftPanel extends HBox {
             //Dernæst defineres starttidspunktet. Dagsvagter starter per default 8:30.
             d = d.plusHours(8);
             d = d.plusMinutes(30);
-            shift = new Shift(id, DAY_HOURS, DAY_MINUTES, d);
+            shift = new Shift(id, DAY_HOURS, DAY_MINUTES, d, employee);
 
             settingsButton.setDisable(false);
         });
@@ -97,7 +100,7 @@ public class ShiftPanel extends HBox {
             LocalDateTime d = startTime.plusDays(dayOfWeek - 1);
             d = d.plusHours(15);
             d = d.plusMinutes(15);
-            shift = new Shift(id, DAY_HOURS, DAY_MINUTES, d);
+            shift = new Shift(id, DAY_HOURS, DAY_MINUTES, d, employee);
 
             settingsButton.setDisable(false);
         });
@@ -108,7 +111,7 @@ public class ShiftPanel extends HBox {
             LocalDateTime d = startTime.plusDays(dayOfWeek - 1);
             d = d.plusHours(23);
             d = d.plusMinutes(30);
-            shift = new Shift(id, DAY_HOURS, DAY_MINUTES, d);
+            shift = new Shift(id, DAY_HOURS, DAY_MINUTES, d, employee);
 
             settingsButton.setDisable(false);
 
@@ -155,6 +158,14 @@ public class ShiftPanel extends HBox {
 
     public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
     
     

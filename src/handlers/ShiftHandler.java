@@ -63,7 +63,7 @@ public class ShiftHandler {
             Minutes minutes = Minutes.parseMinutes("minutes");
             LocalDateTime localDateTime = LocalDateTime.parse("localDateTime");
 
-            shifts.add(new Shift(id, hours, minutes, localDateTime));
+           // shifts.add(new Shift(id, hours, minutes, localDateTime, employee));
         }
 
         rs.close();

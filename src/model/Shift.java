@@ -20,9 +20,10 @@ public class Shift {
     private Minutes minutes;
     private Hours hours;
     private LocalDateTime localDateTime;
-    //private Employee employee
+    private Employee employee;
     
-    public Shift(int id, Hours hours, Minutes minutes, LocalDateTime localDateTime /*, Employee employee*/) {
+    public Shift(int id, Hours hours, Minutes minutes, LocalDateTime localDateTime, Employee employee) {
+        this.employee = employee;
         this.id = id;
         this.hours = hours;
         this.minutes = minutes;
@@ -65,7 +66,7 @@ public class Shift {
     public String toString(){
         LocalDateTime endTime = localDateTime.plusHours(hours.getHours());
         endTime = endTime.plusMinutes(minutes.getMinutes());
-        return /*employee.getName() + */ "'s vagt starter " + localDateTime 
+        return employee.getFirstName() +  " " + employee.getLastName() + "'s vagt starter " + localDateTime 
                 + " og slutter " + endTime;
     }
 }

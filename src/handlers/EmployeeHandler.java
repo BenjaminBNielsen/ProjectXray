@@ -19,6 +19,7 @@ public class EmployeeHandler {
 
     //Singleton instance.
     private static EmployeeHandler instance;
+    private Employee employee;
 
     //
     //Constructor
@@ -105,6 +106,31 @@ public class EmployeeHandler {
         return employee;
 
     }
+    
+//    public Employee getEmployee(int employeeNr) throws SQLException, ClassNotFoundException {
+//        
+//        Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
+//        employee = null;
+//        
+//        String sql = "Select * from employee,person where id = nr" + 
+//                        "and nr = " + employeeNr;
+//        
+//        ResultSet rs = stmt.executeQuery(sql);
+//
+//        if (rs.next()) {
+//            String firstName = ("firstName");
+//            String lastName = ("lastName");
+//            int telephone = rs.getInt("telephone");
+//            String address = ("adress");
+//            String mail = ("mail");
+//
+//            employee = new Employee(firstName, lastName, employeeNr, telephone, address, mail); 
+//        }
+//
+//        rs.close();
+//        stmt.close();
+//        return employee;
+//    }
 
     public void addEmployees(ObservableList<Employee> employees) throws SQLException {
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();

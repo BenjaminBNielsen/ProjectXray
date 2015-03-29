@@ -103,14 +103,15 @@ public class ShiftPopup extends PopupWindow {
     
     private void initShiftPanels() {
         LocalDateTime ldt = (LocalDateTime) cDate.getSelectionModel().getSelectedItem();
+        Employee emp = (Employee) cEmployee.getSelectionModel().getSelectedItem();
         
-        shiftPanels[0] = new ShiftPanel(1, "Mandag", ldt);
-        shiftPanels[1] = new ShiftPanel(2, "Tirsdag", ldt);
-        shiftPanels[2] = new ShiftPanel(3, "Onsdag", ldt);
-        shiftPanels[3] = new ShiftPanel(4, "Torsdag", ldt);
-        shiftPanels[4] = new ShiftPanel(5, "Fredag", ldt);
-        shiftPanels[5] = new ShiftPanel(6, "Lørdag", ldt);
-        shiftPanels[6] = new ShiftPanel(7, "Søndag", ldt);
+        shiftPanels[0] = new ShiftPanel(1, "Mandag", ldt, emp);
+        shiftPanels[1] = new ShiftPanel(2, "Tirsdag", ldt, emp);
+        shiftPanels[2] = new ShiftPanel(3, "Onsdag", ldt, emp);
+        shiftPanels[3] = new ShiftPanel(4, "Torsdag", ldt, emp);
+        shiftPanels[4] = new ShiftPanel(5, "Fredag", ldt, emp);
+        shiftPanels[5] = new ShiftPanel(6, "Lørdag", ldt, emp);
+        shiftPanels[6] = new ShiftPanel(7, "Søndag", ldt, emp);
         
         for (ShiftPanel shiftPanel : shiftPanels) {
             shiftPanel.setAlignment(Pos.CENTER);
@@ -163,6 +164,7 @@ public class ShiftPopup extends PopupWindow {
                     if (newValue != null) {
                         for (ShiftPanel shiftPanel : shiftPanels) {
                             shiftPanel.setDisable(false);
+                            shiftPanel.setEmployee((Employee) cEmployee.getSelectionModel().getSelectedItem());
                         }
                     }
                 }
