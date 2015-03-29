@@ -22,9 +22,10 @@ public class Shift {
     private Minutes minutes;
     private Hours hours;
     private LocalDateTime localDateTime;
-    //private Employee employee
+    private Employee employee;
     
-    public Shift(int id, Hours hours, Minutes minutes, LocalDateTime localDateTime /*, Employee employee*/) {
+    public Shift(int id, Hours hours, Minutes minutes, LocalDateTime localDateTime, Employee employee) {
+        this.employee = employee;
         this.id = id;
         this.hours = hours;
         this.minutes = minutes;
