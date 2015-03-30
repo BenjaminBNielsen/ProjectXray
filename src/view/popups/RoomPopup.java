@@ -109,10 +109,8 @@ public class RoomPopup extends PopupWindow {
                     exceptionPopup.display("Der findes allerede et rum med det navn");
                     System.out.println(ex.getMessage());
                 } catch (ClassNotFoundException ex) {
-                    exceptionPopup.display("mySQL gav følgende fejlbesked: " + ex.getMessage());
-                } catch (NullPointerException ex) {
-                    exceptionPopup.display("mySQL gav følgende fejlbesked: " + ex.getMessage());
-                }
+                    exceptionPopup.display("Der mangler en database driver, kontakt systemadministrator");
+                } 
                 System.out.println(roomNameInsert + "\n" + roomStateInsert);
             } else {
                 exceptionPopup.display("Der er ingen rum i listen der skal indsættes");
