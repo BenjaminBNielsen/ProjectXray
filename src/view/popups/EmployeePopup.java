@@ -82,7 +82,9 @@ public class EmployeePopup extends PopupWindow {
             try {
                 Xray.getInstance().getPersonControl().addEmployees(employees);
             } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
             } catch (ClassNotFoundException ex) {
+                System.out.println(ex.getMessage());
             }
         });
         super.addToBottomHBox(addEmployee);
