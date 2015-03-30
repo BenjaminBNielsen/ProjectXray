@@ -55,13 +55,13 @@ public class Frontpage extends Application {
             Xray.getInstance().createConnection();
         } catch (SQLException ex) {
             DatabasePopup dbp = new DatabasePopup();
-            dbp.display("1");
+            dbp.display("Ingen forbindelse til database");
         } catch (ClassNotFoundException ex) {
             DatabasePopup dbp = new DatabasePopup();
-            dbp.display("2");
+            dbp.display("Database library skal tilføjes");
         } catch (FileNotFoundException ex) {
             DatabasePopup dbp = new DatabasePopup();
-            dbp.display("3");
+            dbp.display("Databasefil mangler");
         }
         if (DatabaseConnection.getInstance().hasConnection()) {
             initNodes(window);
