@@ -5,8 +5,12 @@
  */
 package control;
 
+import dbc.DatabaseConnection;
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Shift;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -24,25 +28,20 @@ public class ShiftControlTest {
     public ShiftControlTest() {
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    @After
-    public void tearDown() throws Exception {
-    }
-
     @Test
     public void testGetShiftsNoNullsNoException() {
         boolean hasFailedActual = false, hasFailedExpected = false;
+
+        try {
+            DatabaseConnection.getInstance().createConnection();
+        } catch (FileNotFoundException ex) {
+            System.out.println("Filen som der læses fra kunne ikke findes");
+        } catch (SQLException ex) {
+            System.out.println("Da der skulle oprettes forbindelse til databasen forekom der en sql fejl:\n"
+                    + ex.getMessage());
+        } catch (ClassNotFoundException ex) {
+            System.out.println("Kunne ikke finde driveren, husk at importere jdbc biblioteket");
+        }
 
         ShiftControl sc = new ShiftControl();
 
@@ -50,10 +49,15 @@ public class ShiftControlTest {
         String errorMessage = "";
         try {
             ArrayList<Shift> shifts = sc.getShifts();
+            if (shifts == null) {
+                hasFailedActual = true;
+                errorMessage = "Kunne ikke hente vagterne ud fra databasen.";
+            }
 
             //Løb arraylisten igennem og find eventuelle nulls.
             for (int i = 0; i < shifts.size(); i++) {
-                if (shifts.get(i) == null) {
+                //Hvis ikke der allerede er forekommet en fejl skal der ledes efter nulls i shift arraylisten.
+                if (shifts.get(i) == null && hasFailedActual == false) {
                     hasFailedActual = true;
                     errorMessage = "Der er forekommet mindst én null i metoden.";
                 }
@@ -65,19 +69,23 @@ public class ShiftControlTest {
                     + ex.getMessage();
         }
 
+        try {
+            //Lukker forbindelsen til databasen efter sig.
+            DatabaseConnection.getInstance().closeConnection();
+        } catch (SQLException ex) {
+            errorMessage = "Der er forekommet en sql fejl i metoden, denne gav følgende fejlbesked:\n"
+                    + ex.getMessage();
+        }
+
         assertEquals(errorMessage, hasFailedExpected, hasFailedActual);
-    }
-    
-    @Test
-    public void testAddShiftsInsertedCorrectly(){
-        int expectedResult = 999999999;
-        int actualResult = 0;
-        
-        
     }
 
     @Test
-    public void testGetShifts() throws Exception {
+    public void testAddShiftsInsertedCorrectly() {
+        int expectedResult = 999999999;
+        int actualResult = 0;
+
+        
     }
 
 }

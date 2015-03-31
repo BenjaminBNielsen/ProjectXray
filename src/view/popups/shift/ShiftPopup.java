@@ -165,13 +165,13 @@ public class ShiftPopup extends PopupWindow {
                             }
                         } catch (SQLException ex) {
                             String error = "Der kunne ikke hentes ansatte ind i drop-ned menuen"
-                + " kontakt venligst systemadministrator.";
+                                    + " kontakt venligst systemadministrator.";
                             exceptionPopup.display(error);
                         } catch (ClassNotFoundException ex) {
                             String error = "Der kunne ikke oprettes forbindelse til databasen, kontakt venligst"
                                     + "din systemadministrator.";
                             exceptionPopup.display(ex.getMessage());
-                        } 
+                        }
                         //Når man har valgt en dato skal comboboksen med ansatte komme frem
                         cEmployee.setDisable(false);
                     }

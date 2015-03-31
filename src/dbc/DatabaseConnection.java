@@ -66,11 +66,6 @@ public class DatabaseConnection {
             }
             textScan.close();
 
-//            host = "localhost";
-//            port = "3306";
-//            dbNavn = "xraydb";
-//            user = "root";
-//            pass = "root";
             db = "jdbc:mysql://" + host + ":" + port + "/" + dbNavn;
 
             driverName = "com.mysql.jdbc.Driver";
@@ -79,11 +74,10 @@ public class DatabaseConnection {
 
         conn = DriverManager.getConnection(db, user, pass);
 
-            System.out.println("32423423");
         if(conn != null){
-            System.out.println("DET VIRKEDE");
+            System.out.println("Der er oprettet forbindelse til databasen");
         }else{
-            System.out.println("ØV");
+            System.out.println("Der blev ikke oprettet forbindelse...");
         }
         //Hvis programmet når her til uden at støde på exceptions må den have forbindelse.
         hasConnection = true;
@@ -96,5 +90,10 @@ public class DatabaseConnection {
 
     public boolean hasConnection() {
         return hasConnection;
+    }
+    
+    //I forbindelse med testing skal man kunne lukke forbindelsen efter sig.
+    public void closeConnection() throws SQLException {
+        conn.close();
     }
 }
