@@ -6,18 +6,20 @@
 package control;
 
 import dbc.DatabaseConnection;
+import handlers.EmployeeHandler;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Employee;
+import model.Occupation;
 import model.Shift;
-import org.junit.After;
-import org.junit.AfterClass;
+import org.joda.time.Hours;
+import org.joda.time.LocalDateTime;
+import org.joda.time.Minutes;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.BeforeClass;
 
 /**
  *
@@ -47,6 +49,7 @@ public class ShiftControlTest {
 
         //Giver en passende fejlbesked.
         String errorMessage = "";
+
         try {
             ArrayList<Shift> shifts = sc.getShifts();
             if (shifts == null) {
@@ -67,6 +70,8 @@ public class ShiftControlTest {
             hasFailedActual = true;
             errorMessage = "Der er forekommet en sql fejl i metoden, denne gav følgende fejlbesked:\n"
                     + ex.getMessage();
+        } catch (ClassNotFoundException ex) {
+            System.out.println("Kunne ikke finde driveren, husk at importere jdbc biblioteket");
         }
 
         try {
@@ -81,11 +86,74 @@ public class ShiftControlTest {
     }
 
     @Test
-    public void testAddShiftsInsertedCorrectly() {
-        int expectedResult = 999999999;
+    public void testAddShiftInsertedCorrectly() {
+        int expectedResult = 0;
         int actualResult = 0;
 
+        try {
+            DatabaseConnection.getInstance().createConnection();
+        } catch (FileNotFoundException ex) {
+            System.out.println("Filen som der læses fra kunne ikke findes");
+        } catch (SQLException ex) {
+            System.out.println("Da der skulle oprettes forbindelse til databasen forekom der en sql fejl:\n"
+                    + ex.getMessage());
+        } catch (ClassNotFoundException ex) {
+            System.out.println("Kunne ikke finde driveren, husk at importere jdbc biblioteket");
+        }
+
+        ShiftControl sc = new ShiftControl();
+        ArrayList<Shift> shifts = new ArrayList<>();
+
+        try {
+            //Etabler expectedResult
+            shifts = sc.getShifts();
+        } catch (SQLException ex) {
+            String errorMessage = "I forbindelse med hentning af shift objekter"
+                    + " til udregning af forventet resultat"
+                    + " er der forekommet en sql fejl i metoden, denne gav følgende fejlbesked:\n"
+                    + ex.getMessage();
+            System.out.println(errorMessage);
+        } catch (ClassNotFoundException ex) {
+            System.out.println("Kunne ikke finde driveren, husk at importere jdbc biblioteket");
+        }
+
+        //Hvis der er shift objekter i databasen
+        if (shifts.size() > 0) {
+        //Hvis der er auto increment på id'en må det forventede resultat være det
+            //sidste elements id + 1.
+            expectedResult = shifts.get(shifts.size() - 1).getId() + 1;
+        }else{
+            expectedResult = 1;
+        }
         
+//        try {
+//            sc.addShifts(shifts);
+//        } catch (SQLException ex) {
+//            String errorMessage = "I forbindelse med indsætning af shift objektet til test"
+//                    + "er der forekommet en sql fejl i metoden, denne gav følgende fejlbesked:\n"
+//                    + ex.getMessage();
+//            System.out.println(errorMessage);
+//        } catch (ClassNotFoundException ex) {
+//            System.out.println("Kunne ikke finde driveren, husk at importere jdbc biblioteket");
+//        }
+
+        //Test at det oprettede element nu er det sidste i databasen, og at det har
+        //den forventede id.
+        try {
+            //Etabler actualResult
+            shifts = sc.getShifts();
+        } catch (SQLException ex) {
+            String errorMessage = "I forbindelse med hentelse af det nyligt tilføjede objekt"
+                    + "er der forekommet en sql fejl i metoden, denne gav følgende fejlbesked:\n"
+                    + ex.getMessage();
+            System.out.println(errorMessage);
+        } catch (ClassNotFoundException ex) {
+            System.out.println("Kunne ikke finde driveren, husk at importere jdbc biblioteket");
+        }
+
+        actualResult = shifts.get(shifts.size() - 1).getId();
+
+        assertEquals("addShift oprettede ikke et Shift-objekt som det skulle", expectedResult, actualResult);
     }
 
 }

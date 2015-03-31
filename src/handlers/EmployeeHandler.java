@@ -20,7 +20,6 @@ public class EmployeeHandler {
 
     //Singleton instance.
     private static EmployeeHandler instance;
-    private Employee employee;
 
     //
     //Constructor
@@ -31,21 +30,21 @@ public class EmployeeHandler {
         return instance;
     }
 
-    public void addEmployee(String firstName, String lastName, int cpr, int phoneNumber,
+    public void addEmployee(String firstName, String lastName, int nr, int phoneNumber,
             String address, String eMail, Occupation occupation) throws SQLException, ClassNotFoundException {
 
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
         //indsætter som person.
-        String sql = "insert into person() values('" + firstName + "','"
+        String sql = "insert into person() values(" + nr + ",'" + firstName + "','"
                 + lastName + "');";
 
         stmt.execute(sql);
 
         //indsætter som medarbejder.
-        sql = "insert into employee() values(" + cpr + ",";
-        sql += phoneNumber + ",'" + address + "','" + eMail + "','"
-                + firstName + "','" + lastName + "'," + occupation.getId() + ");";
+        sql = "insert into employee() values(" + nr + ",";
+        sql += phoneNumber + ",'" + address + "','" + eMail + "',"
+                + occupation.getId() + ");";
 
         stmt.execute(sql);
 
@@ -115,7 +114,7 @@ public class EmployeeHandler {
     public Employee getEmployee(int employeeNr) throws SQLException, ClassNotFoundException {
         
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
-        employee = null;
+        Employee employee = null;
         
         String sql = "Select * from employee,person where id = nr" + 
                         "and nr = " + employeeNr;

@@ -95,5 +95,6 @@ public class DatabaseConnection {
     //I forbindelse med testing skal man kunne lukke forbindelsen efter sig.
     public void closeConnection() throws SQLException {
         conn.close();
+        conn = null;
     }
 }
