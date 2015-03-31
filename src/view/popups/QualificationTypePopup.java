@@ -38,7 +38,11 @@ public class QualificationTypePopup extends PopupWindow {
     private ListView<QualificationType> qTList;
     private AddButton addToListView;
     private RemoveButton removeFromListView;
+    private ExceptionPopup exceptionPopup;
 
+    public QualificationTypePopup() {
+        exceptionPopup = new ExceptionPopup();
+    }
     @Override
     public void display(String title) {
 
@@ -53,6 +57,7 @@ public class QualificationTypePopup extends PopupWindow {
         super.addToRight(vBoxRight);
         super.addToBottomHBox(createQualificationType);
         super.display(title);
+        
 
     }
 
@@ -68,9 +73,9 @@ public class QualificationTypePopup extends PopupWindow {
 //            qTItems.add(qualificationType);
 //            qTList.setItems(qTItems);
         } catch (SQLException ex) {
-            Logger.getLogger(QualificationTypePopup.class.getName()).log(Level.SEVERE, null, ex);
+            exceptionPopup.display("");
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(QualificationTypePopup.class.getName()).log(Level.SEVERE, null, ex);
+            exceptionPopup.display("");
         }
             
     }
@@ -117,12 +122,11 @@ public class QualificationTypePopup extends PopupWindow {
             try {
                 Xray.getInstance().getQualificationControl().addQualificationTypes(qTItems);
             } catch (SQLException ex) {
-                ExceptionPopup exceptionPopup = new ExceptionPopup();
-                exceptionPopup.display(ex.getMessage());
+                exceptionPopup.display("Kvalifikationen kunne ikke indsættes, kontakt systemadministrator.");
 
             } catch (ClassNotFoundException ex) {
-                ExceptionPopup exceptionPopup = new ExceptionPopup();
-                exceptionPopup.display(ex.getMessage());
+                exceptionPopup.display("Der kunne ikke oprettes forbindelse til databasen, "
+                        + "kontakt venligst din systemadministrator.");
             }
         });
     }

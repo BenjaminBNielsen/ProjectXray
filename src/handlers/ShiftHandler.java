@@ -43,8 +43,8 @@ public class ShiftHandler {
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
         String sql = "insert into shift(hours,minutes,startTime,employeeNr) "
-                + "values (" + hours.getHours() + "," + minutes.getMinutes() + 
-                ",'" + localDateTime.toString() + "'," + employee.getId() + ");";
+                + "values (" + hours.getHours() + "," + minutes.getMinutes()
+                + ",'" + localDateTime.toString() + "'," + employee.getId() + ");";
 
         stmt.execute(sql);
         System.out.println(sql);
@@ -73,5 +73,57 @@ public class ShiftHandler {
         rs.close();
         stmt.close();
         return shifts;
+    }
+
+    public void addShifts(ArrayList<Shift> shifts)
+            throws SQLException, ClassNotFoundException {
+
+        Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
+
+        String sql = "insert into shift(id, hours, minutes, localDateTime, employee) values";
+        //String sql = "insert into room() values(" + roomNumber + ",'"
+        //        + roomName + "'," + roomState + ");";
+
+        for (int i = 0; i < shifts.size(); i++) {
+            Shift tempShift = shifts.get(i);
+            sql += "('" + tempShift.getId();
+            sql += "'," + tempShift.getHours();
+            sql += "'," + tempShift.getMinutes();
+            sql += "'," + tempShift.getLocalDateTime();
+            sql += "'," + tempShift.getEmployee();
+            if (i == shifts.size() - 1) {
+                sql += ");";
+            } else {
+                sql += "),\n";
+            }
+        }
+
+        stmt.execute(sql);
+
+        stmt.close();
+    }
+
+    public Shift getShift(int id) throws SQLException, ClassNotFoundException {
+
+        Shift shift = null;
+
+        Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
+
+        String sql = "select * from shift where id =" + id;
+
+        ResultSet rs = stmt.executeQuery(sql);
+
+        while (rs.next()) {
+            Hours hours = Hours.hours(rs.getInt("hours"));
+            Minutes minutes = Minutes.minutes(rs.getInt("minutes"));
+            LocalDateTime localDateTime = LocalDateTime.parse(rs.getString("startTime"));
+            Employee employee = EmployeeHandler.getInstance().getEmployee(rs.getInt("employeeId"));
+
+            shift = new Shift(id, hours, minutes, localDateTime, employee);
+        }
+
+        rs.close();
+        stmt.close();
+        return shift;
     }
 }
