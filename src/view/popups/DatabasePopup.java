@@ -30,7 +30,11 @@ public class DatabasePopup extends PopupWindow {
     private TextField tHost, tPort, tDbName, tUser;
     private PasswordField tPassword;
     private Label lHost, lPort, lDbName, lUser, lPassword, lErrorMessage;
+    private ExceptionPopup exceptionPopup;
     
+    public DatabasePopup() {
+        exceptionPopup = new ExceptionPopup();
+    }
 
     @Override
     public void display(String title) {
@@ -90,8 +94,11 @@ public class DatabasePopup extends PopupWindow {
             try {   
                 DatabaseConnection.getInstance().createConnection();
             } catch (FileNotFoundException ex) {
+                exceptionPopup.display("Der er ingen tekstfil med oplysninger til databasen");
             } catch (SQLException ex) {
+                exceptionPopup.display("Der er sket en fejl i forbindelse med databasen, kontakt systemadministrator");
             } catch (ClassNotFoundException ex) {
+                exceptionPopup.display("Der mangler en database driver, kontakt systemadministrator");
             }
             if (DatabaseConnection.getInstance().hasConnection() == true) {
                 
@@ -123,7 +130,7 @@ public class DatabasePopup extends PopupWindow {
         try {
             textScan = new Scanner(sfile);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(DatabasePopup.class.getName()).log(Level.SEVERE, null, ex);
+            exceptionPopup.display("Der er ingen tekstfil med oplysninger til databasen");
         }
             while (textScan.hasNext()) {
                 switch (textScan.next()) {

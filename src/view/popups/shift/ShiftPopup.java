@@ -170,7 +170,7 @@ public class ShiftPopup extends PopupWindow {
                         } catch (ClassNotFoundException ex) {
                             String error = "Der kunne ikke oprettes forbindelse til databasen, kontakt venligst"
                                     + "din systemadministrator.";
-                            exceptionPopup.display(ex.getMessage());
+                            exceptionPopup.display(error);
                         } 
                         //Når man har valgt en dato skal comboboksen med ansatte komme frem
                         cEmployee.setDisable(false);
