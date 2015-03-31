@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package handlers;
 
 import dbc.DatabaseConnection;
@@ -11,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import model.Room;
+import model.Employee;
 import model.Shift;
 import org.joda.time.Hours;
 import org.joda.time.LocalDateTime;
@@ -22,35 +21,39 @@ import org.joda.time.Minutes;
  * @author Jonas
  */
 public class ShiftHandler {
+
     private static ShiftHandler instance;
     private ArrayList<Shift> shifts;
-    
-    private ShiftHandler () {
+
+    private ShiftHandler() {
         shifts = new ArrayList<>();
     }
-    
+
     public static ShiftHandler getInstance() {
         if (instance == null) {
             instance = new ShiftHandler();
         }
         return instance;
     }
-    
+
     //parametrene er fra model klassen Shift uden Id
-    public void addShifts (Hours hours, Minutes minutes, LocalDateTime localDateTime) 
-        throws SQLException, ClassNotFoundException {
-        
+    public void addShift(Hours hours, Minutes minutes, LocalDateTime localDateTime, Employee employee)
+            throws SQLException, ClassNotFoundException {
+
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
-        
-        String sql = "insert into shift('hours', 'minutes', 'localDate') values";
-        
+
+        String sql = "insert into shift(hours,minutes,startTime,employeeNr) "
+                + "values (" + hours.getHours() + "," + minutes.getMinutes() + 
+                ",'" + localDateTime.toString() + "'," + employee.getId() + ");";
+
         stmt.execute(sql);
+        System.out.println(sql);
 
         stmt.close();
     }
-    
-    public ArrayList<Shift> getShifts() throws SQLException {
-        
+
+    public ArrayList<Shift> getShifts() throws SQLException, ClassNotFoundException {
+
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
         String sql = "select * from shift;";
@@ -59,11 +62,12 @@ public class ShiftHandler {
 
         while (rs.next()) {
             int id = rs.getInt("id");
-            Hours hours = Hours.parseHours("hours");
-            Minutes minutes = Minutes.parseMinutes("minutes");
-            LocalDateTime localDateTime = LocalDateTime.parse("localDateTime");
+            Hours hours = Hours.hours(rs.getInt("hours"));
+            Minutes minutes = Minutes.minutes(rs.getInt("minutes"));
+            LocalDateTime localDateTime = LocalDateTime.parse(rs.getString("startTime"));
+            Employee employee = EmployeeHandler.getInstance().getEmployee(rs.getInt("employeeId"));
 
-           // shifts.add(new Shift(id, hours, minutes, localDateTime, employee));
+            shifts.add(new Shift(id, hours, minutes, localDateTime, employee));
         }
 
         rs.close();

@@ -5,17 +5,17 @@
  */
 package view.popups.shift;
 
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import model.Employee;
 import model.Shift;
 import org.joda.time.Hours;
-import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Minutes;
 import view.buttons.SettingsButton;
+import view.popups.ExceptionPopup;
 
 /**
  *
@@ -46,6 +46,8 @@ public class ShiftPanel extends HBox {
     //SettingsPopup
     ShiftPanelConfig configPanel;
 
+    private ExceptionPopup exceptionPopup;
+
     public ShiftPanel(int dayOfWeek, String dayName, /*Vil altid være en mandag*/ LocalDateTime startTime, Employee employee) {
         super(15);
         this.employee = employee;
@@ -53,7 +55,8 @@ public class ShiftPanel extends HBox {
         lDayName = new Label(dayName);
         this.dayOfWeek = dayOfWeek;
         this.startTime = startTime;
-        
+        exceptionPopup = new ExceptionPopup();
+
         initButtons();
         setup();
 
@@ -93,7 +96,7 @@ public class ShiftPanel extends HBox {
 
             settingsButton.setDisable(false);
         });
-        
+
         eveningShift = new Button("Aftenvagt");
         eveningShift.setOnAction(e -> {
             int id = 1;
@@ -104,7 +107,7 @@ public class ShiftPanel extends HBox {
 
             settingsButton.setDisable(false);
         });
-        
+
         nightShift = new Button("Nattevagt");
         nightShift.setOnAction(e -> {
             int id = 1;
@@ -118,38 +121,81 @@ public class ShiftPanel extends HBox {
         });
 
         configPanel.getChangeButton().setOnAction(e -> {
-            LocalDateTime ld = shift.getLocalDate();
-            
-            //Nulstiller timer.
-            ld = ld.minusHours(ld.getHourOfDay());
-            
-            //Nulstiller minuttet.
-            ld = ld.minusMinutes(ld.getMinuteOfHour());
-            
-            //Dernæst skal det som der er indtastet i configpopuppen tilføjes til 
-            //den nulstillede dato.
-            int modifiedStartHour = Integer.parseInt(configPanel.gettStartHour().getText());
-            
-            ld = ld.plusHours(modifiedStartHour);
-            
-            int modifiedStartMinute = Integer.parseInt(configPanel.gettStartMinute().getText());
-            
-            ld = ld.plusMinutes(modifiedStartMinute);
-            
-            shift.setLocalDate(ld);
-            
-            //Dernæst udregnes vagttiden, altså hvor mange timer og minutter
-            //vagten tager fra starttidspunktet.
-            int modifiedEndHour = Integer.parseInt(configPanel.gettEndHour().getText());
-            int modifiedEndMinute = Integer.parseInt(configPanel.gettEndMinute().getText());
-            
-            shift.setHours(Hours.hours(modifiedEndHour - modifiedStartHour));
-            shift.setMinutes(Minutes.minutes(modifiedEndMinute - modifiedStartMinute));
+            makeChange();
         });
     }
 
     private void setup() {
         super.getChildren().addAll(dayShift, eveningShift, nightShift, settingsButton);
+    }
+
+    private void makeChange() {
+        boolean inputError = false;
+
+        LocalDateTime ld = shift.getLocalDate();
+
+        //Nulstiller timer.
+        ld = ld.minusHours(ld.getHourOfDay());
+
+        //Nulstiller minuttet.
+        ld = ld.minusMinutes(ld.getMinuteOfHour());
+        
+        shift.setLocalDate(ld);
+
+        //Dernæst skal det som der er indtastet i configpopuppen tilføjes til 
+        //den nulstillede dato.
+        int modifiedStartHour = checkInput(configPanel.gettStartHour(), inputError, "HH");
+        if(modifiedStartHour == -1){
+            inputError = true;
+        }
+
+        int modifiedStartMinute = checkInput(configPanel.gettStartMinute(), inputError, "MM");
+        if(modifiedStartMinute == -1){
+            inputError = true;
+        }
+        
+        int modifiedEndHour = checkInput(configPanel.gettEndHour(), inputError, "HH");
+        if(modifiedEndHour == -1){
+            inputError = true;
+        }
+
+        int modifiedEndMinute = checkInput(configPanel.gettEndMinute(), inputError, "MM");
+        if(modifiedEndMinute == -1){
+            inputError = true;
+        }
+
+        //Dernæst udregnes vagttiden, altså hvor mange timer og minutter
+        //vagten tager fra starttidspunktet.
+        if (!inputError) {
+            shift.setHours(Hours.hours(modifiedEndHour - modifiedStartHour));
+            shift.setMinutes(Minutes.minutes(modifiedEndMinute - modifiedStartMinute));
+        }
+    }
+
+    private int checkInput(TextField textField, boolean inputError, String showText) {
+        String inputErrorMessage = "Der kan kun indtastes tal i de 4 felter";
+        String wrongSizeIntError = "Der skal indtastes et tal mellem 0 og 23";
+        int output = 0;
+        //Text fra det første intastningsfelt på :ShiftConfigPanel.
+        String inputText = textField.getText();
+        if (!inputText.equals(showText) && inputError == false) {
+            try {
+                output = Integer.parseInt(inputText);
+                //Man skal indtaste et gyldigt tidspunkt.
+                if(output < 0 || output > 23){
+                    inputError = true;
+                    exceptionPopup.display(wrongSizeIntError);
+                }
+            } catch (NumberFormatException ex) {
+                exceptionPopup.display(inputErrorMessage);
+                inputError = true;
+            }
+        } else if (!inputError) {
+            inputError = true;
+            exceptionPopup.display(inputErrorMessage);
+        }
+
+        return (inputError) ? -1 : output;
     }
 
     public LocalDateTime getStartTime() {
@@ -167,5 +213,5 @@ public class ShiftPanel extends HBox {
     public void setEmployee(Employee employee) {
         this.employee = employee;
     }
-    
+
 }
