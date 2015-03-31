@@ -89,42 +89,45 @@ public class ShiftControlTest {
     public void testAddShiftInsertedCorrectly() {
         int expectedResult = 0;
         int actualResult = 0;
+        ShiftControl sc = new ShiftControl();
 
+        //Opret forbindelse.
         try {
             DatabaseConnection.getInstance().createConnection();
         } catch (FileNotFoundException ex) {
-            System.out.println("Filen som der læses fra kunne ikke findes");
+            System.out.println("Der kunne ikke oprettes forbindelse til databasen"
+                    + " fordi at filen \"xraydb.text\" ikke blev fundet,"
+                    + " sørg for at denne ligger i rodmappen");
         } catch (SQLException ex) {
-            System.out.println("Da der skulle oprettes forbindelse til databasen forekom der en sql fejl:\n"
+            System.out.println("I forbindelse med oprettelse af forbindelse til"
+                    + "databasen kom forekom der en sql fejl med denne fejlbesked:\n"
                     + ex.getMessage());
         } catch (ClassNotFoundException ex) {
             System.out.println("Kunne ikke finde driveren, husk at importere jdbc biblioteket");
         }
 
-        ShiftControl sc = new ShiftControl();
-        ArrayList<Shift> shifts = new ArrayList<>();
-
+        //Hent employee-testobjekt(se "DB/script 4 - test_insert.sql").
+        Employee testEmployee = null;
         try {
-            //Etabler expectedResult
-            shifts = sc.getShifts();
+            testEmployee = EmployeeHandler.getInstance().getEmployee(2147483647);
         } catch (SQLException ex) {
-            String errorMessage = "I forbindelse med hentning af shift objekter"
-                    + " til udregning af forventet resultat"
-                    + " er der forekommet en sql fejl i metoden, denne gav følgende fejlbesked:\n"
-                    + ex.getMessage();
-            System.out.println(errorMessage);
+            Logger.getLogger(ShiftControlTest.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
-            System.out.println("Kunne ikke finde driveren, husk at importere jdbc biblioteket");
+            Logger.getLogger(ShiftControlTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        //Hvis der er shift objekter i databasen
-        if (shifts.size() > 0) {
-        //Hvis der er auto increment på id'en må det forventede resultat være det
-            //sidste elements id + 1.
-            expectedResult = shifts.get(shifts.size() - 1).getId() + 1;
-        }else{
-            expectedResult = 1;
-        }
+        
+        //Indsæt shift via addShifts med samme id som det forventede resultat.
+        ArrayList<Shift> shifts = new ArrayList<>();
+        LocalDateTime testTime = new LocalDateTime(1500,1,1,0,0);
+        shifts.add(new Shift(expectedResult, Hours.hours(0), Minutes.minutes(0), testTime, testEmployee));
+        sc.addShifts(shifts);
+        
+        //Hent det indsatte shift-objekt.
+        
+        
+        //Tjek at det indsatte objekts id er det samme som det hentede,
+        //det kan fx forekomme at den hentedes id er null, hvis objektet ikke
+        //blev indsat korrekt
         
 //        try {
 //            sc.addShifts(shifts);
