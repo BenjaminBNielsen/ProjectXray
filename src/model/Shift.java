@@ -55,13 +55,23 @@ public class Shift {
         this.hours = hours;
     }
 
-    public LocalDateTime getLocalDate() {
+    public LocalDateTime getLocalDateTime() {
         return localDateTime;
     }
 
-    public void setLocalDate(LocalDateTime localDateTime) {
+    public void setLocalDateTime(LocalDateTime localDateTime) {
         this.localDateTime = localDateTime;
     }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+    
+    
 
     @Override
     public String toString() {

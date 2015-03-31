@@ -74,4 +74,32 @@ public class ShiftHandler {
         stmt.close();
         return shifts;
     }
+    
+    public void addShifts(ArrayList<Shift> shifts) 
+        throws SQLException, ClassNotFoundException {
+        
+        Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
+
+        String sql = "insert into shift(id, hours, minutes, localDateTime, employee) values";
+        //String sql = "insert into room() values(" + roomNumber + ",'"
+        //        + roomName + "'," + roomState + ");";
+        
+        for (int i = 0; i < shifts.size(); i++) {
+                Shift tempShift = shifts.get(i);
+                sql += "('" + tempShift.getId();
+                sql += "'," + tempShift.getHours();
+                sql += "'," + tempShift.getMinutes();
+                sql += "'," + tempShift.getLocalDateTime();
+                sql += "'," + tempShift.getEmployee();
+                if (i == shifts.size() - 1) {
+                    sql += ");";
+                } else {
+                    sql += "),\n";
+                }
+            }
+
+        stmt.execute(sql);
+
+        stmt.close();
+    }
 }

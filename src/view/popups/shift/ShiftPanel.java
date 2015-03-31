@@ -132,7 +132,7 @@ public class ShiftPanel extends HBox {
     private void makeChange() {
         boolean inputError = false;
 
-        LocalDateTime ld = shift.getLocalDate();
+        LocalDateTime ld = shift.getLocalDateTime();
 
         //Nulstiller timer.
         ld = ld.minusHours(ld.getHourOfDay());
@@ -140,7 +140,7 @@ public class ShiftPanel extends HBox {
         //Nulstiller minuttet.
         ld = ld.minusMinutes(ld.getMinuteOfHour());
         
-        shift.setLocalDate(ld);
+        shift.setLocalDateTime(ld);
 
         //Dernæst skal det som der er indtastet i configpopuppen tilføjes til 
         //den nulstillede dato.
