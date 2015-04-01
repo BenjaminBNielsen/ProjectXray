@@ -37,17 +37,16 @@ public class ShiftHandler {
     }
 
     //parametrene er fra model klassen Shift uden Id
-    public void addShift(Hours hours, Minutes minutes, LocalDateTime localDateTime, Employee employee)
-            throws SQLException, ClassNotFoundException {
+    public void addShift(Shift shift) throws SQLException, ClassNotFoundException {
 
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
-        String sql = "insert into shift(hours,minutes,startTime,employeeNr) "
-                + "values (" + hours.getHours() + "," + minutes.getMinutes()
-                + ",'" + localDateTime.toString() + "'," + employee.getId() + ");";
+        String sql = "insert into shift() values (" + shift.getId() + ","
+                + shift.getHours().getHours() + "," + shift.getMinutes().getMinutes()
+                + ",'" + shift.getLocalDateTime().toString() + "'," 
+                + shift.getEmployee().getId() + ");";
 
         stmt.execute(sql);
-        System.out.println(sql);
 
         stmt.close();
     }
@@ -65,7 +64,7 @@ public class ShiftHandler {
             Hours hours = Hours.hours(rs.getInt("hours"));
             Minutes minutes = Minutes.minutes(rs.getInt("minutes"));
             LocalDateTime localDateTime = LocalDateTime.parse(rs.getString("startTime"));
-            Employee employee = EmployeeHandler.getInstance().getEmployee(rs.getInt("employeeId"));
+            Employee employee = EmployeeHandler.getInstance().getEmployee(rs.getInt("employeeNr"));
 
             shifts.add(new Shift(id, hours, minutes, localDateTime, employee));
         }
@@ -99,7 +98,6 @@ public class ShiftHandler {
         }
 
         stmt.execute(sql);
-        System.out.println(sql);
         
         stmt.close();
     }

@@ -9,11 +9,7 @@ package control;
 import handlers.ShiftHandler;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import model.Employee;
 import model.Shift;
-import org.joda.time.Hours;
-import org.joda.time.LocalDateTime;
-import org.joda.time.Minutes;
 
 /* @author Benjamin */
 
@@ -26,4 +22,6 @@ public class ShiftControl {
     void addShifts(ArrayList<Shift> shifts) throws SQLException, ClassNotFoundException {
         ShiftHandler.getInstance().addShifts(shifts);
     }
+    
+    
 }
