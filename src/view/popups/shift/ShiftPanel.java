@@ -132,34 +132,34 @@ public class ShiftPanel extends HBox {
     private void makeChange() {
         boolean inputError = false;
 
-        LocalDateTime ld = shift.getLocalDateTime();
+        LocalDateTime ldt = shift.getLocalDateTime();
 
         //Nulstiller timer.
-        ld = ld.minusHours(ld.getHourOfDay());
+        ldt = ldt.minusHours(ldt.getHourOfDay());
 
         //Nulstiller minuttet.
-        ld = ld.minusMinutes(ld.getMinuteOfHour());
+        ldt = ldt.minusMinutes(ldt.getMinuteOfHour());
         
-        shift.setLocalDateTime(ld);
+        shift.setLocalDateTime(ldt);
 
         //Dernæst skal det som der er indtastet i configpopuppen tilføjes til 
         //den nulstillede dato.
-        int modifiedStartHour = checkInput(configPanel.gettStartHour(), inputError, "HH");
+        int modifiedStartHour = checkInput(configPanel.gettStartHour(), inputError, "HH",23,0);
         if(modifiedStartHour == -1){
             inputError = true;
         }
 
-        int modifiedStartMinute = checkInput(configPanel.gettStartMinute(), inputError, "MM");
+        int modifiedStartMinute = checkInput(configPanel.gettStartMinute(), inputError, "MM",59,0);
         if(modifiedStartMinute == -1){
             inputError = true;
         }
         
-        int modifiedEndHour = checkInput(configPanel.gettEndHour(), inputError, "HH");
+        int modifiedEndHour = checkInput(configPanel.gettEndHour(), inputError, "HH",23,0);
         if(modifiedEndHour == -1){
             inputError = true;
         }
 
-        int modifiedEndMinute = checkInput(configPanel.gettEndMinute(), inputError, "MM");
+        int modifiedEndMinute = checkInput(configPanel.gettEndMinute(), inputError, "MM",59,0);
         if(modifiedEndMinute == -1){
             inputError = true;
         }
@@ -172,9 +172,11 @@ public class ShiftPanel extends HBox {
         }
     }
 
-    private int checkInput(TextField textField, boolean inputError, String showText) {
+    private int checkInput(TextField textField, boolean inputError, String showText,
+            int highestValue, int lowestValue) {
         String inputErrorMessage = "Der kan kun indtastes tal i de 4 felter";
-        String wrongSizeIntError = "Der skal indtastes et tal mellem 0 og 23";
+        String wrongSizeIntError = "Der skal indtastes et tal mellem " + lowestValue
+                + " og " + highestValue + ".";
         int output = 0;
         //Text fra det første intastningsfelt på :ShiftConfigPanel.
         String inputText = textField.getText();
@@ -182,7 +184,7 @@ public class ShiftPanel extends HBox {
             try {
                 output = Integer.parseInt(inputText);
                 //Man skal indtaste et gyldigt tidspunkt.
-                if(output < 0 || output > 23){
+                if(output < lowestValue || output > highestValue){
                     inputError = true;
                     exceptionPopup.display(wrongSizeIntError);
                 }

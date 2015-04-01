@@ -7,6 +7,7 @@ package control;
 
 import dbc.DatabaseConnection;
 import handlers.EmployeeHandler;
+import handlers.ShiftHandler;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -87,7 +88,7 @@ public class ShiftControlTest {
 
     @Test
     public void testAddShiftInsertedCorrectly() {
-        int expectedResult = 0;
+        int expectedResult = 99999999;
         int actualResult = 0;
         ShiftControl sc = new ShiftControl();
 
@@ -111,50 +112,43 @@ public class ShiftControlTest {
         try {
             testEmployee = EmployeeHandler.getInstance().getEmployee(2147483647);
         } catch (SQLException ex) {
-            Logger.getLogger(ShiftControlTest.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Employee objektet til test kunne ikke hentes,"
+                    + " husk at køre test scriptet.\n fejlbesked:\n"
+                    + ex.getMessage());
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ShiftControlTest.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Kunne ikke finde driveren, husk at importere jdbc biblioteket");
         }
         
         //Indsæt shift via addShifts med samme id som det forventede resultat.
         ArrayList<Shift> shifts = new ArrayList<>();
         LocalDateTime testTime = new LocalDateTime(1500,1,1,0,0);
         shifts.add(new Shift(expectedResult, Hours.hours(0), Minutes.minutes(0), testTime, testEmployee));
-        sc.addShifts(shifts);
+        try {
+            sc.addShifts(shifts);
+        } catch (SQLException ex) {
+            System.out.println("Shift objektet til test kunne ikke oprettes,"
+                    + " fejlbesked:\n"
+                    + ex.getMessage());
+        } catch (ClassNotFoundException ex) {
+            System.out.println("Kunne ikke finde driveren, husk at importere jdbc biblioteket");
+        }
         
         //Hent det indsatte shift-objekt.
-        
+        Shift actualShift = null;
+        try {
+            actualShift = ShiftHandler.getInstance().getShift(expectedResult);
+        } catch (SQLException ex) {
+            System.out.println("Shift objektet til test kunne ikke hentes,"
+                    + " fejlbesked:\n"
+                    + ex.getMessage());
+        } catch (ClassNotFoundException ex) {
+            System.out.println("Kunne ikke finde driveren, husk at importere jdbc biblioteket");
+        }
         
         //Tjek at det indsatte objekts id er det samme som det hentede,
         //det kan fx forekomme at den hentedes id er null, hvis objektet ikke
         //blev indsat korrekt
-        
-//        try {
-//            sc.addShifts(shifts);
-//        } catch (SQLException ex) {
-//            String errorMessage = "I forbindelse med indsætning af shift objektet til test"
-//                    + "er der forekommet en sql fejl i metoden, denne gav følgende fejlbesked:\n"
-//                    + ex.getMessage();
-//            System.out.println(errorMessage);
-//        } catch (ClassNotFoundException ex) {
-//            System.out.println("Kunne ikke finde driveren, husk at importere jdbc biblioteket");
-//        }
-
-        //Test at det oprettede element nu er det sidste i databasen, og at det har
-        //den forventede id.
-        try {
-            //Etabler actualResult
-            shifts = sc.getShifts();
-        } catch (SQLException ex) {
-            String errorMessage = "I forbindelse med hentelse af det nyligt tilføjede objekt"
-                    + "er der forekommet en sql fejl i metoden, denne gav følgende fejlbesked:\n"
-                    + ex.getMessage();
-            System.out.println(errorMessage);
-        } catch (ClassNotFoundException ex) {
-            System.out.println("Kunne ikke finde driveren, husk at importere jdbc biblioteket");
-        }
-
-        actualResult = shifts.get(shifts.size() - 1).getId();
+        actualResult = actualShift.getId();
 
         assertEquals("addShift oprettede ikke et Shift-objekt som det skulle", expectedResult, actualResult);
     }
