@@ -34,7 +34,7 @@ public class RoomControl {
         RoomHandler.getInstance().addRooms(rooms);
     }
     
-    public ArrayList getRooms(ArrayList<Room> rooms) throws SQLException, ClassNotFoundException {
+    public ArrayList getRooms() throws SQLException, ClassNotFoundException {
         return RoomHandler.getInstance().getRooms();
     }
     
