@@ -117,7 +117,7 @@ public class EmployeeHandler {
         Employee employee = null;
         
         String sql = "Select * from employee,person where id = nr" + 
-                        "and nr = " + employeeNr;
+                        " and nr = " + employeeNr;
         
         ResultSet rs = stmt.executeQuery(sql);
 
