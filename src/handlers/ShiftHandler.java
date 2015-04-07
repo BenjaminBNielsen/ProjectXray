@@ -15,6 +15,7 @@ import model.Shift;
 import org.joda.time.Hours;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Minutes;
+import org.joda.time.format.DateTimeFormat;
 
 /**
  *
@@ -43,7 +44,7 @@ public class ShiftHandler {
 
         String sql = "insert into shift() values (" + shift.getId() + ","
                 + shift.getHours().getHours() + "," + shift.getMinutes().getMinutes()
-                + ",'" + shift.getLocalDateTime().toString() + "'," 
+                + ",'" + shift.getLocalDateTime().toString() + "',"
                 + shift.getEmployee().getId() + ");";
 
         stmt.execute(sql);
@@ -63,7 +64,8 @@ public class ShiftHandler {
             int id = rs.getInt("id");
             Hours hours = Hours.hours(rs.getInt("hours"));
             Minutes minutes = Minutes.minutes(rs.getInt("minutes"));
-            LocalDateTime localDateTime = LocalDateTime.parse(rs.getString("startTime"));
+            LocalDateTime localDateTime = LocalDateTime.parse(rs.getString("startTime"),
+                    DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS"));
             Employee employee = EmployeeHandler.getInstance().getEmployee(rs.getInt("employeeNr"));
 
             shifts.add(new Shift(id, hours, minutes, localDateTime, employee));
@@ -98,7 +100,7 @@ public class ShiftHandler {
         }
 
         stmt.execute(sql);
-        
+
         stmt.close();
     }
 
@@ -115,7 +117,8 @@ public class ShiftHandler {
         while (rs.next()) {
             Hours hours = Hours.hours(rs.getInt("hours"));
             Minutes minutes = Minutes.minutes(rs.getInt("minutes"));
-            LocalDateTime localDateTime = LocalDateTime.parse(rs.getString("startTime"));
+            LocalDateTime localDateTime = LocalDateTime.parse(rs.getString("startTime"),
+                    DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS"));
             Employee employee = EmployeeHandler.getInstance().getEmployee(rs.getInt("employeeNr"));
 
             shift = new Shift(id, hours, minutes, localDateTime, employee);

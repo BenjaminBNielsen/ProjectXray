@@ -9,16 +9,9 @@ import dbc.DatabaseConnection;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import model.Employee;
-import model.Occupation;
-import model.Shift;
-import org.joda.time.Hours;
-import org.joda.time.LocalDateTime;
-import org.joda.time.Minutes;
+import model.Student;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -26,9 +19,9 @@ import static org.junit.Assert.*;
  *
  * @author Benjamin
  */
-public class EmployeeHandlerTest {
+public class StudentHandlerTest {
 
-    public EmployeeHandlerTest() {
+    public StudentHandlerTest() {
     }
 
     @Test
@@ -36,9 +29,9 @@ public class EmployeeHandlerTest {
         boolean isNullActual = false;
         boolean isNullExpected = false;
         String errorMessage = "";
-        EmployeeHandler eh = EmployeeHandler.getInstance();
+        StudentHandler sh = StudentHandler.getInstance();
 
-        if (eh == null) {
+        if (sh == null) {
             errorMessage = "Det returnerede objekt var null";
             isNullActual = true;
         }
@@ -47,7 +40,7 @@ public class EmployeeHandlerTest {
     }
 
     @Test
-    public void testAddEmployeeNoExceptions() {
+    public void testAddStudentNoExceptions() {
         boolean hasExceptionsActual = false;
         boolean hasExceptionsExpected = false;
         String errorMessage = "";
@@ -68,22 +61,12 @@ public class EmployeeHandlerTest {
                     + "findes, tjek at biblioteket er importeret.";
         }
 
-        Occupation testOccupation = null;
+        Student testStudent = new Student(99999994, "Jones", "Bones", 1);
         try {
-            testOccupation = OccupationHandler.getInstance().getOccupation(2147483647);
-        } catch (SQLException ex) {
-            errorMessage = "SQLException: I forbindelse med indhentning af occupation-objekt"
-                    + " opstod der en sql fejl som gav følgende fejlbesked:\n"
-                    + ex.getMessage();
-        }
-
-        Employee testEmployee = new Employee("Harald", "Blåtand", 99999998,
-                12345678, "Ringgade 41", "sejfyr@somemail.com", testOccupation);
-        try {
-            EmployeeHandler.getInstance().addEmployee(testEmployee);
+            StudentHandler.getInstance().addStudent(testStudent);
         } catch (SQLException ex) {
             hasExceptionsActual = true;
-            errorMessage = "SQLException: Employee objektet til test kunne ikke oprettes,"
+            errorMessage = "SQLException: Student objektet til test kunne ikke oprettes,"
                     + " fejlbesked:\n"
                     + ex.getMessage();
 
@@ -99,14 +82,13 @@ public class EmployeeHandlerTest {
         } catch (SQLException ex) {
             errorMessage = "Der er forekommet en sql fejl i metoden, denne gav følgende fejlbesked:\n"
                     + ex.getMessage();
-            System.out.println(errorMessage);
         }
 
         assertEquals(errorMessage, hasExceptionsExpected, hasExceptionsActual);
     }
 
     @Test
-    public void testGetEmployeesNoExceptions() {
+    public void testGetStudentsNoExceptions() {
         boolean hasExceptionsActual = false;
         boolean hasExceptionsExpected = false;
         String errorMessage = "";
@@ -127,10 +109,10 @@ public class EmployeeHandlerTest {
         }
 
         try {
-            ArrayList<Employee> employees = EmployeeHandler.getInstance().getEmployees();
+            ArrayList<Student> students = StudentHandler.getInstance().getStudents();
         } catch (SQLException ex) {
             hasExceptionsActual = true;
-            errorMessage = "SQLException: I forbindelse med indhentning af employee-objekter"
+            errorMessage = "SQLException: I forbindelse med indhentning af student-objekter"
                     + " opstod der en sql fejl som gav følgende fejlbesked:\n"
                     + ex.getMessage();
         } catch (ClassNotFoundException ex) {
@@ -153,7 +135,7 @@ public class EmployeeHandlerTest {
     }
 
     @Test
-    public void testAddEmployeesNoExceptions() {
+    public void testAddStudentsNoExceptions() {
         boolean hasExceptionsActual = false;
         boolean hasExceptionsExpected = false;
         String errorMessage = "";
@@ -172,31 +154,18 @@ public class EmployeeHandlerTest {
         } catch (ClassNotFoundException ex) {
             errorMessage = "ClassNotFoundException: JDBC driveren kunne ikke "
                     + "findes, tjek at biblioteket er importeret.";
-        }
-
-        //Hent Occupation-testobjekt(se "DB/script 4 - test_insert.sql").
-        Occupation testOccupation = null;
-        try {
-            testOccupation = OccupationHandler.getInstance().getOccupation(2147483647);
-        } catch (SQLException ex) {
-            hasExceptionsActual = true;
-            errorMessage = "SQLException: Occupation-objektet til test kunne ikke hentes,"
-                    + " husk at køre test scriptet.\n fejlbesked:\n"
-                    + ex.getMessage();
         }
 
         //Indsæt employee objekter via addEmployees.
-        ObservableList<Employee> employees = FXCollections.observableArrayList();
-        employees.add(new Employee("Harald", "Blåtand", 99999996,
-                12345678, "Ringgade 41", "sejfyr@somemail.com", testOccupation));
-        employees.add(new Employee("Harald", "Blåtand", 99999995,
-                12345678, "Ringgade 41", "sejfyr@somemail.com", testOccupation));
-        
+        ObservableList<Student> students = FXCollections.observableArrayList();
+        students.add(new Student(99999993, "Jones", "Bones", 1));
+        students.add(new Student(99999992, "Jones", "Bones", 1));
+
         try {
-            EmployeeHandler.getInstance().addEmployees(employees);
+            StudentHandler.getInstance().addStudents(students);
         } catch (SQLException ex) {
             hasExceptionsActual = true;
-            errorMessage = "SQLException: Employee objektet til test kunne ikke oprettes,"
+            errorMessage = "SQLException: Student objektet til test kunne ikke oprettes,"
                     + " fejlbesked:\n"
                     + ex.getMessage();
         }
@@ -213,51 +182,47 @@ public class EmployeeHandlerTest {
         assertEquals(errorMessage, hasExceptionsExpected, hasExceptionsActual);
 
     }
-    
-     @Test
-     public void testGetEmployeeNoExceptions() {
-     boolean hasExceptionsActual = false;
-     boolean hasExceptionsExpected = false;
-     String errorMessage = "";
 
-     try {
-     DatabaseConnection.getInstance().createConnection();
-     //Ved exceptions sæt boolean til true og giv fejlbesked.
-     } catch (FileNotFoundException ex) {
-     errorMessage = "FileNotFoundException: I forbindelse med oprettelse "
-     + "af databaseforbindelse"
-     + " kunne filen med login oplysninger ikke findes.";
-     } catch (SQLException ex) {
-     errorMessage = "SQLException: I forbindelse med oprettelse af databaseforbindelse"
-     + " opstod der en sql fejl som gav følgende fejlbesked:\n"
-     + ex.getMessage();
-     } catch (ClassNotFoundException ex) {
-     errorMessage = "ClassNotFoundException: JDBC driveren kunne ikke "
-     + "findes, tjek at biblioteket er importeret.";
-     }
+    @Test
+    public void testGetStudentNoExceptions() {
+        boolean hasExceptionsActual = false;
+        boolean hasExceptionsExpected = false;
+        String errorMessage = "";
 
-     try {
-     //Hent Employee-objekt med id 2147483647.
-     EmployeeHandler.getInstance().getEmployee(2147483647);
-     } catch (SQLException ex) {
-     hasExceptionsActual = true;
-     errorMessage = "SQLException: I forbindelse med indhentning af employee-objekt"
-     + " opstod der en sql fejl som gav følgende fejlbesked:\n"
-     + ex.getMessage();
-     } catch (ClassNotFoundException ex) {
-     hasExceptionsActual = true;
-     errorMessage = "ClassNotFoundException: JDBC driveren kunne ikke "
-     + "findes, tjek at biblioteket er importeret.";
-     }
+        try {
+            DatabaseConnection.getInstance().createConnection();
+            //Ved exceptions sæt boolean til true og giv fejlbesked.
+        } catch (FileNotFoundException ex) {
+            errorMessage = "FileNotFoundException: I forbindelse med oprettelse "
+                    + "af databaseforbindelse"
+                    + " kunne filen med login oplysninger ikke findes.";
+        } catch (SQLException ex) {
+            errorMessage = "SQLException: I forbindelse med oprettelse af databaseforbindelse"
+                    + " opstod der en sql fejl som gav følgende fejlbesked:\n"
+                    + ex.getMessage();
+        } catch (ClassNotFoundException ex) {
+            errorMessage = "ClassNotFoundException: JDBC driveren kunne ikke "
+                    + "findes, tjek at biblioteket er importeret.";
+        }
 
-     //Luk forbindelsen.
-     try {
-     DatabaseConnection.getInstance().closeConnection();
-     } catch (SQLException ex) {
-     errorMessage = "Der er forekommet en sql fejl i metoden, denne gav følgende fejlbesked:\n"
-     + ex.getMessage();
-     }
+        try {
+            //Hent Student-objekt med id 2147483646.
+            StudentHandler.getInstance().getStudent(2147483646);
+        } catch (SQLException ex) {
+            hasExceptionsActual = true;
+            errorMessage = "SQLException: I forbindelse med indhentning af Student-objekt"
+                    + " opstod der en sql fejl som gav følgende fejlbesked:\n"
+                    + ex.getMessage();
+        }
 
-     assertEquals(errorMessage, hasExceptionsExpected, hasExceptionsActual);
-     }
+        //Luk forbindelsen.
+        try {
+            DatabaseConnection.getInstance().closeConnection();
+        } catch (SQLException ex) {
+            errorMessage = "Der er forekommet en sql fejl i metoden, denne gav følgende fejlbesked:\n"
+                    + ex.getMessage();
+        }
+
+        assertEquals(errorMessage, hasExceptionsExpected, hasExceptionsActual);
+    }
 }

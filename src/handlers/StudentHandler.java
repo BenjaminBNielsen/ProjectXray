@@ -71,20 +71,23 @@ public class StudentHandler {
         stmt.close();
     }
 
-    public void addStudent(String firstName, String lastName, int module)
-            throws SQLException, ClassNotFoundException {
+    public void addStudent(Student student) throws SQLException, ClassNotFoundException {
 
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
+        String firstName = student.getFirstName();
+        String lastName = student.getLastName();
+        int id = student.getId();
+        int module = student.getModule();
+
         //indsætter som person.
-        String sql = "insert into person() values('" + firstName + "','"
+        String sql = "insert into person() values(" + id + ",'" + firstName + "','"
                 + lastName + "');";
 
         stmt.execute(sql);
 
         //indsætter som medarbejder.
-        sql = "insert into student() values(" + module + ",'";
-        sql += firstName + "','" + lastName + "');";
+        sql = "insert into student() values(" + id + "," + module + ");";
 
         stmt.execute(sql);
 
@@ -106,7 +109,7 @@ public class StudentHandler {
             String lastName = ("lastName");
             int module = rs.getInt("module");
 
-            students.add(new Student(id,firstName, lastName, module));
+            students.add(new Student(id, firstName, lastName, module));
         }
 
         rs.close();
