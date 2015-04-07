@@ -30,11 +30,18 @@ public class EmployeeHandler {
         return instance;
     }
 
-    public void addEmployee(String firstName, String lastName, int nr, int phoneNumber,
-            String address, String eMail, Occupation occupation) throws SQLException, ClassNotFoundException {
+    public void addEmployee(Employee employee) throws SQLException, ClassNotFoundException {
 
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
+        int nr = employee.getId();
+        String firstName = employee.getFirstName();
+        String lastName = employee.getLastName();
+        int phoneNumber = employee.getPhoneNumber();
+        String address = employee.getAddress();
+        String eMail = employee.geteMail();
+        int occupationId = employee.getOccupation().getId();
+        
         //indsætter som person.
         String sql = "insert into person() values(" + nr + ",'" + firstName + "','"
                 + lastName + "');";
@@ -44,7 +51,7 @@ public class EmployeeHandler {
         //indsætter som medarbejder.
         sql = "insert into employee() values(" + nr + ",";
         sql += phoneNumber + ",'" + address + "','" + eMail + "',"
-                + occupation.getId() + ");";
+                + occupationId+ ");";
 
         stmt.execute(sql);
 

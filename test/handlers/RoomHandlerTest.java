@@ -84,7 +84,10 @@ public class RoomHandlerTest {
      * Test of getRooms method, of class RoomHandler.
      */
     @Test
-    public void testGetRooms() throws Exception {
+    public void testGetRooms() throws Exception/*FJERN EXCEPTION KAST DETTE HØRER IKKE TIL I EN TEST METODE!!!!!!!!!!!!!!!!!!!!
+            !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1*/{
         
         try {
             DatabaseConnection.getInstance().createConnection();
