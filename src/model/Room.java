@@ -47,8 +47,20 @@ public class Room {
         this.roomState = roomState;
     }
     
-    @Override
+    private String getRoomStateString() {
+        String roomStateString = "";
+        if (roomState == 1) {
+            roomStateString = "Åbent";
+        } else if (roomState == 2) {
+            roomStateString = "Lukket";
+        } else if (roomState == 3) {
+            roomStateString = "Service";
+        }
+        return roomStateString;
+    }   
+    
     public String toString() {
-        return roomNumber + " - " + roomName;
+        return roomName + " : " + roomNumber 
+                + "\n" + getRoomStateString();
     }
 }

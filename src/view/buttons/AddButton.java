@@ -9,14 +9,15 @@ import javafx.scene.control.Button;
 
 /**
  *
- * @author Yousef
+ * @author Benjamin
  */
-public class AddButton extends Button{
+public class AddButton extends Button {
+
     public AddButton() {
         super(">>>");
 
         this.setPrefSize(42, 30);
 
     }
-    
+
 }

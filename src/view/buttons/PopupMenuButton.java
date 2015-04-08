@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package view;
+package view.buttons;
 
 import javafx.scene.control.*;
 
@@ -11,14 +11,14 @@ import javafx.scene.control.*;
  *
  * @author Benjamin
  */
-public class MenuButton extends Button{
+public class PopupMenuButton extends Button{
     
-    public MenuButton(String text){
+    public PopupMenuButton(String text){
         super(text);
         this.setPrefSize(150,50);
     }
     
-    public MenuButton(){
+    public PopupMenuButton(){
         super();
         this.setPrefSize(150,50);
     }

@@ -6,7 +6,7 @@
 
 package handlers;
 
-import databaseConnection.DatabaseConnection;
+import dbc.DatabaseConnection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -65,7 +65,7 @@ public class StudentHandler {
             String lastName = ("lastName");
             int module = rs.getInt("module");
 
-            students.add(new Student(firstName, lastName, module));
+            //students.add(new Student(firstName, lastName, module));
         }
 
         rs.close();

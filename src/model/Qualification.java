@@ -59,23 +59,24 @@ public class Qualification {
     public void setTraining(boolean training) {
         this.training = training;
     }
-
+    
     @Override
     public String toString() {
         String qName = type.getType();
         String train, emp;
         if(training == true){
-            train = " | Træning";
+            train = "  (træning)";
         }else{
             train = "";
         }
         if(employee == null){
             emp = "";
         }else{
-            emp = " | " + employee.toString();
+            emp = "/n | " + employee.toString();
         }
         
         
-        return qName + train + emp + " | " + room.toString() + ".";
+        return "| " + qName + train + emp + " | " +"\n" + room.toString() + ".";
     }
+
 }
