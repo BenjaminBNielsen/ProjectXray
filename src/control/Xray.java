@@ -22,11 +22,13 @@ public class Xray {
     private QualificationControl qualificationControl;
     private PersonControl personControl;
     private Connection databaseConnection;
+    private ShiftControl shiftControl;
 
     private Xray() throws SQLException, ClassNotFoundException {
         roomControl = new RoomControl();
         qualificationControl = new QualificationControl();
         personControl = new PersonControl();
+        shiftControl = new ShiftControl();
     }
 
     public void createConnection() throws FileNotFoundException, SQLException, ClassNotFoundException {
@@ -64,6 +66,14 @@ public class Xray {
 
     public PersonControl getPersonControl() {
         return personControl;
+    }
+    
+    public ShiftControl getShiftControl(){
+        return shiftControl;
+    }
+    
+    public void setShiftControl(ShiftControl shiftControl){
+        this.shiftControl = shiftControl;
     }
 
 }

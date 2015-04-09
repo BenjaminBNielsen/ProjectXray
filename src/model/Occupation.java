@@ -14,7 +14,6 @@ public class Occupation {
     public Occupation(int id, String description) {
         this.id = id;
         this.description = description;
-        
     }
 
     public int getId() {

@@ -89,34 +89,6 @@ public class EmployeeHandler {
 
         return employees;
     }
-
-//    public Employee getEmployee(int employeeCPR) throws SQLException, ClassNotFoundException {
-//        Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
-//        Employee employee = null;
-//
-//        String sql = "Select * from qualification where employeeCPR = " + employeeCPR;
-//
-//        ResultSet rs = stmt.executeQuery(sql);
-//
-//        while (rs.next()) {
-//            String firstName = ("firstName");
-//            String lastName = ("lastName");
-//            int cpr = rs.getInt("cpr");
-//            int phoneNumber = rs.getInt("telephone");
-//            String address = rs.getString("address");
-//            String eMail = rs.getString("mail");
-//            //String occupation = rs.getString("occupation");
-//
-//            employee = new Employee(firstName, lastName, cpr, phoneNumber, address, eMail, null/*occupation*/);
-//
-//        }
-//
-//        rs.close();
-//        stmt.close();
-//
-//        return employee;
-//
-//    }
     
     public Employee getEmployee(int employeeNr) throws SQLException, ClassNotFoundException {
         
@@ -129,11 +101,11 @@ public class EmployeeHandler {
         ResultSet rs = stmt.executeQuery(sql);
 
         if (rs.next()) {
-            String firstName = ("firstName");
-            String lastName = ("lastName");
+            String firstName = rs.getString("firstName");
+            String lastName = rs.getString("lastName");
             int telephone = rs.getInt("telephone");
-            String address = ("adress");
-            String mail = ("mail");
+            String address = rs.getString("adress");
+            String mail = rs.getString("mail");
             Occupation occupation = OccupationHandler.getInstance().
                     getOccupation(rs.getInt("occupationId"));
             employee = new Employee(firstName, lastName, employeeNr, telephone, address, mail, occupation); 
@@ -164,7 +136,6 @@ public class EmployeeHandler {
         }
 
         //Eksekver sql statementen
-        System.out.println(sql);
         stmt.execute(sql);
         
         //Lav en ny statement
@@ -183,9 +154,7 @@ public class EmployeeHandler {
                     + employee.getAddress() + "','" + employee.geteMail() + "'," +
                         employee.getOccupation().getId() + ");";
             }
-            System.out.println(employee.getFirstName() + " " + " indsat successfuldt.");
         }
-        System.out.println(sql);
 
         stmt.execute(sql);
         stmt.close();

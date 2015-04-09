@@ -6,6 +6,7 @@
 package view.popups.shift;
 
 import control.Xray;
+import handlers.ShiftHandler;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -19,6 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.Employee;
+import model.Shift;
 import org.joda.time.LocalDateTime;
 import view.buttons.PopupMenuButton;
 import view.popups.ExceptionPopup;
@@ -96,8 +98,19 @@ public class ShiftPopup extends PopupWindow {
     private void initButtons() {
         addShifts = new PopupMenuButton("Tilføj vagter");
         addShifts.setOnAction(e -> {
-            for (ShiftPanel shiftPanel : shiftPanels) {
-                System.out.println(shiftPanel.getShift());
+            ArrayList<Shift> shifts = new ArrayList<>();
+            for (int i = 0; i < shiftPanels.length; i++) {
+                if(shiftPanels[i].getShift() != null){
+                    shifts.add(shiftPanels[i].getShift());
+                }
+                
+            }
+            try {
+                ShiftHandler.getInstance().addShifts(shifts);
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            } catch (ClassNotFoundException ex) {
+                System.out.println(ex.getMessage());
             }
         });
     }
