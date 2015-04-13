@@ -11,7 +11,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import model.Employee;
+import model.Occupation;
 import model.Shift;
 import org.joda.time.Hours;
 import org.joda.time.LocalDateTime;
@@ -23,9 +26,9 @@ import static org.junit.Assert.*;
  *
  * @author Benjamin
  */
-public class ShiftHandlerTest {
+public class EmployeeHandlerTest {
 
-    public ShiftHandlerTest() {
+    public EmployeeHandlerTest() {
     }
 
     @Test
@@ -33,9 +36,9 @@ public class ShiftHandlerTest {
         boolean isNullActual = false;
         boolean isNullExpected = false;
         String errorMessage = "";
-        ShiftHandler sh = ShiftHandler.getInstance();
+        EmployeeHandler eh = EmployeeHandler.getInstance();
 
-        if (sh == null) {
+        if (eh == null) {
             errorMessage = "Det returnerede objekt var null";
             isNullActual = true;
         }
@@ -44,7 +47,7 @@ public class ShiftHandlerTest {
     }
 
     @Test
-    public void testAddShiftNoExceptions() {
+    public void testAddEmployeeNoExceptions() {
         boolean hasExceptionsActual = false;
         boolean hasExceptionsExpected = false;
         String errorMessage = "";
@@ -65,30 +68,22 @@ public class ShiftHandlerTest {
                     + "findes, tjek at biblioteket er importeret.";
         }
 
-        //Hent employee-testobjekt(se "DB/script 4 - test_insert.sql").
-        Employee testEmployee = null;
+        Occupation testOccupation = null;
         try {
-            testEmployee = EmployeeHandler.getInstance().getEmployee(2147483647);
+            testOccupation = OccupationHandler.getInstance().getOccupation(2147483647);
         } catch (SQLException ex) {
-            hasExceptionsActual = true;
-            errorMessage = "SQLException: Employee objektet til test kunne ikke hentes,"
-                    + " husk at køre test scriptet.\n fejlbesked:\n"
+            errorMessage = "SQLException: I forbindelse med indhentning af occupation-objekt"
+                    + " opstod der en sql fejl som gav følgende fejlbesked:\n"
                     + ex.getMessage();
-        } catch (ClassNotFoundException ex) {
-            hasExceptionsActual = true;
-            errorMessage = "ClassNotFoundException: JDBC driveren kunne ikke "
-                    + "findes, tjek at biblioteket er importeret.";
         }
 
-        //Indsæt shift via addShift med samme id = 99999999.
-        LocalDateTime testTime = new LocalDateTime(1500, 1, 1, 0, 0);
-        Shift testShift = new Shift(99999998, Hours.hours(0), Minutes.minutes(0),
-                testTime, testEmployee);
+        Employee testEmployee = new Employee("Harald", "Blåtand", 99999998,
+                12345678, "Ringgade 41", "sejfyr@somemail.com", testOccupation);
         try {
-            ShiftHandler.getInstance().addShift(testShift);
+            EmployeeHandler.getInstance().addEmployee(testEmployee);
         } catch (SQLException ex) {
             hasExceptionsActual = true;
-            errorMessage = "SQLException: Shift objektet til test kunne ikke oprettes,"
+            errorMessage = "SQLException: Employee objektet til test kunne ikke oprettes,"
                     + " fejlbesked:\n"
                     + ex.getMessage();
 
@@ -111,7 +106,7 @@ public class ShiftHandlerTest {
     }
 
     @Test
-    public void testGetShiftsNoExceptions() {
+    public void testGetEmployeesNoExceptions() {
         boolean hasExceptionsActual = false;
         boolean hasExceptionsExpected = false;
         String errorMessage = "";
@@ -132,10 +127,10 @@ public class ShiftHandlerTest {
         }
 
         try {
-            ArrayList<Shift> shifts = ShiftHandler.getInstance().getShifts();
+            ArrayList<Employee> employees = EmployeeHandler.getInstance().getEmployees();
         } catch (SQLException ex) {
             hasExceptionsActual = true;
-            errorMessage = "SQLException: I forbindelse med indhentning af shift-objekter"
+            errorMessage = "SQLException: I forbindelse med indhentning af employee-objekter"
                     + " opstod der en sql fejl som gav følgende fejlbesked:\n"
                     + ex.getMessage();
         } catch (ClassNotFoundException ex) {
@@ -158,7 +153,7 @@ public class ShiftHandlerTest {
     }
 
     @Test
-    public void testAddShiftsNoExceptions() {
+    public void testAddEmployeesNoExceptions() {
         boolean hasExceptionsActual = false;
         boolean hasExceptionsExpected = false;
         String errorMessage = "";
@@ -179,43 +174,31 @@ public class ShiftHandlerTest {
                     + "findes, tjek at biblioteket er importeret.";
         }
 
-        //Hent employee-testobjekt(se "DB/script 4 - test_insert.sql").
-        Employee testEmployee = null;
+        //Hent Occupation-testobjekt(se "DB/script 4 - test_insert.sql").
+        Occupation testOccupation = null;
         try {
-            testEmployee = EmployeeHandler.getInstance().getEmployee(2147483647);
+            testOccupation = OccupationHandler.getInstance().getOccupation(2147483647);
         } catch (SQLException ex) {
             hasExceptionsActual = true;
-            errorMessage = "SQLException: Employee objektet til test kunne ikke hentes,"
+            errorMessage = "SQLException: Occupation-objektet til test kunne ikke hentes,"
                     + " husk at køre test scriptet.\n fejlbesked:\n"
                     + ex.getMessage();
-        } catch (ClassNotFoundException ex) {
-            hasExceptionsActual = true;
-            errorMessage = "ClassNotFoundException: JDBC driveren kunne ikke "
-                    + "findes, tjek at biblioteket er importeret.";
         }
 
-        //Indsæt shift via addShift med samme id = 99999999.
-        LocalDateTime testTime = new LocalDateTime(1500, 1, 1, 0, 0);
-        ArrayList<Shift> shifts = new ArrayList<>();
+        //Indsæt employee objekter via addEmployees.
+        ObservableList<Employee> employees = FXCollections.observableArrayList();
+        employees.add(new Employee("Harald", "Blåtand", 99999996,
+                12345678, "Ringgade 41", "sejfyr@somemail.com", testOccupation));
+        employees.add(new Employee("Harald", "Blåtand", 99999995,
+                12345678, "Ringgade 41", "sejfyr@somemail.com", testOccupation));
         
-        Shift testShift1 = new Shift(99999996, Hours.hours(0), Minutes.minutes(0),
-                testTime, testEmployee);
-        shifts.add(testShift1);
-        Shift testShift2 = new Shift(99999995, Hours.hours(0), Minutes.minutes(0),
-                testTime, testEmployee);
-        shifts.add(testShift2);
         try {
-            ShiftHandler.getInstance().addShifts(shifts);
+            EmployeeHandler.getInstance().addEmployees(employees);
         } catch (SQLException ex) {
             hasExceptionsActual = true;
-            errorMessage = "SQLException: Shift objektet til test kunne ikke oprettes,"
+            errorMessage = "SQLException: Employee objektet til test kunne ikke oprettes,"
                     + " fejlbesked:\n"
                     + ex.getMessage();
-
-        } catch (ClassNotFoundException ex) {
-            hasExceptionsActual = true;
-            errorMessage = "ClassNotFoundException: JDBC driveren kunne ikke "
-                    + "findes, tjek at biblioteket er importeret.";
         }
 
         //Luk forbindelsen.
@@ -230,53 +213,51 @@ public class ShiftHandlerTest {
         assertEquals(errorMessage, hasExceptionsExpected, hasExceptionsActual);
 
     }
+    
+     @Test
+     public void testGetEmployeeNoExceptions() {
+     boolean hasExceptionsActual = false;
+     boolean hasExceptionsExpected = false;
+     String errorMessage = "";
 
-    @Test
-    public void testGetShiftNoExceptions() {
-        boolean hasExceptionsActual = false;
-        boolean hasExceptionsExpected = false;
-        String errorMessage = "";
+     try {
+     DatabaseConnection.getInstance().createConnection();
+     //Ved exceptions sæt boolean til true og giv fejlbesked.
+     } catch (FileNotFoundException ex) {
+     errorMessage = "FileNotFoundException: I forbindelse med oprettelse "
+     + "af databaseforbindelse"
+     + " kunne filen med login oplysninger ikke findes.";
+     } catch (SQLException ex) {
+     errorMessage = "SQLException: I forbindelse med oprettelse af databaseforbindelse"
+     + " opstod der en sql fejl som gav følgende fejlbesked:\n"
+     + ex.getMessage();
+     } catch (ClassNotFoundException ex) {
+     errorMessage = "ClassNotFoundException: JDBC driveren kunne ikke "
+     + "findes, tjek at biblioteket er importeret.";
+     }
 
-        try {
-            DatabaseConnection.getInstance().createConnection();
-            //Ved exceptions sæt boolean til true og giv fejlbesked.
-        } catch (FileNotFoundException ex) {
-            errorMessage = "FileNotFoundException: I forbindelse med oprettelse "
-                    + "af databaseforbindelse"
-                    + " kunne filen med login oplysninger ikke findes.";
-        } catch (SQLException ex) {
-            errorMessage = "SQLException: I forbindelse med oprettelse af databaseforbindelse"
-                    + " opstod der en sql fejl som gav følgende fejlbesked:\n"
-                    + ex.getMessage();
-        } catch (ClassNotFoundException ex) {
-            errorMessage = "ClassNotFoundException: JDBC driveren kunne ikke "
-                    + "findes, tjek at biblioteket er importeret.";
-        }
+     try {
+     //Hent Employee-objekt med id 2147483647.
+     EmployeeHandler.getInstance().getEmployee(2147483647);
+     } catch (SQLException ex) {
+     hasExceptionsActual = true;
+     errorMessage = "SQLException: I forbindelse med indhentning af employee-objekt"
+     + " opstod der en sql fejl som gav følgende fejlbesked:\n"
+     + ex.getMessage();
+     } catch (ClassNotFoundException ex) {
+     hasExceptionsActual = true;
+     errorMessage = "ClassNotFoundException: JDBC driveren kunne ikke "
+     + "findes, tjek at biblioteket er importeret.";
+     }
 
-        try {
-            //Hent Shiftobjekt med id 99999997.
-            ShiftHandler.getInstance().getShift(99999997);
-        } catch (SQLException ex) {
-            hasExceptionsActual = true;
-            errorMessage = "SQLException: I forbindelse med indhentning af Shift-objekt"
-                    + " opstod der en sql fejl som gav følgende fejlbesked:\n"
-                    + ex.getMessage();
-        } catch (ClassNotFoundException ex) {
-            hasExceptionsActual = true;
-            errorMessage = "ClassNotFoundException: JDBC driveren kunne ikke "
-                    + "findes, tjek at biblioteket er importeret.";
-        }
+     //Luk forbindelsen.
+     try {
+     DatabaseConnection.getInstance().closeConnection();
+     } catch (SQLException ex) {
+     errorMessage = "Der er forekommet en sql fejl i metoden, denne gav følgende fejlbesked:\n"
+     + ex.getMessage();
+     }
 
-        //Luk forbindelsen.
-        try {
-            DatabaseConnection.getInstance().closeConnection();
-        } catch (SQLException ex) {
-            errorMessage = "Der er forekommet en sql fejl i metoden, denne gav følgende fejlbesked:\n"
-                    + ex.getMessage();
-            System.out.println(errorMessage);
-        }
-
-        assertEquals(errorMessage, hasExceptionsExpected, hasExceptionsActual);
-    }
-
+     assertEquals(errorMessage, hasExceptionsExpected, hasExceptionsActual);
+     }
 }

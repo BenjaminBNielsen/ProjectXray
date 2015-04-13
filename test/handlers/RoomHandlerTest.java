@@ -141,6 +141,7 @@ public class RoomHandlerTest {
      * Test of getRooms method, of class RoomHandler.
      */
     @Test
+
     public void testGetRooms() {
         boolean testExceptionsActual = false;
         boolean testExceptionsExpected = false;

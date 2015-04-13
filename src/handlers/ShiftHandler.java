@@ -15,6 +15,7 @@ import model.Shift;
 import org.joda.time.Hours;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Minutes;
+import org.joda.time.format.DateTimeFormat;
 
 /**
  *
@@ -41,12 +42,14 @@ public class ShiftHandler {
 
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
-        String sql = "insert into shift() values (" + shift.getId() + ","
+        String sql = "insert into shift(hours,minutes,startTime,employeeNr) values ("
                 + shift.getHours().getHours() + "," + shift.getMinutes().getMinutes()
-                + ",'" + shift.getLocalDateTime().toString() + "'," 
-                + shift.getEmployee().getId() + ");";
+                + ",'" + shift.getLocalDateTime().toString("yyyy-MM-dd HH:mm:ss.SSS")
+                + "'," + shift.getEmployee().getId() + ");";
 
-        stmt.execute(sql);
+        int key = stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+
+        System.out.println(key);
 
         stmt.close();
     }
@@ -63,7 +66,8 @@ public class ShiftHandler {
             int id = rs.getInt("id");
             Hours hours = Hours.hours(rs.getInt("hours"));
             Minutes minutes = Minutes.minutes(rs.getInt("minutes"));
-            LocalDateTime localDateTime = LocalDateTime.parse(rs.getString("startTime"));
+            LocalDateTime localDateTime = LocalDateTime.parse(rs.getString("startTime"),
+                    DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS"));
             Employee employee = EmployeeHandler.getInstance().getEmployee(rs.getInt("employeeNr"));
 
             shifts.add(new Shift(id, hours, minutes, localDateTime, employee));
@@ -77,18 +81,13 @@ public class ShiftHandler {
     public void addShifts(ArrayList<Shift> shifts)
             throws SQLException, ClassNotFoundException {
 
-        Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
-
-        String sql = "insert into shift() values";
-        //String sql = "insert into room() values(" + roomNumber + ",'"
-        //        + roomName + "'," + roomState + ");";
+        String sql = "insert into shift(hours,minutes,startTime,employeeNr) values";
 
         for (int i = 0; i < shifts.size(); i++) {
             Shift tempShift = shifts.get(i);
-            sql += "(" + tempShift.getId();
-            sql += "," + tempShift.getHours().getHours();
+            sql += "(" + tempShift.getHours().getHours();
             sql += "," + tempShift.getMinutes().getMinutes();
-            sql += ",'" + tempShift.getLocalDateTime();
+            sql += ",'" + tempShift.getLocalDateTime().toString("yyyy-MM-dd HH:mm:ss.SSS");
             sql += "'," + tempShift.getEmployee().getId();
             if (i == shifts.size() - 1) {
                 sql += ");";
@@ -97,8 +96,17 @@ public class ShiftHandler {
             }
         }
 
-        stmt.execute(sql);
+        Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
+        int key = stmt.executeUpdate(sql,Statement.RETURN_GENERATED_KEYS);
         
+        ResultSet rs = stmt.getGeneratedKeys();
+        while(rs.next()){
+            key = rs.getInt(1);
+            System.out.println(key);
+        }
+
+        
+
         stmt.close();
     }
 
@@ -115,7 +123,8 @@ public class ShiftHandler {
         while (rs.next()) {
             Hours hours = Hours.hours(rs.getInt("hours"));
             Minutes minutes = Minutes.minutes(rs.getInt("minutes"));
-            LocalDateTime localDateTime = LocalDateTime.parse(rs.getString("startTime"));
+            LocalDateTime localDateTime = LocalDateTime.parse(rs.getString("startTime"),
+                    DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS"));
             Employee employee = EmployeeHandler.getInstance().getEmployee(rs.getInt("employeeNr"));
 
             shift = new Shift(id, hours, minutes, localDateTime, employee);

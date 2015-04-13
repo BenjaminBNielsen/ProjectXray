@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package handlers;
 
 import dbc.DatabaseConnection;
@@ -15,7 +14,6 @@ import javafx.collections.ObservableList;
 import model.Student;
 
 /* @author Benjamin */
-
 public class StudentHandler {
     //Singleton instance.
 
@@ -29,9 +27,9 @@ public class StudentHandler {
         }
         return instance;
     }
-    
-    public void addStudents(ObservableList<Student> students) throws SQLException{
-                Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
+
+    public void addStudents(ObservableList<Student> students) throws SQLException {
+        Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
         String sql = "insert into person() values";
         for (int i = 0; i < students.size(); i++) {
@@ -52,18 +50,18 @@ public class StudentHandler {
         //Eksekver sql statementen
         System.out.println(sql);
         stmt.execute(sql);
-        
+
         //Lav en ny statement
         stmt = DatabaseConnection.getInstance().getConnection().createStatement();
         sql = "insert into student() values";
         for (int i = 0; i < students.size(); i++) {
             Student student = students.get(i);
-            
+
             //indsætter som medarbejder.
-            if(i != students.size()-1){
-            sql +="(" + student.getId() + "," + student.getModule() + "),";
-            }else{
-                sql +="(" + student.getId() + "," + student.getModule() + ");";
+            if (i != students.size() - 1) {
+                sql += "(" + student.getId() + "," + student.getModule() + "),";
+            } else {
+                sql += "(" + student.getId() + "," + student.getModule() + ");";
             }
             System.out.println(student.getFirstName() + " " + " indsat successfuldt.");
         }
@@ -73,20 +71,23 @@ public class StudentHandler {
         stmt.close();
     }
 
-    public void addStudent(String firstName, String lastName, int module) 
-            throws SQLException, ClassNotFoundException {
+    public void addStudent(Student student) throws SQLException, ClassNotFoundException {
 
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
+        String firstName = student.getFirstName();
+        String lastName = student.getLastName();
+        int id = student.getId();
+        int module = student.getModule();
+
         //indsætter som person.
-        String sql = "insert into person() values('" + firstName + "','"
+        String sql = "insert into person() values(" + id + ",'" + firstName + "','"
                 + lastName + "');";
 
         stmt.execute(sql);
 
         //indsætter som medarbejder.
-        sql = "insert into student() values(" + module + ",'";
-        sql += firstName + "','" + lastName + "');";
+        sql = "insert into student() values(" + id + "," + module + ");";
 
         stmt.execute(sql);
 
@@ -98,23 +99,45 @@ public class StudentHandler {
 
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
-        String sql = "select * from person,student where person.firstName = employee.firstName"
-                + " and person.lastName = employee.lastName;";
+        String sql = "select * from person,student where id = nr;";
 
         ResultSet rs = stmt.executeQuery(sql);
 
         while (rs.next()) {
+            int id = rs.getInt("nr");
             String firstName = ("firstName");
             String lastName = ("lastName");
             int module = rs.getInt("module");
 
-            //students.add(new Student(firstName, lastName, module));
+            students.add(new Student(id, firstName, lastName, module));
         }
 
         rs.close();
         stmt.close();
 
         return students;
+    }
+
+    public Student getStudent(int id) throws SQLException {
+        Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
+        Student student = null;
+
+        String sql = "Select * from student,person where id = nr"
+                + " and nr = " + id;
+
+        ResultSet rs = stmt.executeQuery(sql);
+
+        if (rs.next()) {
+            String firstName = ("firstName");
+            String lastName = ("lastName");
+            int module = rs.getInt("module");
+
+            student = new Student(id, firstName, lastName, module);
+        }
+
+        rs.close();
+        stmt.close();
+        return student;
     }
 
 }

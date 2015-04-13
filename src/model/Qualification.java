@@ -9,7 +9,7 @@ package model;
  *
  * @author Yousef
  */
-public class Qualification {
+public abstract class Qualification {
 
     private int id;
     private boolean training;

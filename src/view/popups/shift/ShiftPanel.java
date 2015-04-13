@@ -8,6 +8,7 @@ package view.popups.shift;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import model.Employee;
 import model.Shift;
@@ -139,28 +140,28 @@ public class ShiftPanel extends HBox {
 
         //Nulstiller minuttet.
         ldt = ldt.minusMinutes(ldt.getMinuteOfHour());
-        
+
         shift.setLocalDateTime(ldt);
 
         //Dernæst skal det som der er indtastet i configpopuppen tilføjes til 
         //den nulstillede dato.
-        int modifiedStartHour = checkInput(configPanel.gettStartHour(), inputError, "HH",23,0);
-        if(modifiedStartHour == -1){
+        int modifiedStartHour = checkInput(configPanel.gettStartHour(), inputError, 23, 0);
+        if (modifiedStartHour == -1) {
             inputError = true;
         }
 
-        int modifiedStartMinute = checkInput(configPanel.gettStartMinute(), inputError, "MM",59,0);
-        if(modifiedStartMinute == -1){
-            inputError = true;
-        }
-        
-        int modifiedEndHour = checkInput(configPanel.gettEndHour(), inputError, "HH",23,0);
-        if(modifiedEndHour == -1){
+        int modifiedStartMinute = checkInput(configPanel.gettStartMinute(), inputError, 59, 0);
+        if (modifiedStartMinute == -1) {
             inputError = true;
         }
 
-        int modifiedEndMinute = checkInput(configPanel.gettEndMinute(), inputError, "MM",59,0);
-        if(modifiedEndMinute == -1){
+        int modifiedEndHour = checkInput(configPanel.gettEndHour(), inputError, 23, 0);
+        if (modifiedEndHour == -1) {
+            inputError = true;
+        }
+
+        int modifiedEndMinute = checkInput(configPanel.gettEndMinute(), inputError, 59, 0);
+        if (modifiedEndMinute == -1) {
             inputError = true;
         }
 
@@ -172,7 +173,7 @@ public class ShiftPanel extends HBox {
         }
     }
 
-    private int checkInput(TextField textField, boolean inputError, String showText,
+    private int checkInput(TextField textField, boolean inputError,
             int highestValue, int lowestValue) {
         String inputErrorMessage = "Der kan kun indtastes tal i de 4 felter";
         String wrongSizeIntError = "Der skal indtastes et tal mellem " + lowestValue
@@ -180,11 +181,11 @@ public class ShiftPanel extends HBox {
         int output = 0;
         //Text fra det første intastningsfelt på :ShiftConfigPanel.
         String inputText = textField.getText();
-        if (!inputText.equals(showText) && inputError == false) {
+        if (!inputError) {
             try {
                 output = Integer.parseInt(inputText);
                 //Man skal indtaste et gyldigt tidspunkt.
-                if(output < lowestValue || output > highestValue){
+                if (output < lowestValue || output > highestValue) {
                     inputError = true;
                     exceptionPopup.display(wrongSizeIntError);
                 }
@@ -192,9 +193,6 @@ public class ShiftPanel extends HBox {
                 exceptionPopup.display(inputErrorMessage);
                 inputError = true;
             }
-        } else if (!inputError) {
-            inputError = true;
-            exceptionPopup.display(inputErrorMessage);
         }
 
         return (inputError) ? -1 : output;

@@ -9,13 +9,9 @@ import dbc.DatabaseConnection;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import model.Employee;
-import model.Shift;
-import org.joda.time.Hours;
-import org.joda.time.LocalDateTime;
-import org.joda.time.Minutes;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import model.Student;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -23,9 +19,9 @@ import static org.junit.Assert.*;
  *
  * @author Benjamin
  */
-public class ShiftHandlerTest {
+public class StudentHandlerTest {
 
-    public ShiftHandlerTest() {
+    public StudentHandlerTest() {
     }
 
     @Test
@@ -33,7 +29,7 @@ public class ShiftHandlerTest {
         boolean isNullActual = false;
         boolean isNullExpected = false;
         String errorMessage = "";
-        ShiftHandler sh = ShiftHandler.getInstance();
+        StudentHandler sh = StudentHandler.getInstance();
 
         if (sh == null) {
             errorMessage = "Det returnerede objekt var null";
@@ -44,7 +40,7 @@ public class ShiftHandlerTest {
     }
 
     @Test
-    public void testAddShiftNoExceptions() {
+    public void testAddStudentNoExceptions() {
         boolean hasExceptionsActual = false;
         boolean hasExceptionsExpected = false;
         String errorMessage = "";
@@ -65,30 +61,12 @@ public class ShiftHandlerTest {
                     + "findes, tjek at biblioteket er importeret.";
         }
 
-        //Hent employee-testobjekt(se "DB/script 4 - test_insert.sql").
-        Employee testEmployee = null;
+        Student testStudent = new Student(99999994, "Jones", "Bones", 1);
         try {
-            testEmployee = EmployeeHandler.getInstance().getEmployee(2147483647);
+            StudentHandler.getInstance().addStudent(testStudent);
         } catch (SQLException ex) {
             hasExceptionsActual = true;
-            errorMessage = "SQLException: Employee objektet til test kunne ikke hentes,"
-                    + " husk at køre test scriptet.\n fejlbesked:\n"
-                    + ex.getMessage();
-        } catch (ClassNotFoundException ex) {
-            hasExceptionsActual = true;
-            errorMessage = "ClassNotFoundException: JDBC driveren kunne ikke "
-                    + "findes, tjek at biblioteket er importeret.";
-        }
-
-        //Indsæt shift via addShift med samme id = 99999999.
-        LocalDateTime testTime = new LocalDateTime(1500, 1, 1, 0, 0);
-        Shift testShift = new Shift(99999998, Hours.hours(0), Minutes.minutes(0),
-                testTime, testEmployee);
-        try {
-            ShiftHandler.getInstance().addShift(testShift);
-        } catch (SQLException ex) {
-            hasExceptionsActual = true;
-            errorMessage = "SQLException: Shift objektet til test kunne ikke oprettes,"
+            errorMessage = "SQLException: Student objektet til test kunne ikke oprettes,"
                     + " fejlbesked:\n"
                     + ex.getMessage();
 
@@ -104,14 +82,13 @@ public class ShiftHandlerTest {
         } catch (SQLException ex) {
             errorMessage = "Der er forekommet en sql fejl i metoden, denne gav følgende fejlbesked:\n"
                     + ex.getMessage();
-            System.out.println(errorMessage);
         }
 
         assertEquals(errorMessage, hasExceptionsExpected, hasExceptionsActual);
     }
 
     @Test
-    public void testGetShiftsNoExceptions() {
+    public void testGetStudentsNoExceptions() {
         boolean hasExceptionsActual = false;
         boolean hasExceptionsExpected = false;
         String errorMessage = "";
@@ -132,10 +109,10 @@ public class ShiftHandlerTest {
         }
 
         try {
-            ArrayList<Shift> shifts = ShiftHandler.getInstance().getShifts();
+            ArrayList<Student> students = StudentHandler.getInstance().getStudents();
         } catch (SQLException ex) {
             hasExceptionsActual = true;
-            errorMessage = "SQLException: I forbindelse med indhentning af shift-objekter"
+            errorMessage = "SQLException: I forbindelse med indhentning af student-objekter"
                     + " opstod der en sql fejl som gav følgende fejlbesked:\n"
                     + ex.getMessage();
         } catch (ClassNotFoundException ex) {
@@ -158,7 +135,7 @@ public class ShiftHandlerTest {
     }
 
     @Test
-    public void testAddShiftsNoExceptions() {
+    public void testAddStudentsNoExceptions() {
         boolean hasExceptionsActual = false;
         boolean hasExceptionsExpected = false;
         String errorMessage = "";
@@ -179,43 +156,18 @@ public class ShiftHandlerTest {
                     + "findes, tjek at biblioteket er importeret.";
         }
 
-        //Hent employee-testobjekt(se "DB/script 4 - test_insert.sql").
-        Employee testEmployee = null;
-        try {
-            testEmployee = EmployeeHandler.getInstance().getEmployee(2147483647);
-        } catch (SQLException ex) {
-            hasExceptionsActual = true;
-            errorMessage = "SQLException: Employee objektet til test kunne ikke hentes,"
-                    + " husk at køre test scriptet.\n fejlbesked:\n"
-                    + ex.getMessage();
-        } catch (ClassNotFoundException ex) {
-            hasExceptionsActual = true;
-            errorMessage = "ClassNotFoundException: JDBC driveren kunne ikke "
-                    + "findes, tjek at biblioteket er importeret.";
-        }
+        //Indsæt employee objekter via addEmployees.
+        ObservableList<Student> students = FXCollections.observableArrayList();
+        students.add(new Student(99999993, "Jones", "Bones", 1));
+        students.add(new Student(99999992, "Jones", "Bones", 1));
 
-        //Indsæt shift via addShift med samme id = 99999999.
-        LocalDateTime testTime = new LocalDateTime(1500, 1, 1, 0, 0);
-        ArrayList<Shift> shifts = new ArrayList<>();
-        
-        Shift testShift1 = new Shift(99999996, Hours.hours(0), Minutes.minutes(0),
-                testTime, testEmployee);
-        shifts.add(testShift1);
-        Shift testShift2 = new Shift(99999995, Hours.hours(0), Minutes.minutes(0),
-                testTime, testEmployee);
-        shifts.add(testShift2);
         try {
-            ShiftHandler.getInstance().addShifts(shifts);
+            StudentHandler.getInstance().addStudents(students);
         } catch (SQLException ex) {
             hasExceptionsActual = true;
-            errorMessage = "SQLException: Shift objektet til test kunne ikke oprettes,"
+            errorMessage = "SQLException: Student objektet til test kunne ikke oprettes,"
                     + " fejlbesked:\n"
                     + ex.getMessage();
-
-        } catch (ClassNotFoundException ex) {
-            hasExceptionsActual = true;
-            errorMessage = "ClassNotFoundException: JDBC driveren kunne ikke "
-                    + "findes, tjek at biblioteket er importeret.";
         }
 
         //Luk forbindelsen.
@@ -232,7 +184,7 @@ public class ShiftHandlerTest {
     }
 
     @Test
-    public void testGetShiftNoExceptions() {
+    public void testGetStudentNoExceptions() {
         boolean hasExceptionsActual = false;
         boolean hasExceptionsExpected = false;
         String errorMessage = "";
@@ -254,17 +206,13 @@ public class ShiftHandlerTest {
         }
 
         try {
-            //Hent Shiftobjekt med id 99999997.
-            ShiftHandler.getInstance().getShift(99999997);
+            //Hent Student-objekt med id 2147483646.
+            StudentHandler.getInstance().getStudent(2147483646);
         } catch (SQLException ex) {
             hasExceptionsActual = true;
-            errorMessage = "SQLException: I forbindelse med indhentning af Shift-objekt"
+            errorMessage = "SQLException: I forbindelse med indhentning af Student-objekt"
                     + " opstod der en sql fejl som gav følgende fejlbesked:\n"
                     + ex.getMessage();
-        } catch (ClassNotFoundException ex) {
-            hasExceptionsActual = true;
-            errorMessage = "ClassNotFoundException: JDBC driveren kunne ikke "
-                    + "findes, tjek at biblioteket er importeret.";
         }
 
         //Luk forbindelsen.
@@ -273,10 +221,8 @@ public class ShiftHandlerTest {
         } catch (SQLException ex) {
             errorMessage = "Der er forekommet en sql fejl i metoden, denne gav følgende fejlbesked:\n"
                     + ex.getMessage();
-            System.out.println(errorMessage);
         }
 
         assertEquals(errorMessage, hasExceptionsExpected, hasExceptionsActual);
     }
-
 }
