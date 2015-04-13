@@ -22,7 +22,7 @@ public class RoomHandler {
     private static RoomHandler instance;
     private ArrayList<Room> rooms;
     
-    private RoomHandler() {
+    RoomHandler() {
          rooms = new ArrayList<>();
     }
     
@@ -83,7 +83,7 @@ public class RoomHandler {
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
         Room room = null;
         
-        String sql = "Select * from qualification where roomname = " + roomName;
+        String sql = "Select * from qualification where roomName = " + roomName;
 
         ResultSet rs = stmt.executeQuery(sql);
 
@@ -103,7 +103,7 @@ public class RoomHandler {
         
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
         
-        String sql = "select count(*) from room as rowNumber;";
+        String sql = "select count(*) as rowNumber from room;";
         
         ResultSet rs = stmt.executeQuery(sql);
         int roomCount = 0;

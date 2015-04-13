@@ -26,7 +26,7 @@ import org.junit.Test;
 
 /**
  *
- * @author Benjamin
+ * @author Jonas
  */
 public class RoomControlTest {
     
@@ -90,8 +90,7 @@ public class RoomControlTest {
         ObservableList<Room> rooms = FXCollections.observableArrayList();
         Room testRoom1 = new Room("test3", 1);
         Room testRoom2 = new Room("test4", 2);
-        rooms.add(0, testRoom1);
-        rooms.add(1, testRoom2);
+        rooms.addAll(testRoom1, testRoom2);
         
         //Indsæt data i databasen.
         try {
@@ -134,7 +133,7 @@ public class RoomControlTest {
         //Resultat.
         assertEquals(errorMessage, hasFailedExpected, hasFailedActual);
         System.out.println(errorMessage + "Forventet boolean værdi: " + hasFailedExpected 
-                + ", faktisk boolean værdi: " +hasFailedActual);
+                + ", faktisk boolean værdi: " +hasFailedActual + ".");
         
     }
 
@@ -174,6 +173,7 @@ public class RoomControlTest {
         }
         ArrayList<Room> rooms = new ArrayList<>();
         
+        //Henter rum fra databasen.
         try {
             rooms = rc.getRooms();
         } catch (SQLException ex) {
@@ -200,7 +200,7 @@ public class RoomControlTest {
         //Resultat
         assertEquals(errorMessage, hasFailedExpected, hasFailedActual);
         System.out.println(errorMessage + "Forventet boolean værdi: " + hasFailedExpected 
-                + ", faktisk boolean værdi: " +hasFailedActual);
+                + ", faktisk boolean værdi: " +hasFailedActual + ".");
     }
     
 }
