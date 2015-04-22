@@ -41,6 +41,9 @@ public class Frontpage extends Application {
     private PopupMenuButton createEmployee, createQualificationButton, createRoomButton,
             createStudent, createShift;
     
+    //objekt af Schedule
+    private Schedule schedule = new Schedule();
+    
     
     public static void main(String[] args) {
         launch(args);
@@ -88,7 +91,7 @@ public class Frontpage extends Application {
         hMenuLayout.setAlignment(Pos.CENTER_LEFT);
 
         vMainLayout.setAlignment(Pos.TOP_LEFT);
-        vMainLayout.getChildren().add(hMenuLayout);
+        vMainLayout.getChildren().addAll(hMenuLayout, schedule);
 
         window.setScene(frontPageScene);
         window.show();
@@ -139,5 +142,7 @@ public class Frontpage extends Application {
         for (PopupMenuButton menuButton : menuButtons) {
             hMenuLayout.getChildren().add(menuButton);
         }
+        
+        
     }
 }
