@@ -13,10 +13,16 @@ package model;
 public class Room {
     private String roomName;
     private int roomState;
+    private int minOccupation;
+    private int maxOccupation;
+    private int count;
     
-    public Room (String roomName, int roomState) {
+    public Room (String roomName, int roomState, int minOccupation, int maxOccupation) {
         this.roomName = roomName;
         this.roomState = roomState;
+        this.minOccupation = minOccupation;
+        this.maxOccupation = maxOccupation;
+        count = 0;
     }
 
     public String getRoomName() {
@@ -37,17 +43,46 @@ public class Room {
     
     private String getRoomStateString() {
         String roomStateString = "";
-        if (roomState == 1) {
-            roomStateString = "Åbent";
-        } else if (roomState == 2) {
-            roomStateString = "Lukket";
-        } else if (roomState == 3) {
-            roomStateString = "Service";
-        }
+//        if (roomState == 1) {
+//            roomStateString = "Åbent";
+//        } else if (roomState == 2) {
+//            roomStateString = "Lukket";
+//        } else if (roomState == 3) {
+//            roomStateString = "Service";
+//        }
         return roomStateString;
     }   
+
+    public int getMinOccupation() {
+        return minOccupation;
+    }
+
+    public void setMinOccupation(int minOccupation) {
+        this.minOccupation = minOccupation;
+    }
+
+    public int getMaxOccupation() {
+        return maxOccupation;
+    }
+
+    public void setMaxOccupation(int maxOccupation) {
+        this.maxOccupation = maxOccupation;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
     
+    public void increment(){
+        count++;
+    }
+    
+    @Override
     public String toString() {
-        return roomName +  "\n" + getRoomStateString();
+        return roomName + " (" + count + ")";
     }
 }
