@@ -13,10 +13,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import model.Employee;
 import model.Qualification;
-import model.QualificationType;
 import model.Room;
 import model.RoomQualification;
-import model.SingleQualification;
+import model.LimitQualification;
 
 /**
  *
@@ -47,7 +46,7 @@ public class QualificationHandler {
                 Employee employee = EmployeeHandler.getInstance().getEmployee(employeeId);
                 
 
-                roomQualifications.add(new RoomQualification(id, training, employee, room));
+                //roomQualifications.add(new RoomQualification(id, training, employee, room));
             }
 
             stmt.close();
@@ -60,8 +59,8 @@ public class QualificationHandler {
         return roomQualifications;
     }
 
-    public ArrayList<SingleQualification> getSingleQualifications(Employee employee) throws ClassNotFoundException {
-        ArrayList<SingleQualification> singleQualifications = new ArrayList<>();
+    public ArrayList<LimitQualification> getSingleQualifications(Employee employee) throws ClassNotFoundException {
+        ArrayList<LimitQualification> singleQualifications = new ArrayList<>();
         try {
             java.sql.Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
@@ -72,7 +71,7 @@ public class QualificationHandler {
                 int id = rs.getInt("id");
                 Boolean training = rs.getBoolean("training");
                 
-                singleQualifications.add(new SingleQualification(id, training, employee));
+                //singleQualifications.add(new LimitQualification(id, training, employee));
             }
 
             stmt.close();
@@ -122,20 +121,20 @@ public class QualificationHandler {
 //
 //    }
 
-    public void createQualification(QualificationType type, Boolean training, Room room) {
-        try {
-            java.sql.Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
-
-            String SQL = "insert into qualification(qualiTypeId, training, roomId) values (";
-            SQL += type + "," + training + "," + room +")";
-
-            stmt.execute(SQL);
-            stmt.close();
-        } catch (SQLException ex) {
-            System.out.println("SQL FEJL: " + ex.getMessage());
-        }
-
-    }
+//    public void createQualification(QualificationType type, Boolean training, Room room) {
+//        try {
+//            java.sql.Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
+//
+//            String SQL = "insert into qualification(qualiTypeId, training, roomId) values (";
+//            SQL += type + "," + training + "," + room +")";
+//
+//            stmt.execute(SQL);
+//            stmt.close();
+//        } catch (SQLException ex) {
+//            System.out.println("SQL FEJL: " + ex.getMessage());
+//        }
+//
+//    }
 
     public static QualificationHandler getInstance() {
         if (instance == null) {

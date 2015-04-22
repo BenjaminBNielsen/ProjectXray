@@ -69,8 +69,10 @@ public class RoomHandler {
         while (rs.next()) {
             String roomName = ("roomName");
             int roomState = rs.getInt("roomState");
+            int minOccupation = rs.getInt("minOccupation");
+            int maxOccupation = rs.getInt("maxOccupation");
 
-            rooms.add(new Room(roomName, roomState));
+            rooms.add(new Room(roomName, roomState,minOccupation,maxOccupation));
         }
 
         rs.close();
@@ -89,8 +91,10 @@ public class RoomHandler {
 
         if (rs.next()) {
             int roomState = rs.getInt("roomState");
-
-            room = new Room(roomName, roomState); 
+            int minOccupation = rs.getInt("minOccupation");
+            int maxOccupation = rs.getInt("maxOccupation");
+            
+            room = new Room(roomName, roomState,minOccupation,maxOccupation); 
         }
 
         rs.close();

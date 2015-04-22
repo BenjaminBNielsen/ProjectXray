@@ -11,7 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import model.Employee;
-import model.Shift;
+import model.TimeInvestment;
 import org.joda.time.Hours;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Minutes;
@@ -42,7 +42,7 @@ public class ShiftPanel extends HBox {
     //Label:
     private Label lDayName;
 
-    private Shift shift;
+    private TimeInvestment shift;
 
     //SettingsPopup
     ShiftPanelConfig configPanel;
@@ -63,11 +63,11 @@ public class ShiftPanel extends HBox {
 
     }
 
-    public Shift getShift() {
+    public TimeInvestment getShift() {
         return shift;
     }
 
-    public void setShift(Shift shift) {
+    public void setShift(TimeInvestment shift) {
         this.shift = shift;
     }
 
@@ -84,7 +84,6 @@ public class ShiftPanel extends HBox {
         dayShift = new Button("Dagvagt");
         dayShift.setOnAction(e -> {
 
-            int id = 1;
             //For at finde datoen og tiden på ugen skal der lægges nogle elementer til.
             //Først lægges dayOfWeek til en ny variabel d. Så hvis det fx er onsdag er
             //dayOfWeek 3 og der lægges derfor 3-1 til mandagen som er dayOfWeek 1,
@@ -93,18 +92,17 @@ public class ShiftPanel extends HBox {
             //Dernæst defineres starttidspunktet. Dagsvagter starter per default 8:30.
             d = d.plusHours(8);
             d = d.plusMinutes(30);
-            shift = new Shift(id, DAY_HOURS, DAY_MINUTES, d, employee);
+            shift = new TimeInvestment(DAY_HOURS, DAY_MINUTES, d, employee, null);
 
             settingsButton.setDisable(false);
         });
 
         eveningShift = new Button("Aftenvagt");
         eveningShift.setOnAction(e -> {
-            int id = 1;
             LocalDateTime d = startTime.plusDays(dayOfWeek - 1);
             d = d.plusHours(15);
             d = d.plusMinutes(15);
-            shift = new Shift(id, DAY_HOURS, DAY_MINUTES, d, employee);
+            shift = new TimeInvestment(DAY_HOURS, DAY_MINUTES, d, employee, null);
 
             settingsButton.setDisable(false);
         });
@@ -115,7 +113,7 @@ public class ShiftPanel extends HBox {
             LocalDateTime d = startTime.plusDays(dayOfWeek - 1);
             d = d.plusHours(23);
             d = d.plusMinutes(30);
-            shift = new Shift(id, DAY_HOURS, DAY_MINUTES, d, employee);
+            shift = new TimeInvestment(DAY_HOURS, DAY_MINUTES, d, employee, null);
 
             settingsButton.setDisable(false);
 
@@ -133,7 +131,7 @@ public class ShiftPanel extends HBox {
     private void makeChange() {
         boolean inputError = false;
 
-        LocalDateTime ldt = shift.getLocalDateTime();
+        LocalDateTime ldt = shift.getStartTime();
 
         //Nulstiller timer.
         ldt = ldt.minusHours(ldt.getHourOfDay());
@@ -141,7 +139,7 @@ public class ShiftPanel extends HBox {
         //Nulstiller minuttet.
         ldt = ldt.minusMinutes(ldt.getMinuteOfHour());
 
-        shift.setLocalDateTime(ldt);
+        shift.setStartTime(ldt);
 
         //Dernæst skal det som der er indtastet i configpopuppen tilføjes til 
         //den nulstillede dato.

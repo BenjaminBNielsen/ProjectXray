@@ -1,7 +1,6 @@
 package view;
 
 import view.popups.RoomPopup;
-import view.popups.QualificationPopup;
 import view.popups.EmployeePopup;
 import view.popups.DatabasePopup;
 import control.Xray;
@@ -19,7 +18,6 @@ import javafx.scene.*;
 import javafx.scene.layout.*;
 import javafx.stage.*;
 import view.buttons.PopupMenuButton;
-import view.popups.QualificationTypePopup;
 import view.popups.StudentPopup;
 import view.popups.shift.ShiftPopup;
 
@@ -119,16 +117,16 @@ public class Frontpage extends Application {
         
         createQualificationButton = new PopupMenuButton("Opret kvalifikation");
         createQualificationButton.setOnAction(e -> {
-            QualificationTypePopup qualificationTypeWindow = new QualificationTypePopup();
-            qualificationTypeWindow.display("Kvalifikationer");
+            //QualificationTypePopup qualificationTypeWindow = new QualificationTypePopup();
+            //qualificationTypeWindow.display("Kvalifikationer");
 
         });
         menuButtons.add(createQualificationButton);
 
         createRoomButton = new PopupMenuButton("Opret rum");
         createRoomButton.setOnAction(e -> {
-            RoomPopup roomWindow = new RoomPopup();
-            roomWindow.display("Rum");
+//            RoomPopup roomWindow = new RoomPopup();
+//            roomWindow.display("Rum");
         });
         menuButtons.add(createRoomButton);
         
