@@ -85,7 +85,8 @@ public class RoomPopup extends PopupWindow {
             roomNameInsert = tFRoomName.getText();
 
                             roomStateInsert = cBRoomState.getSelectionModel().getSelectedIndex() + 1;
-                            rooms.add(new Room(roomNameInsert, roomStateInsert));
+                            //DER MANGLER MINIMUM OG MAXIMUM
+                            //rooms.add(new Room(roomNameInsert, roomStateInsert));
                             roomView.setItems(rooms);
 
 
