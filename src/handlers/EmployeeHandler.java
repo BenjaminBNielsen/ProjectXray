@@ -104,7 +104,7 @@ public class EmployeeHandler {
             String firstName = rs.getString("firstName");
             String lastName = rs.getString("lastName");
             int telephone = rs.getInt("telephone");
-            String address = rs.getString("adress");
+            String address = rs.getString("address");
             String mail = rs.getString("mail");
             Occupation occupation = OccupationHandler.getInstance().
                     getOccupation(rs.getInt("occupationId"));
