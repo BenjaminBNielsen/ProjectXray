@@ -1,4 +1,4 @@
-/*
+    /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -47,5 +47,23 @@ public class OccupationHandler {
             System.out.println(occupation);
         }
         return occupations;
+    }
+    
+    public Occupation getOccupation(int id) throws SQLException {
+        Occupation occupation = null;
+        
+        Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
+        
+        String sql = "select * from occupation where id = " + id;
+        
+        ResultSet rs = stmt.executeQuery(sql);
+        
+        if (rs.next()) {
+            String desc = rs.getString("description");
+            occupation = new Occupation(id, desc);
+        }
+        
+        
+        return occupation;
     }
 }

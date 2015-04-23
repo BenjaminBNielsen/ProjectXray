@@ -42,12 +42,12 @@ public class RoomControl {
         RoomHandler.getInstance().addRooms(rooms);
     }
     
-    public ArrayList getRooms(ArrayList<Room> rooms) throws SQLException, ClassNotFoundException {
+    public ArrayList getRooms() throws SQLException, ClassNotFoundException {
         return RoomHandler.getInstance().getRooms();
     }
     
-    public Room getRoom(int roomNumber) throws SQLException, ClassNotFoundException {
-        return RoomHandler.getInstance().getRoom(roomNumber);
-    }
+//    public Room getRoom(int roomNumber) throws SQLException, ClassNotFoundException {
+//        return RoomHandler.getInstance().getRoom(roomNumber);
+//    }
     
 }

@@ -43,7 +43,17 @@ public class Xray {
         databaseConnection = DatabaseConnection.getInstance().getConnection();
         
     }
-    
+
+//    public void createConnection() throws FileNotFoundException, SQLException, ClassNotFoundException {
+//        //Opret forbindelse til databasen
+//        if (!DatabaseConnection.getInstance().hasConnection()) {
+//            DatabaseConnection.getInstance().createConnection();
+//        }
+//
+//        databaseConnection = DatabaseConnection.getInstance().getConnection();
+//
+//    }
+
     public static Xray getInstance() throws SQLException, ClassNotFoundException {
         if (Instance == null) {
             Instance = new Xray();
@@ -66,9 +76,9 @@ public class Xray {
     public void setQualificationControl(QualificationControl qualificationControl) {
         this.qualificationControl = qualificationControl;
     }
-    
-    public PersonControl getPersonControl(){
+
+    public PersonControl getPersonControl() {
         return personControl;
     }
-    
+
 }

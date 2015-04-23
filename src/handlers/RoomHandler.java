@@ -38,13 +38,13 @@ public class RoomHandler {
         
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
-        String sql = "insert into room(roomNumber, roomName, roomState) values";
+        String sql = "insert into room(roomName, roomState) values";
         //String sql = "insert into room() values(" + roomNumber + ",'"
         //        + roomName + "'," + roomState + ");";
         
         for (int i = 0; i < rooms.size(); i++) {
                 Room tempRoom = rooms.get(i);
-                sql += "(" + tempRoom.getRoomNumber() + ",' " + tempRoom.getRoomName();
+                sql += "('" + tempRoom.getRoomName();
                 sql += "'," + tempRoom.getRoomState();
                 if (i == rooms.size() - 1) {
                     sql += ");";
@@ -67,11 +67,10 @@ public class RoomHandler {
         ResultSet rs = stmt.executeQuery(sql);
 
         while (rs.next()) {
-            int roomNumber = rs.getInt("roomNumber");
             String roomName = ("roomName");
             int roomState = rs.getInt("roomState");
 
-            rooms.add(new Room(roomNumber, roomName, roomState));
+            rooms.add(new Room(roomName, roomState));
         }
 
         rs.close();
@@ -80,19 +79,18 @@ public class RoomHandler {
         return rooms;
     }
     
-    public Room getRoom(int roomNumber) throws SQLException, ClassNotFoundException{
+    public Room getRoom(String roomName) throws SQLException, ClassNotFoundException{
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
         Room room = null;
         
-        String sql = "Select * from qualification where roomnumber = " + roomNumber;
+        String sql = "Select * from qualification where roomname = " + roomName;
 
         ResultSet rs = stmt.executeQuery(sql);
 
         if (rs.next()) {
-            String roomName = ("roomName");
             int roomState = rs.getInt("roomState");
 
-            room = new Room(roomNumber, roomName, roomState); 
+            room = new Room(roomName, roomState); 
         }
 
         rs.close();

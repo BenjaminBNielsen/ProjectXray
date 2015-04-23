@@ -14,6 +14,8 @@ import model.Employee;
 import model.Qualification;
 import model.QualificationType;
 import model.Room;
+import model.RoomQualification;
+import model.SingleQualification;
 
 /**
  *
@@ -39,29 +41,35 @@ public class QualificationControl {
         
     }
     
-    public ArrayList<Qualification> getQualifications(){
-        return QualificationHandler.getInstance().getQualifications();
+//    public ArrayList<Qualification> getQualifications(){
+//        return QualificationHandler.getInstance().getRoomQualifications();
+//        
+//    }
+    
+    public ArrayList<SingleQualification> getSingleQualifications(Employee employee) throws ClassNotFoundException{
+        return QualificationHandler.getInstance().getSingleQualifications(employee);
         
     }
     
-    public ArrayList<Qualification> getEmployeeQualifications(Employee selectedEmployee) throws ClassNotFoundException{
-        return QualificationHandler.getInstance().getEmployeeQualifications(selectedEmployee);
-        
-    }
-    
-    public ArrayList<Qualification> getQualificationsForSeveralEmployees(ArrayList<Employee> employees) throws ClassNotFoundException{
-        return QualificationHandler.getInstance().getQualificationsForSeveralEmployees(employees);
-        
-    }
-    
-    public ArrayList<Qualification> getRoomQualifications(Room room) throws ClassNotFoundException{
+        public ArrayList<RoomQualification> getRoomQualifications(Room room) throws ClassNotFoundException{
         return QualificationHandler.getInstance().getRoomQualifications(room);
         
     }
-    
-    public void setEmployeeQualifications(ArrayList<Qualification> selectedQualifications){
-        QualificationHandler.getInstance().setEmployeeQualifications(selectedQualifications);
-    }
-    
+        
+//    public ArrayList<Qualification> getQualificationsForSeveralEmployees(ArrayList<Employee> employees) throws ClassNotFoundException{
+//        return QualificationHandler.getInstance().getQualificationsForSeveralEmployees(employees);
+//        
+//    }
+//    
+
+//    
+//    public void setEmployeeQualifications(ArrayList<Qualification> selectedQualifications){
+//        QualificationHandler.getInstance().setEmployeeQualifications(selectedQualifications);
+//    }
+//    
+        
+        public int getQTRow() throws SQLException, ClassNotFoundException{
+            return QualificationTypeHandler.getInstance().getQTRow();
+        }
     
 }

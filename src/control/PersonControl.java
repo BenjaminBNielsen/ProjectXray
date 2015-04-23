@@ -26,15 +26,9 @@ public class PersonControl {
         EmployeeHandler.getInstance().addEmployees(employees);
     }
 
-    public void addStudents(ArrayList<Student> students) throws SQLException, ClassNotFoundException {
+    public void addStudents(ObservableList<Student> students) throws SQLException, ClassNotFoundException {
 
-        for (Student student : students) {
-            String firstName = student.getFirstName();
-            String lastName = student.getLastName();
-            int module = student.getModule();
-
-            StudentHandler.getInstance().addStudent(firstName, lastName, module);
-        }
+        StudentHandler.getInstance().addStudents(students);
     }
 
     public ArrayList<Employee> getEmployees() throws SQLException, ClassNotFoundException {

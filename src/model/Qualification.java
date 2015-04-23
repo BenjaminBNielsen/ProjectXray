@@ -11,49 +11,24 @@ package model;
  */
 public class Qualification {
 
-    private QualificationType type;
+    private int id;
     private boolean training;
-    private Employee employee;
-    private Room room;
 
-    public Qualification(QualificationType type, boolean training) {
-        this.type = type;
+    public Qualification(int id, boolean training) {
+        this.id = id;
         this.training = training;
     }
 
-    public Qualification(QualificationType type, boolean training, Employee employee, Room room) {
-        this.type = type;
-        this.training = training;
-        this.employee = employee;
-        this.room = room;
-    }
-
-    public void setRoom(Room room) {
-        this.room = room;
-    }
-
-    public Room getRoom() {
-        return room;
-    }
-
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
-    }
-
-    public Employee getEmployee() {
-        return employee;
-    }
-
-    public QualificationType getType() {
-        return type;
+    public int getId() {
+        return id;
     }
 
     public boolean isTraining() {
         return training;
     }
 
-    public void setqName(QualificationType type) {
-        this.type = type;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setTraining(boolean training) {
@@ -62,21 +37,9 @@ public class Qualification {
     
     @Override
     public String toString() {
-        String qName = type.getType();
-        String train, emp;
-        if(training == true){
-            train = "  (træning)";
-        }else{
-            train = "";
-        }
-        if(employee == null){
-            emp = "";
-        }else{
-            emp = "/n | " + employee.toString();
-        }
-        
-        
-        return "| " + qName + train + emp + " | " +"\n" + room.toString() + ".";
+        String s = "røntgen";
+    return s;
     }
+       
 
 }

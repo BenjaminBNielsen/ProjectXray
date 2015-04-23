@@ -26,5 +26,8 @@ public class Student extends Person {
         this.module = module;
     }
 
+    public String toString(){
+        return super.getFirstName() + ": " + super.getId();
+    }
     
 }

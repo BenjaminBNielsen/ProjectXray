@@ -20,6 +20,8 @@ import javafx.scene.layout.*;
 import javafx.stage.*;
 import view.buttons.PopupMenuButton;
 import view.popups.QualificationTypePopup;
+import view.popups.StudentPopup;
+import view.popups.shift.ShiftPopup;
 
 public class Frontpage extends Application {
 
@@ -37,7 +39,7 @@ public class Frontpage extends Application {
 
     //buttons:
     private PopupMenuButton createEmployee, createQualificationButton, createRoomButton,
-            createStudent;
+            createStudent, createShift;
     
     
     public static void main(String[] args) {
@@ -53,14 +55,13 @@ public class Frontpage extends Application {
             Xray.getInstance().createConnection();
         } catch (SQLException ex) {
             DatabasePopup dbp = new DatabasePopup();
-            dbp.display("1");
+            dbp.display("Ingen forbindelse til database");
         } catch (ClassNotFoundException ex) {
             DatabasePopup dbp = new DatabasePopup();
-            dbp.display("2");
+            dbp.display("Database library skal tilføjes");
         } catch (FileNotFoundException ex) {
             DatabasePopup dbp = new DatabasePopup();
-            dbp.display("3");
-            dbp.getStage().initStyle(StageStyle.UTILITY);
+            dbp.display("Databasefil mangler");
         }
         if (DatabaseConnection.getInstance().hasConnection()) {
             initNodes(window);
@@ -108,7 +109,6 @@ public class Frontpage extends Application {
         
         createStudent = new PopupMenuButton("Opret studerende");
         createStudent.setOnAction(e -> {
-            System.out.println("hey");
         });
         menuButtons.add(createStudent);
         
@@ -126,7 +126,6 @@ public class Frontpage extends Application {
             roomWindow.display("Rum");
         });
         menuButtons.add(createRoomButton);
-
         for (PopupMenuButton menuButton : menuButtons) {
             hMenuLayout.getChildren().add(menuButton);
         }

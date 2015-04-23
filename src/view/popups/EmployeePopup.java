@@ -21,8 +21,6 @@ import view.buttons.AddButton;
 import view.buttons.SettingsButton;
 
 public class EmployeePopup extends PopupWindow {
-    public static final int COLUMN_STANDARD_WIDTH = 200;
-
     //Layouts
     private VBox contentEmployee, addEmployeePane, middleContentPane;
 
@@ -84,7 +82,9 @@ public class EmployeePopup extends PopupWindow {
             try {
                 Xray.getInstance().getPersonControl().addEmployees(employees);
             } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
             } catch (ClassNotFoundException ex) {
+                System.out.println(ex.getMessage());
             }
         });
         super.addToBottomHBox(addEmployee);
@@ -176,13 +176,12 @@ public class EmployeePopup extends PopupWindow {
     }
 
     private void initComboBoxes() {
-        ObservableList<Occupation> occupations = FXCollections.observableArrayList();
         try {
-            occupations = Xray.getInstance().getPersonControl().getOccupations();
+            cOccupation = new ComboBox(Xray.getInstance().getPersonControl().getOccupations());
         } catch (SQLException ex) {
         } catch (ClassNotFoundException ex) {
         }
-        cOccupation = new ComboBox(occupations);
+        
         cOccupation.getSelectionModel().selectFirst();
         cOccupation.setPrefWidth(COLUMN_STANDARD_WIDTH);
     }

@@ -11,24 +11,12 @@ package model;
  * @author Jonas
  */
 public class Room {
-
-    
-    private int roomNumber;
     private String roomName;
     private int roomState;
     
-    public Room (int roomNumber, String roomName, int roomState) {
-        this.roomNumber = roomNumber;
+    public Room (String roomName, int roomState) {
         this.roomName = roomName;
         this.roomState = roomState;
-    }
-
-    public int getRoomNumber() {
-        return roomNumber;
-    }
-
-    public void setRoomNumber(int roomNumber) {
-        this.roomNumber = roomNumber;
     }
 
     public String getRoomName() {
@@ -60,7 +48,6 @@ public class Room {
     }   
     
     public String toString() {
-        return roomName + " : " + roomNumber 
-                + "\n" + getRoomStateString();
+        return roomName +  "\n" + getRoomStateString();
     }
 }
