@@ -1,5 +1,6 @@
 package view;
 
+import view.schema.Schedule;
 import view.popups.RoomPopup;
 import view.popups.EmployeePopup;
 import view.popups.DatabasePopup;
@@ -39,8 +40,7 @@ public class Frontpage extends Application {
     private PopupMenuButton createEmployee, createQualificationButton, createRoomButton,
             createStudent, createShift;
     
-    //objekt af Schedule
-    private Schedule schedule = new Schedule();
+    
     
     
     public static void main(String[] args) {
@@ -89,7 +89,7 @@ public class Frontpage extends Application {
         hMenuLayout.setAlignment(Pos.CENTER_LEFT);
 
         vMainLayout.setAlignment(Pos.TOP_LEFT);
-        vMainLayout.getChildren().addAll(hMenuLayout, schedule);
+        vMainLayout.getChildren().addAll(hMenuLayout);
 
         window.setScene(frontPageScene);
         window.show();
