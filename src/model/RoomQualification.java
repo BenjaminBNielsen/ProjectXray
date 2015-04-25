@@ -13,9 +13,6 @@ import java.util.ArrayList;
  */
 public class RoomQualification extends Qualification {
 
-    private Employee employee;
-    private Room room;
-
     public RoomQualification(int id, boolean training, String type,
             ArrayList<Employee> employees, ArrayList<Room> rooms) {
         super(id, training, type, employees, rooms);
