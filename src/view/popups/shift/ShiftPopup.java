@@ -19,6 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.Employee;
+import model.TimeInvestment;
 import org.joda.time.LocalDateTime;
 import view.buttons.PopupMenuButton;
 import view.popups.ExceptionPopup;
@@ -96,9 +97,21 @@ public class ShiftPopup extends PopupWindow {
     private void initButtons() {
         addShifts = new PopupMenuButton("Tilføj vagter");
         addShifts.setOnAction(e -> {
-            for (ShiftPanel shiftPanel : shiftPanels) {
-                System.out.println(shiftPanel.getShift());
+            ArrayList<TimeInvestment> shifts = new ArrayList<>();
+            for (int i = 0; i < shiftPanels.length; i++) {
+                if(shiftPanels[i].getShift() != null){
+                    shifts.add(shiftPanels[i].getShift());
+                }
+                
             }
+            //TimeInvestmenthandler skal indsætte dem i databasen.
+//            try {
+//                ShiftHandler.getInstance().addShifts(shifts);
+//            } catch (SQLException ex) {
+//                System.out.println(ex.getMessage());
+//            } catch (ClassNotFoundException ex) {
+//                System.out.println(ex.getMessage());
+//            }
         });
     }
 

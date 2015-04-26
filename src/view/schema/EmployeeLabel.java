@@ -3,19 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model;
+package view.schema;
+
+import javafx.scene.control.Label;
+import model.Employee;
 
 /**
  *
- * @author Yousef
+ * @author Benjamin
  */
-public class SingleQualification extends Qualification {
-
+public class EmployeeLabel extends Label{
+ 
     private Employee employee;
-
-    public SingleQualification(int id, boolean training, Employee employee) {
-        super(id, training);
+    
+    public EmployeeLabel(Employee employee){
         this.employee = employee;
+        this.setText(employee.getFirstName() + " " + employee.getLastName());
     }
 
     public Employee getEmployee() {
@@ -25,5 +28,4 @@ public class SingleQualification extends Qualification {
     public void setEmployee(Employee employee) {
         this.employee = employee;
     }
-
 }

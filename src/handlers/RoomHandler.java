@@ -22,7 +22,7 @@ public class RoomHandler {
     private static RoomHandler instance;
     private ArrayList<Room> rooms;
     
-    private RoomHandler() {
+    RoomHandler() {
          rooms = new ArrayList<>();
     }
     
@@ -69,8 +69,10 @@ public class RoomHandler {
         while (rs.next()) {
             String roomName = ("roomName");
             int roomState = rs.getInt("roomState");
+            int minOccupation = rs.getInt("minOccupation");
+            int maxOccupation = rs.getInt("maxOccupation");
 
-            rooms.add(new Room(roomName, roomState));
+            rooms.add(new Room(roomName, roomState,minOccupation,maxOccupation));
         }
 
         rs.close();
@@ -83,14 +85,16 @@ public class RoomHandler {
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
         Room room = null;
         
-        String sql = "Select * from qualification where roomname = " + roomName;
+        String sql = "Select * from qualification where roomName = " + roomName;
 
         ResultSet rs = stmt.executeQuery(sql);
 
         if (rs.next()) {
             int roomState = rs.getInt("roomState");
-
-            room = new Room(roomName, roomState); 
+            int minOccupation = rs.getInt("minOccupation");
+            int maxOccupation = rs.getInt("maxOccupation");
+            
+            room = new Room(roomName, roomState,minOccupation,maxOccupation); 
         }
 
         rs.close();
@@ -103,7 +107,7 @@ public class RoomHandler {
         
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
         
-        String sql = "select count(*) from room as rowNumber;";
+        String sql = "select count(*) as rowNumber from room;";
         
         ResultSet rs = stmt.executeQuery(sql);
         int roomCount = 0;

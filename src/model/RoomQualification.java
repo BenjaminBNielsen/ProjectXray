@@ -5,35 +5,25 @@
  */
 package model;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Yousef
  */
-public class RoomQualification extends Qualification{
+public class RoomQualification extends Qualification {
+
     private Employee employee;
     private Room room;
-    
 
-    public RoomQualification(int id, boolean training, Employee employee, Room room) {
-        super(id, training);
-        this.employee = employee;
-        this.room = room;
+    public RoomQualification(int id, boolean training, String type,
+            ArrayList<Employee> employees, ArrayList<Room> rooms) {
+        super(id, training, type, employees, rooms);
     }
 
-    public Employee getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
-    }
-
-    public Room getRoom() {
-        return room;
-    }
-
-    public void setRoom(Room room) {
-        this.room = room;
+    @Override
+    public String toString() {
+        return super.toString();
     }
     
 }

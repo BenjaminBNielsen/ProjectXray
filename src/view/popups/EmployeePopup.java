@@ -134,7 +134,7 @@ public class EmployeePopup extends PopupWindow {
     }
 
     private void initListViews() {
-        employeeView = new ListView<Employee>();
+        employeeView = new ListView<>();
         addEmployeePane.getChildren().add(employeeView);
     }
 
