@@ -6,6 +6,7 @@
 package view.popups.shift;
 
 import control.Xray;
+import handlers.TimeInvestmentHandler;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -104,14 +105,18 @@ public class ShiftPopup extends PopupWindow {
                 }
                 
             }
+            for (int i = 0; i < shifts.size(); i++) {
+                System.out.println(shifts.get(i));
+            }
+            
             //TimeInvestmenthandler skal indsætte dem i databasen.
-//            try {
-//                ShiftHandler.getInstance().addShifts(shifts);
-//            } catch (SQLException ex) {
-//                System.out.println(ex.getMessage());
-//            } catch (ClassNotFoundException ex) {
-//                System.out.println(ex.getMessage());
-//            }
+            try {
+                Xray.getInstance().addTimeInvestments(shifts);
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            } catch (ClassNotFoundException ex) {
+                System.out.println(ex.getMessage());
+            }
         });
     }
 

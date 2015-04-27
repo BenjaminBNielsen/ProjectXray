@@ -6,9 +6,11 @@
 package view.schema;
 
 import java.util.ArrayList;
+import javafx.geometry.Orientation;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import model.Room;
 import model.TimeInvestment;
@@ -18,37 +20,34 @@ import org.joda.time.LocalDateTime;
  *
  * @author Jonas
  */
-public class ScheduleListItem extends HBox{
+public class ScheduleListItem extends TilePane{
+    public static final int AMOUNT_OF_LIST_ITEMS = 8;
     private Room room;
-    private Label roomLabel;
+    private RoomLabel roomLabel;
     
     public ScheduleListItem(Room room, ArrayList<TimeInvestment> shifts, LocalDateTime startTime) {
         this.room = room;
-        roomLabel = new Label(room.getRoomName());
+        this.setOrientation(Orientation.HORIZONTAL);
         
+        roomLabel = new RoomLabel(room.getRoomName());
+        
+        roomLabel.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         //Tilføj rumnavn til venstre.
         this.getChildren().add(roomLabel);
         
-        //Tilføj mandagens vagter.
-        this.getChildren().add(new ShiftTile(getShiftsOnDate(startTime, shifts)));
+        //Tilføj vagter til dagene på ugen. i0 = mandag, i6 = søndag.
+        for (int i = 0; i < 7; i++) {
+            ShiftTile shiftTile = new ShiftTile(getShiftsOnDate(startTime.plusDays(i), shifts), 155);
+            shiftTile.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+            this.getChildren().add(shiftTile);
+        }
         
-        //Tilføj tirsdagens vagter.
-        this.getChildren().add(new ShiftTile(getShiftsOnDate(startTime.plusDays(1), shifts)));
+        //Løb alle tiles igennem for at give dem en sort border.
+        for (int i = 0; i < this.getChildren().size(); i++) {
+            this.getChildren().get(i).setStyle("-fx-border-color: black;");
+            
+        }
         
-        //Onsdag:
-        this.getChildren().add(new ShiftTile(getShiftsOnDate(startTime.plusDays(2), shifts)));
-        
-        //Torsdag:
-        this.getChildren().add(new ShiftTile(getShiftsOnDate(startTime.plusDays(3), shifts)));
-        
-        //Fredag:
-        this.getChildren().add(new ShiftTile(getShiftsOnDate(startTime.plusDays(4), shifts)));
-        
-        //Lørdag:
-        this.getChildren().add(new ShiftTile(getShiftsOnDate(startTime.plusDays(5), shifts)));
-        
-        //Søndag:
-        this.getChildren().add(new ShiftTile(getShiftsOnDate(startTime.plusDays(6), shifts)));
     }
     
     private ArrayList<TimeInvestment> getShiftsOnDate(LocalDateTime date, ArrayList<TimeInvestment> shifts){

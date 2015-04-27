@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -34,8 +35,6 @@ import view.popups.ExceptionPopup;
  */
 public class Schedule extends ListView {
 
-    private ScheduleListItem vBoxMon, vBoxTues, vBoxWed, vBoxThurs, vBoxFri, vBoxSat, vBoxSun;
-    private HBox vBoxContainer = new HBox();
     private ArrayList<Room> rooms = new ArrayList<>();
     private ArrayList<TimeInvestment> timeInvestments;
     private ObservableList<ScheduleListItem> scheduleListItems = FXCollections.observableArrayList();
@@ -45,9 +44,11 @@ public class Schedule extends ListView {
     public Schedule(ArrayList<TimeInvestment> timeInvestments, LocalDateTime startTime) {
         this.timeInvestments = timeInvestments;
         this.startTime = startTime;
-
+        this.setEditable(false);
+        this.setFocusTraversable(false);
+        
         try {
-            this.addShiftTiles();
+            addShiftTiles();
         } catch (SQLException ex) {
             exceptionPopup.display("I forbindelse med indhentning af rum fra databasen"
                     + " er der sket en fejl, kontakt din systemadministrator. SQL gav"
@@ -61,8 +62,6 @@ public class Schedule extends ListView {
 
     public void addShiftTiles() throws SQLException, ClassNotFoundException {
 
-        vBoxContainer.getChildren().addAll(vBoxMon, vBoxTues, vBoxWed, vBoxThurs, vBoxFri, vBoxSat, vBoxSun);
-
         rooms = Xray.getInstance().getRoomControl().getRooms();
 
         for (int i = 0; i < rooms.size(); i++) {
@@ -70,7 +69,7 @@ public class Schedule extends ListView {
 
             scheduleListItems.add(new ScheduleListItem(rooms.get(i), shiftsOnRoom, startTime));
         }
-        
+
         this.setItems(scheduleListItems);
 
     }
@@ -79,8 +78,10 @@ public class Schedule extends ListView {
         ArrayList<TimeInvestment> shiftsOnRoom = new ArrayList<>();
 
         for (int i = 0; i < timeInvestments.size(); i++) {
-            if (timeInvestments.get(i).getRoom().getRoomName().equals(room.getRoomName())) {
-                shiftsOnRoom.add(timeInvestments.get(i));
+            if (timeInvestments.get(i).getRoom() != null) {
+                if (timeInvestments.get(i).getRoom().getRoomName().equals(room.getRoomName())) {
+                    shiftsOnRoom.add(timeInvestments.get(i));
+                }
             }
         }
 

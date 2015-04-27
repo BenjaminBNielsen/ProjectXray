@@ -67,7 +67,7 @@ public class RoomHandler {
         ResultSet rs = stmt.executeQuery(sql);
 
         while (rs.next()) {
-            String roomName = ("roomName");
+            String roomName = rs.getString("roomName");
             int roomState = rs.getInt("roomState");
             int minOccupation = rs.getInt("minOccupation");
             int maxOccupation = rs.getInt("maxOccupation");
