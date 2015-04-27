@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import model.Employee;
 import model.Qualification;
 import model.Room;
@@ -24,12 +25,13 @@ import model.LimitQualification;
 public class QualificationHandler {
 
     private static QualificationHandler instance;
-    private ArrayList<Qualification> qualifications;
+    private ArrayList<RoomQualification> roomQualifications;
+    private ArrayList<LimitQualification> limitQualifications;
 
     private QualificationHandler() {
     }
 
-    public ArrayList<RoomQualification> getRoomQualifications(Room room) throws ClassNotFoundException {
+    public ArrayList<RoomQualification> getRoomQualificationsFromRoom(Room room) throws ClassNotFoundException {
         ArrayList<RoomQualification> roomQualifications = new ArrayList<>();
         try {
             java.sql.Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
@@ -54,6 +56,83 @@ public class QualificationHandler {
         } catch (SQLException ex) {
             System.out.println("SQL Fejl: " + ex.getMessage());
 
+        }
+
+        return roomQualifications;
+    }
+    
+     public ArrayList<RoomQualification> getRoomQualifications() {
+        ArrayList<RoomQualification> roomQualifications = new ArrayList<>();
+        try {
+            Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
+
+            String SQL = "select * from roomQualification, qualification where "
+                    + "roomQualification.id = qualification.id;";
+            System.out.println(SQL);
+            ResultSet rs = stmt.executeQuery(SQL);
+
+            while (rs.next()) {
+                int id = rs.getInt("qualification.id");
+                String type = rs.getString("type");
+                Boolean training = rs.getBoolean("training");
+                
+                Statement stmtEmployees = DatabaseConnection.getInstance().getConnection().createStatement();
+                String sql = "select * from qualToEmp where qualId = " + id;
+                System.out.println(sql);
+                ArrayList<Employee> qualEmployees = new ArrayList<>();
+                
+                ResultSet rsEmployees = stmtEmployees.executeQuery(sql);
+                
+                while(rsEmployees.next()){
+                    System.out.println(rsEmployees.getRow());
+                    int empId = rsEmployees.getInt("employeeNr");
+                    qualEmployees.add(EmployeeHandler.getInstance().getEmployee(empId));
+                }
+                System.out.println("----------");
+                for (int i = 0; i < qualEmployees.size(); i++) {
+                    System.out.println(qualEmployees.get(i));
+                    
+                }
+                System.out.println("----------");
+                
+                stmtEmployees.close();
+                rsEmployees.close();
+                
+                Statement stmtRooms = DatabaseConnection.getInstance().getConnection().createStatement();
+                sql = "select * from qualToRoom where qualId = " + id;
+                System.out.println(sql);
+                ArrayList<Room> qualRooms = new ArrayList<>();
+                
+                ResultSet rsRooms = stmtRooms.executeQuery(sql);
+                
+                while(rsRooms.next()){
+                    System.out.println(rsRooms.getRow());
+                    String roomName = rsRooms.getString("roomName");
+                    qualRooms.add(RoomHandler.getInstance().getRoom(roomName));
+                }
+                
+                stmtRooms.close();
+                rsRooms.close();
+                
+                roomQualifications.add(new RoomQualification(id, type, qualEmployees, qualRooms));
+            }
+            
+            for (int i = 0; i < roomQualifications.size(); i++) {
+                System.out.println(roomQualifications.get(i));
+                System.out.println(Arrays.asList(roomQualifications.get(i).getEmployees().toArray()));
+                System.out.println(Arrays.asList(roomQualifications.get(i).getRooms().toArray()));
+                
+            }
+
+            stmt.close();
+            rs.close();
+        } catch (SQLException ex) {
+            System.out.println("SQL Fejl: " + ex.getMessage());
+
+        } catch(ClassNotFoundException ex){
+            System.out.println("DET VIRKER IKKE DET LOOORT");
+        } catch(Exception ex){
+            System.out.println("LORTET VIRKER STADIG IKKE");
         }
 
         return roomQualifications;
