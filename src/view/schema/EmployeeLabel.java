@@ -5,27 +5,33 @@
  */
 package view.schema;
 
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import model.Employee;
+import model.TimeInvestment;
 
 /**
  *
  * @author Benjamin
  */
-public class EmployeeLabel extends Label{
+public class EmployeeLabel extends Button{
  
-    private Employee employee;
+    private TimeInvestment shift;
     
-    public EmployeeLabel(Employee employee){
-        this.employee = employee;
-        this.setText(employee.getFirstName() + " " + employee.getLastName());
+    public EmployeeLabel(TimeInvestment shift){
+        this.shift = shift;
+        this.setText(shift.getEmployee().getFirstName() + " " + shift.getEmployee().getLastName());
+        this.setOnAction(e -> {
+            //new changeShiftPopup("title");
+        });
     }
 
-    public Employee getEmployee() {
-        return employee;
+    public TimeInvestment getShift() {
+        return shift;
     }
 
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
+    public void setShift(TimeInvestment shift) {
+        this.shift = shift;
     }
+    
 }

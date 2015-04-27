@@ -31,8 +31,7 @@ public class ShiftTile extends BorderPane{
 
     private void initLabels() {
         for (int i = 0; i < shifts.size(); i++) {
-            Employee currentShiftEmployee = shifts.get(i).getEmployee();
-            bottomVBox.getChildren().add(new EmployeeLabel(currentShiftEmployee));
+            bottomVBox.getChildren().add(new EmployeeLabel(shifts.get(i)));
         }
     }
 
