@@ -18,7 +18,7 @@ import org.joda.time.LocalDateTime;
 
 /**
  *
- * @author Benjamin
+ * @author Benjamin & Jonas
  */
 public class ShiftTile extends BorderPane{
     
@@ -35,8 +35,7 @@ public class ShiftTile extends BorderPane{
 
     private void initLabels() {
         for (int i = 0; i < shifts.size(); i++) {
-            Employee currentShiftEmployee = shifts.get(i).getEmployee();
-            EmployeeLabel tempLabel = new EmployeeLabel(currentShiftEmployee);
+            EmployeeLabel tempLabel = new EmployeeLabel(shifts.get(i));
             LocalDateTime tempShift = shifts.get(i).getStartTime();
             //Hours.
             LocalDateTime tempShiftEveningStart = tempShift.withField(DateTimeFieldType.hourOfDay(), ShiftPeriodConstants.EVENING_SHIFT_HOURS_START.getHours());
