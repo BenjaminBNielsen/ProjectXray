@@ -12,8 +12,12 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import static javafx.scene.paint.Color.*;
 import model.Employee;
 import model.TimeInvestment;
+import org.joda.time.DateTimeFieldType;
+import org.joda.time.LocalDateTime;
 
 /**
  *
@@ -35,7 +39,26 @@ public class ShiftTile extends BorderPane{
 
     private void initLabels() {
         for (int i = 0; i < shifts.size(); i++) {
-            bottomVbox.getChildren().add(new EmployeeLabel(shifts.get(i)));
+            Employee currentShiftEmployee = shifts.get(i).getEmployee();
+            EmployeeLabel tempLabel = new EmployeeLabel(currentShiftEmployee);
+            LocalDateTime tempShift = shifts.get(i).getStartTime();
+            //Hours.
+            LocalDateTime tempShiftEveningStart = tempShift.withField(DateTimeFieldType.hourOfDay(), ShiftPeriodConstants.EVENING_SHIFT_HOURS_START.getHours());
+            LocalDateTime tempShiftNightStart = tempShift.withField(DateTimeFieldType.hourOfDay(), ShiftPeriodConstants.NIGHT_SHIFT_HOURS_START.getHours());
+            LocalDateTime tempShiftDayStart = tempShift.withField(DateTimeFieldType.hourOfDay(), ShiftPeriodConstants.DAY_SHIFT_HOURS_START.getHours());
+            //Minutes.
+            tempShiftEveningStart = tempShiftEveningStart.withField(DateTimeFieldType.minuteOfHour(), ShiftPeriodConstants.EVENING_SHIFT_MINUTES_START.getMinutes());
+            tempShiftNightStart = tempShiftEveningStart.withField(DateTimeFieldType.minuteOfHour(), ShiftPeriodConstants.NIGHT_SHIFT_MINUTES_START.getMinutes());
+            tempShiftDayStart = tempShiftEveningStart.withField(DateTimeFieldType.minuteOfHour(), ShiftPeriodConstants.DAY_SHIFT_MINUTES_START.getMinutes());
+            //Label farve.
+            if (tempShift.isBefore(tempShiftEveningStart) && tempShift.isAfter(tempShiftDayStart) || tempShift.isEqual(tempShiftDayStart)) {
+                tempLabel.setTextFill(BLUE);
+            } else if (tempShift.isBefore(tempShiftNightStart) && tempShift.isAfter(tempShiftEveningStart) || tempShift.isEqual(tempShiftEveningStart)) {
+                tempLabel.setTextFill(GREEN);
+            } else {
+                tempLabel.setTextFill(RED);
+            }
+            bottomVBox.getChildren().add(tempLabel);
         }
     }
 
