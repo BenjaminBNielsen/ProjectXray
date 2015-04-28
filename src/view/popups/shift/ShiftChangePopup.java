@@ -8,9 +8,11 @@ package view.popups.shift;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import model.TimeInvestment;
 import view.buttons.PopupMenuButton;
 import view.popups.PopupWindow;
 
@@ -22,26 +24,34 @@ public class ShiftChangePopup extends PopupWindow {
     
     private PopupMenuButton changeShift;
     private Label lCurrentShiftDate, lCurrentShiftTime, lCurrentShiftRoom, lChangeToRoom, lChangeToDate, lChangeStartTime, lChangeEndTime;
-//    private TextField tCurrentShiftDate, tCurrentShiftTime, tCurrentShiftRoom;
+    private ComboBox  cChangeRoom , cChangeDate, cChangeStartTime, cChangeEndTime;
+//  private TextField tCurrentShiftDate, tCurrentShiftTime, tCurrentShiftRoom;
     
     public ShiftChangePopup(){
         
     }
     
-     public void display(String title) {
+     public void display(String title, TimeInvestment shift) {
         
         
-        lCurrentShiftDate = new Label(""); 
-        lCurrentShiftTime = new Label(""); 
-        lCurrentShiftRoom = new Label(""); 
+        lCurrentShiftDate = new Label("Vagtdato: "+shift.getStartTime()); 
+        lCurrentShiftTime = new Label("Vagttidspunkt: "+shift.getHours()+":"+shift.getMinutes()); 
+        lCurrentShiftRoom = new Label("Rum: "+shift.getRoom()); 
         lChangeToRoom = new Label("Vælg et rum"); 
         lChangeToDate = new Label("Vælg en dato");
         lChangeStartTime = new Label("Vælg et starttidspunkt"); 
-        lChangeEndTime = new Label("Vælg et starttidspunkt"); 
+        lChangeEndTime = new Label("Vælg et starttidspunkt");
+        
+        cChangeRoom = new ComboBox();
+        cChangeDate = new ComboBox();
+        cChangeStartTime = new ComboBox();
+        cChangeEndTime = new ComboBox();
         
 //        tCurrentShiftDate = new TextField();
 //        tCurrentShiftTime = new TextField();
 //        tCurrentShiftRoom = new TextField();
+        
+        
         
         VBox vBox = new VBox(15);
         vBox.setAlignment(Pos.BOTTOM_CENTER);
@@ -51,10 +61,10 @@ public class ShiftChangePopup extends PopupWindow {
         vBox.getChildren().addAll(  lCurrentShiftDate,
                                     lCurrentShiftTime,
                                     lCurrentShiftRoom,
-                                    lChangeToRoom,
-                                    lChangeToDate,
-                                    lChangeStartTime,
-                                    lChangeEndTime
+                                    lChangeToRoom, cChangeRoom,
+                                    lChangeToDate, cChangeDate,
+                                    lChangeStartTime, cChangeStartTime,
+                                    lChangeEndTime, cChangeEndTime
                                     
                                  );
         

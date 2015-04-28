@@ -20,10 +20,8 @@ import model.Room;
 public class RoomHandler {
     
     private static RoomHandler instance;
-    private ArrayList<Room> rooms;
     
     RoomHandler() {
-         rooms = new ArrayList<>();
     }
     
     public static RoomHandler getInstance() {
@@ -59,7 +57,8 @@ public class RoomHandler {
     }
     
     public ArrayList<Room> getRooms() throws SQLException, ClassNotFoundException {
-
+        ArrayList<Room> rooms = new ArrayList<>();
+        
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
         String sql = "select * from room;";

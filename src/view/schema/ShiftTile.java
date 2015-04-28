@@ -6,8 +6,11 @@
 package view.schema;
 
 import java.util.ArrayList;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import static javafx.scene.paint.Color.*;
@@ -23,13 +26,14 @@ import org.joda.time.LocalDateTime;
 public class ShiftTile extends BorderPane{
     
     ArrayList<TimeInvestment> shifts;
-    VBox bottomVBox = new VBox(5);
+    VBox bottomVbox = new VBox(5);
     
     public ShiftTile(ArrayList<TimeInvestment> shifts, double width){
         this.shifts = shifts;
         this.setPrefSize(width, 100);
-        this.setBottom(bottomVBox);
-        
+        bottomVbox.setAlignment(Pos.TOP_CENTER);
+        this.setCenter(bottomVbox);
+                
         initLabels();
     }
 
@@ -65,11 +69,12 @@ public class ShiftTile extends BorderPane{
         this.shifts = shifts;
     }
 
-    public VBox getBottomVBox() {
-        return bottomVBox;
+    public VBox getBottomVbox() {
+        return bottomVbox;
     }
 
-    public void setBottomVBox(VBox bottomVBox) {
-        this.bottomVBox = bottomVBox;
+    public void setBottomVbox(VBox bottomVbox) {
+        this.bottomVbox = bottomVbox;
     }
+
 }

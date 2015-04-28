@@ -63,7 +63,7 @@ public class Schedule extends ListView {
     public void addShiftTiles() throws SQLException, ClassNotFoundException {
 
         rooms = Xray.getInstance().getRoomControl().getRooms();
-
+        
         for (int i = 0; i < rooms.size(); i++) {
             ArrayList<TimeInvestment> shiftsOnRoom = getShiftsOnRoom(rooms.get(i), timeInvestments);
 
