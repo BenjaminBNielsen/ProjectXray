@@ -14,6 +14,8 @@ import org.joda.time.Minutes;
  * @author Benjamin
  */
 public class TimeInvestment {
+
+    private int id;
     private Hours hours;
     private Minutes minutes;
     private LocalDateTime startTime;
@@ -21,6 +23,15 @@ public class TimeInvestment {
     private Room room;
 
     public TimeInvestment(Hours hours, Minutes minutes, LocalDateTime startTime, Employee employee, Room room) {
+        this.hours = hours;
+        this.minutes = minutes;
+        this.startTime = startTime;
+        this.employee = employee;
+        this.room = room;
+    }
+
+    public TimeInvestment(int id, Hours hours, Minutes minutes, LocalDateTime startTime, Employee employee, Room room) {
+        this.id = id;
         this.hours = hours;
         this.minutes = minutes;
         this.startTime = startTime;
@@ -67,11 +78,14 @@ public class TimeInvestment {
     public void setRoom(Room room) {
         this.room = room;
     }
-    
-    @Override
-    public String toString(){
-        return employee.getFirstName() + " Skal være i {" + room.getRoomName() + "} " + startTime.toString("YYYY-dd-MM: HH:mm");
-    }
-    
-}
 
+    @Override
+    public String toString() {
+        if (room != null) {
+            return employee.getFirstName() + " Skal være i {" + room.getRoomName() + "} " + startTime.toString("YYYY-dd-MM: HH:mm");
+        } else {
+            return employee.getFirstName() + " Skal være i { null } " + startTime.toString("YYYY-dd-MM: HH:mm");
+        }
+    }
+
+}

@@ -21,13 +21,12 @@ public class ShiftTile extends BorderPane{
     ArrayList<TimeInvestment> shifts;
     VBox bottomVBox = new VBox(5);
     
-    public ShiftTile(ArrayList<TimeInvestment> shifts){
+    public ShiftTile(ArrayList<TimeInvestment> shifts, double width){
         this.shifts = shifts;
+        this.setPrefWidth(width);
         this.setBottom(bottomVBox);
         
         initLabels();
-        this.setMinSize(60, 50);
-        this.setStyle("-fx-border-color: black;");
     }
 
     private void initLabels() {

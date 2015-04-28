@@ -12,14 +12,16 @@ import javafx.scene.control.*;
  * @author Benjamin
  */
 public class PopupMenuButton extends Button{
+    public static final double PREFERRED_HEIGHT = 50;
+    public static final double PREFERRED_WIDTH = 150;
     
     public PopupMenuButton(String text){
         super(text);
-        this.setPrefSize(150,50);
+        this.setPrefSize(PREFERRED_WIDTH,PREFERRED_HEIGHT);
     }
     
     public PopupMenuButton(){
         super();
-        this.setPrefSize(150,50);
+        this.setPrefSize(PREFERRED_WIDTH,PREFERRED_HEIGHT);
     }
 }

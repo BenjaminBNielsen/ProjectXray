@@ -63,7 +63,7 @@ public class EmployeeHandler {
 
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
-        String sql = "select * from person,employee where id= nr";
+        String sql = "select * from person,employee where id = nr";
 
         ResultSet rs = stmt.executeQuery(sql);
 

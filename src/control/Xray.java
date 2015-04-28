@@ -7,6 +7,7 @@ package control;
 
 import control.comparators.*;
 import dbc.DatabaseConnection;
+import handlers.TimeInvestmentHandler;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -52,6 +53,16 @@ public class Xray {
 
         databaseConnection = DatabaseConnection.getInstance().getConnection();
         
+    }
+    
+    public void addTimeInvestments(ArrayList<TimeInvestment> shifts) throws 
+            SQLException, ClassNotFoundException{
+        TimeInvestmentHandler.getInstance().addTimeInvestments(shifts);
+    }
+    
+    public ArrayList<TimeInvestment> getUnassignedTimeInvestments() throws 
+            SQLException, ClassNotFoundException{
+        return TimeInvestmentHandler.getInstance().getUnassignedTimeInvestments();
     }
 
     public static Xray getInstance(){
