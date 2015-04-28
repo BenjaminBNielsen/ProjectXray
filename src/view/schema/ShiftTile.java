@@ -6,8 +6,11 @@
 package view.schema;
 
 import java.util.ArrayList;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import model.Employee;
 import model.TimeInvestment;
@@ -19,19 +22,20 @@ import model.TimeInvestment;
 public class ShiftTile extends BorderPane{
     
     ArrayList<TimeInvestment> shifts;
-    VBox bottomVBox = new VBox(5);
+    VBox bottomVbox = new VBox(5);
     
     public ShiftTile(ArrayList<TimeInvestment> shifts, double width){
         this.shifts = shifts;
         this.setPrefSize(width, 100);
-        this.setBottom(bottomVBox);
-        
+        bottomVbox.setAlignment(Pos.TOP_CENTER);
+        this.setCenter(bottomVbox);
+                
         initLabels();
     }
 
     private void initLabels() {
         for (int i = 0; i < shifts.size(); i++) {
-            bottomVBox.getChildren().add(new EmployeeLabel(shifts.get(i)));
+            bottomVbox.getChildren().add(new EmployeeLabel(shifts.get(i)));
         }
     }
 
@@ -43,11 +47,12 @@ public class ShiftTile extends BorderPane{
         this.shifts = shifts;
     }
 
-    public VBox getBottomVBox() {
-        return bottomVBox;
+    public VBox getBottomVbox() {
+        return bottomVbox;
     }
 
-    public void setBottomVBox(VBox bottomVBox) {
-        this.bottomVBox = bottomVBox;
+    public void setBottomVbox(VBox bottomVbox) {
+        this.bottomVbox = bottomVbox;
     }
+
 }
