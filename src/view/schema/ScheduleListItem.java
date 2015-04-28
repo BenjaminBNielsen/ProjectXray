@@ -24,13 +24,13 @@ import org.joda.time.LocalDateTime;
  */
 public class ScheduleListItem extends TilePane{
     private Room room;
-    private RoomLabel roomLabel;
+    private LabelTile roomLabel;
     
     public ScheduleListItem(Room room, ArrayList<TimeInvestment> shifts, LocalDateTime startTime) {
         this.room = room;
         this.setOrientation(Orientation.HORIZONTAL);
         
-        roomLabel = new RoomLabel(room.getRoomName());
+        roomLabel = new LabelTile(room.getRoomName());
         
         //Tilføj rumnavn til venstre.
         this.getChildren().add(roomLabel);

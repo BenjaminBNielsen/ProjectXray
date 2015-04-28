@@ -15,13 +15,13 @@ import javafx.scene.text.FontWeight;
  *
  * @author Benjamin
  */
-public class RoomLabel extends HBox{
-    private Label roomLabel;
+public class LabelTile extends HBox{
+    private Label label;
     
-    public RoomLabel(String text){
-        roomLabel = new Label(text);
-        roomLabel.setFont(Font.font("Arial", FontWeight.BOLD, 22));
-        this.getChildren().add(roomLabel);
+    public LabelTile(String text){
+        label = new Label(text);
+        label.setFont(Font.font("Arial", FontWeight.BOLD, 22));
+        this.getChildren().add(label);
         this.setAlignment(Pos.CENTER);
     }
 }
