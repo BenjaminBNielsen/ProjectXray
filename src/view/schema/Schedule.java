@@ -5,7 +5,7 @@
  */
 package view.schema;
 
-import view.schema.ScheduleListItem;
+import view.schema.AssignedRoomRow;
 import control.Xray;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -37,9 +37,13 @@ public class Schedule extends ListView {
 
     private ArrayList<Room> rooms = new ArrayList<>();
     private ArrayList<TimeInvestment> timeInvestments;
-    private ObservableList<ScheduleListItem> scheduleListItems = FXCollections.observableArrayList();
+    private ArrayList<WeekendTile> weekendTilesSat, weekendTilesSun;
+    private ObservableList<Node> scheduleListItems = FXCollections.observableArrayList();
     private LocalDateTime startTime;
     private ExceptionPopup exceptionPopup = new ExceptionPopup();
+    private WeekendRow weekendRowSat, weekendRowSun;
+    private WeekendTile weekendTileSat, weekendTileSun, weekendTileSatEmp,
+            weekendTileSunEmp;
 
     public Schedule(ArrayList<TimeInvestment> timeInvestments, LocalDateTime startTime) {
         this.timeInvestments = timeInvestments;
@@ -57,6 +61,11 @@ public class Schedule extends ListView {
             exceptionPopup.display("Der er ikke oprettet forbindelse til databasen, "
                     + "fordi der mangler en driver.");
         }
+        
+        initWeekend();
+        
+        this.setItems(scheduleListItems);
+        
 
     }
 
@@ -67,10 +76,10 @@ public class Schedule extends ListView {
         for (int i = 0; i < rooms.size(); i++) {
             ArrayList<TimeInvestment> shiftsOnRoom = getShiftsOnRoom(rooms.get(i), timeInvestments);
 
-            scheduleListItems.add(new ScheduleListItem(rooms.get(i), shiftsOnRoom, startTime));
+            scheduleListItems.add(new AssignedRoomRow(rooms.get(i), shiftsOnRoom, startTime));
         }
 
-        this.setItems(scheduleListItems);
+        
 
     }
 
@@ -87,4 +96,22 @@ public class Schedule extends ListView {
 
         return shiftsOnRoom;
     }
+    
+    public void initWeekend() {
+        weekendTileSat = new WeekendTile("Lørdag", 100, 155);
+        weekendTileSun = new WeekendTile("Søndag", 100, 155);
+        weekendTileSatEmp = new WeekendTile();
+        weekendTileSunEmp = new WeekendTile();
+        weekendTilesSat = new ArrayList<>();
+        weekendTilesSun = new ArrayList<>();
+        weekendTilesSat.add(weekendTileSat);
+        weekendTilesSat.add(weekendTileSatEmp);
+        weekendTilesSun.add(weekendTileSun);
+        weekendTilesSun.add(weekendTileSunEmp);
+        weekendRowSat = new WeekendRow();
+        weekendRowSun = new WeekendRow();
+        weekendRowSat.addWeekendTiles(weekendTilesSat);
+        weekendRowSun.addWeekendTiles(weekendTilesSun);
+        scheduleListItems.addAll(weekendRowSat, weekendRowSun);
+    } 
 }

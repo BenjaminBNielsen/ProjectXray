@@ -22,11 +22,11 @@ import org.joda.time.LocalDateTime;
  *
  * @author Jonas
  */
-public class ScheduleListItem extends TilePane{
+public class AssignedRoomRow extends TilePane{
     private Room room;
     private RoomLabel roomLabel;
     
-    public ScheduleListItem(Room room, ArrayList<TimeInvestment> shifts, LocalDateTime startTime) {
+    public AssignedRoomRow(Room room, ArrayList<TimeInvestment> shifts, LocalDateTime startTime) {
         this.room = room;
         this.setOrientation(Orientation.HORIZONTAL);
         
