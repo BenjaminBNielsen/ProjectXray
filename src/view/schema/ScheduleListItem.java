@@ -14,6 +14,8 @@ import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import model.Room;
 import model.TimeInvestment;
+import org.joda.time.DateTimeFieldType;
+import org.joda.time.Hours;
 import org.joda.time.LocalDateTime;
 
 /**
@@ -21,7 +23,6 @@ import org.joda.time.LocalDateTime;
  * @author Jonas
  */
 public class ScheduleListItem extends TilePane{
-    public static final int AMOUNT_OF_LIST_ITEMS = 8;
     private Room room;
     private RoomLabel roomLabel;
     
@@ -31,14 +32,12 @@ public class ScheduleListItem extends TilePane{
         
         roomLabel = new RoomLabel(room.getRoomName());
         
-        roomLabel.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         //Tilføj rumnavn til venstre.
         this.getChildren().add(roomLabel);
         
         //Tilføj vagter til dagene på ugen. i0 = mandag, i6 = søndag.
         for (int i = 0; i < 7; i++) {
             ShiftTile shiftTile = new ShiftTile(getShiftsOnDate(startTime.plusDays(i), shifts), 155);
-            shiftTile.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
             this.getChildren().add(shiftTile);
         }
         
@@ -53,8 +52,14 @@ public class ScheduleListItem extends TilePane{
     private ArrayList<TimeInvestment> getShiftsOnDate(LocalDateTime date, ArrayList<TimeInvestment> shifts){
         ArrayList<TimeInvestment> shiftsOnDate = new ArrayList<>();
         
+        date = date.withField(DateTimeFieldType.hourOfDay(), 0);
+        date = date.withField(DateTimeFieldType.minuteOfHour(), 0);
+        
+        LocalDateTime dateEndOfDay = date.plusHours(23).plusMinutes(59);
+        
         for (int i = 0; i < shifts.size(); i++) {
-            if(shifts.get(i).getStartTime().equals(date)){
+            if(shifts.get(i).getStartTime().isAfter(date) && shifts.get(i).
+                    getStartTime().isBefore(dateEndOfDay)){
                 shiftsOnDate.add(shifts.get(i));
             }
         }

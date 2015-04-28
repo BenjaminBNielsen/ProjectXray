@@ -60,7 +60,7 @@ public class Frontpage extends Application {
 
         screenWidth = primaryScreenBounds.getWidth();
         screenHeight = primaryScreenBounds.getHeight();
-        
+
         try {
             Xray.getInstance().createConnection();
         } catch (SQLException ex) {
@@ -79,8 +79,8 @@ public class Frontpage extends Application {
 
         try {
             hMenuLayout.setMinHeight(PopupMenuButton.PREFERRED_HEIGHT);
-            Schedule schedule = new Schedule(TimeInvestmentHandler.getInstance().getAssignedTimeInvestments(), new LocalDateTime(2015 - 03 - 23));
-            double minimumScheduleHeight = screenHeight - (screenHeight/7);
+            Schedule schedule = new Schedule(TimeInvestmentHandler.getInstance().getAssignedTimeInvestments(), new LocalDateTime(2015, 03, 23, 0, 0));
+            double minimumScheduleHeight = screenHeight - (screenHeight / 7);
             schedule.setMinHeight(minimumScheduleHeight);
             vMainLayout.getChildren().add(schedule);
 
