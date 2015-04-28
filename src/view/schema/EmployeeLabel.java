@@ -7,6 +7,7 @@ package view.schema;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import model.Employee;
 import model.TimeInvestment;
@@ -21,12 +22,19 @@ public class EmployeeLabel extends Button{
     
     public EmployeeLabel(TimeInvestment shift){
         this.shift = shift;
+        //Gør knappen gennemsigtig så man kun ser teksten.
+        //Gør desuden teksten 18px stor og af typen Arial.
         this.setStyle("-fx-focus-color: transparent;"
                 + "-fx-faint-focus-color: transparent;"
-                + "-fx-background-color: #FFF;");
-//                + "linear-gradient(#fafdfe, #e8f5fc),"
-//                + "linear-gradient(#eaf6fd 0%, #d9f0fc 49%, #bee6fd 50%, #a7d9f5 100%);");
-        this.setText(shift.getEmployee().getFirstName() + " " + shift.getEmployee().getLastName());
+                + "-fx-background-color: transparent;"
+                + "-fx-font-family: Arial;"
+                + "-fx-font-size: 18px;");
+        this.setTextAlignment(TextAlignment.CENTER);
+        this.setWrapText(true);
+        String btnContent = shift.getEmployee().getFirstName().toUpperCase() +
+                " " + shift.getEmployee().getLastName().toUpperCase().charAt(0);
+        
+        this.setText(btnContent);
         this.setOnAction(e -> {
             //new changeShiftPopup("title");
         });

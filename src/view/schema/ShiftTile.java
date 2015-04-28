@@ -50,9 +50,13 @@ public class ShiftTile extends BorderPane{
             tempShiftNightStart = tempShiftNightStart.withField(DateTimeFieldType.minuteOfHour(), ShiftPeriodConstants.NIGHT_SHIFT_MINUTES_START.getMinutes());
             tempShiftDayStart = tempShiftDayStart.withField(DateTimeFieldType.minuteOfHour(), ShiftPeriodConstants.DAY_SHIFT_MINUTES_START.getMinutes());
             //Label farve.
-            if (tempShift.isBefore(tempShiftEveningStart) && tempShift.isAfter(tempShiftDayStart) || tempShift.isEqual(tempShiftDayStart)) {
+            if (tempShift.isEqual(tempShiftDayStart) || 
+                    (tempShift.isBefore(tempShiftEveningStart) && 
+                    tempShift.isAfter(tempShiftDayStart))) {
                 tempLabel.setTextFill(BLUE);
-            } else if (tempShift.isBefore(tempShiftNightStart) && tempShift.isAfter(tempShiftEveningStart) || tempShift.isEqual(tempShiftEveningStart)) {
+            } else if (tempShift.isEqual(tempShiftEveningStart) || 
+                    (tempShift.isBefore(tempShiftNightStart)  && 
+                    tempShift.isAfter(tempShiftEveningStart))) {
                 tempLabel.setTextFill(GREEN);
             } else {
                 tempLabel.setTextFill(RED);
