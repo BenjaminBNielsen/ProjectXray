@@ -40,7 +40,6 @@ public class Schedule extends ListView {
     private ObservableList<Node> scheduleListItems = FXCollections.observableArrayList();
     private LocalDateTime startTime;
     private ExceptionPopup exceptionPopup = new ExceptionPopup();
-    private WeekendRow weekendRowSat, weekendRowSun;
 
     public Schedule(ArrayList<TimeInvestment> timeInvestments, LocalDateTime startTime) {
         this.timeInvestments = timeInvestments;

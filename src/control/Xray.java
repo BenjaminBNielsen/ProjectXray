@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.geometry.Rectangle2D;
+import javafx.stage.Screen;
 import model.Employee;
 import model.LimitQualification;
 import model.Room;
@@ -50,18 +52,18 @@ public class Xray {
         databaseConnection = DatabaseConnection.getInstance().getConnection();
 
     }
-    
-    public void addTimeInvestments(ArrayList<TimeInvestment> shifts) throws 
-            SQLException, ClassNotFoundException{
+
+    public void addTimeInvestments(ArrayList<TimeInvestment> shifts) throws
+            SQLException, ClassNotFoundException {
         TimeInvestmentHandler.getInstance().addTimeInvestments(shifts);
     }
-    
-    public ArrayList<TimeInvestment> getUnassignedTimeInvestments() throws 
-            SQLException, ClassNotFoundException{
+
+    public ArrayList<TimeInvestment> getUnassignedTimeInvestments() throws
+            SQLException, ClassNotFoundException {
         return TimeInvestmentHandler.getInstance().getUnassignedTimeInvestments();
     }
 
-    public static Xray getInstance(){
+    public static Xray getInstance() {
         if (Instance == null) {
             try {
                 Instance = new Xray();
@@ -91,8 +93,8 @@ public class Xray {
     public PersonControl getPersonControl() {
         return personControl;
     }
-    
-        /**
+
+    /**
      * Denne metode tildeler rum til medarbejdere.
      *
      * @param shifts liste over vagter.
@@ -156,10 +158,9 @@ public class Xray {
         //starttidspunkt. Tællingen består i at alle Room-objekter i rooms får talt
         //op på deres count felt, så dette passer med antal tildelinger.
         countDateAssignmentsOfRoom(rooms, currentShift, timeInvestments);
-        
+
         ArrayList<Room> roomsLimitNotReached = getRoomsLimitNotReached(currentShift.getEmployee(), limitQualifications);
 
-        
         if (!roomsLimitNotReached.isEmpty()) {
             //Her inde bliver alle rum der stadig mangler at opfylde 
             //limit på limitQualifications behandlet.
@@ -294,11 +295,12 @@ public class Xray {
     }
 
     /**
-     * Denne metode tjekker at en given tidsinvestering findes i en anden tidsinvesterings 
-     * tidsperiode. Denne tidsperiode er givet ved otherShift's starttidspunkt, 
-     * og dens sluttidspunkt som udregnes ved at lægge tidsinvesteringens timer og 
-     * minutter til.
-     * @param currentShift Den nuværende shift, hvis starttidspunkt skal være i 
+     * Denne metode tjekker at en given tidsinvestering findes i en anden
+     * tidsinvesterings tidsperiode. Denne tidsperiode er givet ved otherShift's
+     * starttidspunkt, og dens sluttidspunkt som udregnes ved at lægge
+     * tidsinvesteringens timer og minutter til.
+     *
+     * @param currentShift Den nuværende shift, hvis starttidspunkt skal være i
      * otherShifts.
      * @param otherShift Den anden vagt som currentShift skal sammenlignes med.
      * @return En boolean hvis værdi er sand hvis currentShift's starttidspunkt
@@ -308,7 +310,7 @@ public class Xray {
         boolean isInPeriod = false;
         LocalDateTime otherShiftEndTime = otherShift.getStartTime().
                 plus(otherShift.getHours()).plus(otherShift.getMinutes());
-        
+
         //Other shift som sammenlignes med currentShift skal have sit starttidspunkt
         //før eller samtidig med currentShifts, og dens sluttidspunkt skal være
         //efter eller samtidig med currentShifts starttidspunkt.
@@ -405,14 +407,15 @@ public class Xray {
 
         return prioritizedRoom;
     }
-    
+
     /**
      * Metode til at finde vagter på en given dato, i en given liste.
+     *
      * @param date dato der skal søges efter.
      * @param shifts liste af vagter der skal søges i.
      * @return en liste af alle vagter på den givne dato.
      */
-        public ArrayList<TimeInvestment> getShiftsOnDate(LocalDateTime date, ArrayList<TimeInvestment> shifts) {
+    public ArrayList<TimeInvestment> getShiftsOnDate(LocalDateTime date, ArrayList<TimeInvestment> shifts) {
         ArrayList<TimeInvestment> shiftsOnDate = new ArrayList<>();
 
         date = date.withField(DateTimeFieldType.hourOfDay(), 0);
@@ -429,5 +432,11 @@ public class Xray {
 
         return shiftsOnDate;
     }
-
+    //Der bliver divideret med 6 fordi at vores frontpage indeholder 6 bokse 
+    //maksimalt, derfor bruger vi boksene som en slags måleenhed.
+    public double getComputedTileWitdh() {
+        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+        double witdh = primaryScreenBounds.getWidth() / 6;
+        return witdh;
+    }
 }

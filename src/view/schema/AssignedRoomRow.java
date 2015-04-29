@@ -18,6 +18,7 @@ import model.TimeInvestment;
 import org.joda.time.DateTimeFieldType;
 import org.joda.time.Hours;
 import org.joda.time.LocalDateTime;
+import view.Frontpage;
 
 /**
  *
@@ -30,15 +31,18 @@ public class AssignedRoomRow extends TilePane{
     public AssignedRoomRow(Room room, ArrayList<TimeInvestment> shifts, LocalDateTime startTime) {
         this.room = room;
         this.setOrientation(Orientation.HORIZONTAL);
+        double tileWitdh = Xray.getInstance().getComputedTileWitdh() - ((Frontpage.STANDARD_PADDING * 2) / 3);
+        System.out.println(tileWitdh);
+        System.out.println(tileWitdh * 6);
         
-        roomLabel = new LabelTile(room.getRoomName());
+        roomLabel = new LabelTile(room.getRoomName(), tileWitdh);
         
         //Tilføj rumnavn til venstre.
         this.getChildren().add(roomLabel);
         
         //Tilføj vagter til dagene på ugen. i0 = mandag, i6 = søndag.
         for (int i = 0; i < 5; i++) {
-            ShiftTile shiftTile = new ShiftTile(Xray.getInstance().getShiftsOnDate(startTime.plusDays(i), shifts), 155);
+            ShiftTile shiftTile = new ShiftTile(Xray.getInstance().getShiftsOnDate(startTime.plusDays(i), shifts), tileWitdh);
             this.getChildren().add(shiftTile);
         }
         

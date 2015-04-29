@@ -11,6 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.TimeInvestment;
 import org.joda.time.LocalDateTime;
+import view.Frontpage;
 
 /**
  *
@@ -29,12 +30,16 @@ public class WeekendRow extends HBox {
         this.dayName = dayName;
         this.date = date;
         this.shifts = shifts;
+        double tileWitdh = Xray.getInstance().getComputedTileWitdh();
+        int padding = Frontpage.STANDARD_PADDING;
         
         shifts = Xray.getInstance().getShiftsOnDate(date, shifts);
         
-        labelTile = new LabelTile(dayName);
-        shiftTile = new ShiftTile(shifts, 450);
-        
+        labelTile = new LabelTile(dayName, tileWitdh - (padding*2));
+        shiftTile = new ShiftTile(shifts, (tileWitdh*5) - (padding*2));
+        System.out.println(tileWitdh - (padding*2));
+        System.out.println((tileWitdh*5) - (padding*2));
+        System.out.println(tileWitdh - (padding*2) + (tileWitdh*5) - (padding*2));
         
         
         
