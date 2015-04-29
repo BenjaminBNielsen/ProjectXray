@@ -98,20 +98,20 @@ public class Schedule extends ListView {
     }
     
     public void initWeekend() {
-        weekendTileSat = new WeekendTile("Lørdag", 100, 155);
-        weekendTileSun = new WeekendTile("Søndag", 100, 155);
-        weekendTileSatEmp = new WeekendTile();
-        weekendTileSunEmp = new WeekendTile();
-        weekendTilesSat = new ArrayList<>();
-        weekendTilesSun = new ArrayList<>();
-        weekendTilesSat.add(weekendTileSat);
-        weekendTilesSat.add(weekendTileSatEmp);
-        weekendTilesSun.add(weekendTileSun);
-        weekendTilesSun.add(weekendTileSunEmp);
-        weekendRowSat = new WeekendRow();
-        weekendRowSun = new WeekendRow();
-        weekendRowSat.addWeekendTiles(weekendTilesSat);
-        weekendRowSun.addWeekendTiles(weekendTilesSun);
-        scheduleListItems.addAll(weekendRowSat, weekendRowSun);
+//        weekendTileSat = new WeekendTile("Lørdag", 100, 155);
+//        weekendTileSun = new WeekendTile("Søndag", 100, 155);
+//        weekendTileSatEmp = new WeekendTile();
+//        weekendTileSunEmp = new WeekendTile();
+//        weekendTilesSat = new ArrayList<>();
+//        weekendTilesSun = new ArrayList<>();
+//        weekendTilesSat.add(weekendTileSat);
+//        weekendTilesSat.add(weekendTileSatEmp);
+//        weekendTilesSun.add(weekendTileSun);
+//        weekendTilesSun.add(weekendTileSunEmp);
+////        weekendRowSat = new WeekendRow();
+////        weekendRowSun = new WeekendRow();
+//        weekendRowSat.addWeekendTiles(weekendTilesSat);
+//        weekendRowSun.addWeekendTiles(weekendTilesSun);
+//        scheduleListItems.addAll(weekendRowSat, weekendRowSun);
     } 
 }

@@ -29,6 +29,4 @@ public class WeekendTile extends BorderPane {
         this.getChildren().add(titleLabel);
     }
 
-    public WeekendTile() {
-    }
 }

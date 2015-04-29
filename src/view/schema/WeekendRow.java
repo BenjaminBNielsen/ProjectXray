@@ -17,20 +17,28 @@ import model.TimeInvestment;
 public class WeekendRow extends HBox {
 
     private String dayName;
-    private ArrayList<WeekendTile> weekendTiles;
-    private WeekendTile weekendTile;
+    private ArrayList<TimeInvestment> shifts;
+    private LabelTile labelTile;
+    private ShiftTile shiftTile;
+    
 
     public WeekendRow(String dayName, ArrayList<TimeInvestment> shifts){
         this.dayName = dayName;
+        this.shifts = shifts;
+        labelTile = new LabelTile(dayName);
+        shiftTile = new ShiftTile(shifts, 450);
         
-        
-    }
-    
-    public void addWeekendTiles(ArrayList<WeekendTile> weekendTiles) {
-        this.weekendTiles = weekendTiles;
-        for (int i = 0; i < weekendTiles.size(); i++) {
-            weekendTile = weekendTiles.get(i);
-            this.getChildren().add(weekendTile);
+        for (int i = 0; i < shifts.size(); i++) {
+            if (shifts.get(i).getStartTime().getDayOfWeek() == 6) {
+                
+            } else if (shifts.get(i).getStartTime().getDayOfWeek() == 7) {
+                
+            }
+            
         }
+        
+        this.getChildren().addAll(labelTile, shiftTile);
+        
+        
     }
 }
