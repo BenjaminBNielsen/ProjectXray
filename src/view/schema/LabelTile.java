@@ -23,5 +23,6 @@ public class LabelTile extends HBox{
         label.setFont(Font.font("Arial", FontWeight.BOLD, 22));
         this.getChildren().add(label);
         this.setAlignment(Pos.CENTER);
+        this.setStyle("-fx-border-color: black;");
     }
 }

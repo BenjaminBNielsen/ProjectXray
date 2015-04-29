@@ -34,8 +34,5 @@ public class ScheduleHeader extends TilePane {
 
         //Sæt border og bredde.
         this.setPrefTileWidth(155);
-        for (int i = 0; i < this.getChildren().size(); i++) {
-            this.getChildren().get(i).setStyle("-fx-border-color: black;");
-        }
     }
 }

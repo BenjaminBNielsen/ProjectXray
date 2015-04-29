@@ -42,12 +42,6 @@ public class AssignedRoomRow extends TilePane{
             this.getChildren().add(shiftTile);
         }
         
-        //Løb alle tiles igennem for at give dem en sort border.
-        for (int i = 0; i < this.getChildren().size(); i++) {
-            this.getChildren().get(i).setStyle("-fx-border-color: black;");
-            
-        }
-        
     }
     
 }
