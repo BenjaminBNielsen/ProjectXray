@@ -5,10 +5,12 @@
  */
 package view.schema;
 
+import control.Xray;
 import java.util.ArrayList;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.TimeInvestment;
+import org.joda.time.LocalDateTime;
 
 /**
  *
@@ -20,22 +22,22 @@ public class WeekendRow extends HBox {
     private ArrayList<TimeInvestment> shifts;
     private LabelTile labelTile;
     private ShiftTile shiftTile;
+    private LocalDateTime date;
     
 
-    public WeekendRow(String dayName, ArrayList<TimeInvestment> shifts){
+    public WeekendRow(String dayName, LocalDateTime date, ArrayList<TimeInvestment> shifts){
         this.dayName = dayName;
+        this.date = date;
         this.shifts = shifts;
+        
+        shifts = Xray.getInstance().getShiftsOnDate(date, shifts);
+        
         labelTile = new LabelTile(dayName);
         shiftTile = new ShiftTile(shifts, 450);
         
-        for (int i = 0; i < shifts.size(); i++) {
-            if (shifts.get(i).getStartTime().getDayOfWeek() == 6) {
-                
-            } else if (shifts.get(i).getStartTime().getDayOfWeek() == 7) {
-                
-            }
-            
-        }
+        
+        
+        
         
         this.getChildren().addAll(labelTile, shiftTile);
         

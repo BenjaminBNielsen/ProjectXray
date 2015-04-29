@@ -41,8 +41,6 @@ public class Schedule extends ListView {
     private LocalDateTime startTime;
     private ExceptionPopup exceptionPopup = new ExceptionPopup();
     private WeekendRow weekendRowSat, weekendRowSun;
-    private WeekendTile weekendTileSat, weekendTileSun, weekendTileSatEmp,
-            weekendTileSunEmp;
 
     public Schedule(ArrayList<TimeInvestment> timeInvestments, LocalDateTime startTime) {
         this.timeInvestments = timeInvestments;
@@ -64,7 +62,8 @@ public class Schedule extends ListView {
                     + "fordi der mangler en driver.");
         }
         
-        initWeekend();
+        scheduleListItems.add(new WeekendRow("Lørdag", startTime.plusDays(5), timeInvestments));
+        scheduleListItems.add(new WeekendRow("Søndag", startTime.plusDays(6), timeInvestments));
         
         this.setItems(scheduleListItems);
         
@@ -99,21 +98,4 @@ public class Schedule extends ListView {
         return shiftsOnRoom;
     }
     
-    public void initWeekend() {
-//        weekendTileSat = new WeekendTile("Lørdag", 100, 155);
-//        weekendTileSun = new WeekendTile("Søndag", 100, 155);
-//        weekendTileSatEmp = new WeekendTile();
-//        weekendTileSunEmp = new WeekendTile();
-//        weekendTilesSat = new ArrayList<>();
-//        weekendTilesSun = new ArrayList<>();
-//        weekendTilesSat.add(weekendTileSat);
-//        weekendTilesSat.add(weekendTileSatEmp);
-//        weekendTilesSun.add(weekendTileSun);
-//        weekendTilesSun.add(weekendTileSunEmp);
-//        weekendRowSat = new WeekendRow();
-//        weekendRowSun = new WeekendRow();
-//        weekendRowSat.addWeekendTiles(weekendTilesSat);
-//        weekendRowSun.addWeekendTiles(weekendTilesSun);
-//        scheduleListItems.addAll(weekendRowSat, weekendRowSun);
-    } 
 }
