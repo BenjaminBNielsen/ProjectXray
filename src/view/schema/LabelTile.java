@@ -17,6 +17,7 @@ import javafx.scene.text.FontWeight;
  */
 public class LabelTile extends HBox{
     private Label label;
+    private int witdh;
     
     public LabelTile(String text){
         label = new Label(text.toUpperCase());
@@ -27,5 +28,14 @@ public class LabelTile extends HBox{
         this.setAlignment(Pos.CENTER);
         this.setStyle("-fx-border-color: black;");
         this.setPrefSize(155, 100);
+    }
+    
+    public LabelTile(String text, double witdh) {
+        label = new Label(text);
+        label.setFont(Font.font("Arial", FontWeight.BOLD, 22));
+        this.getChildren().add(label);
+        this.setAlignment(Pos.CENTER);
+        this.setStyle("-fx-border-color: black;");
+        this.setPrefSize(witdh, 100);
     }
 }

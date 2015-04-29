@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.geometry.Rectangle2D;
+import javafx.stage.Screen;
 import model.Employee;
 import model.LimitQualification;
 import model.Room;
@@ -418,6 +420,7 @@ public class Xray {
      * @param periodLengthMinute Hvor lang tid perioden tager i minutter.
      * @return en liste af alle vagter i en given tidsperiode på en given dato.
      */
+
     public ArrayList<TimeInvestment> getShiftsInPeriod(LocalDateTime date, 
             ArrayList<TimeInvestment> shifts,
             int startHour, int startMinute, int periodLengthHour, int periodLengthMinute) {
@@ -476,4 +479,13 @@ public class Xray {
         return inPeriod;
     }
 
+    /**
+     * Der bliver divideret med 6 fordi at vores frontpage indeholder 6 bokse 
+     * maksimalt, derfor bruger vi boksene som en slags måleenhed.
+     */
+    public double getComputedTileWitdh() {
+        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+        double witdh = primaryScreenBounds.getWidth() / 6;
+        return witdh;
+    }
 }

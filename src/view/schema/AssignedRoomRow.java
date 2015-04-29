@@ -18,6 +18,7 @@ import model.TimeInvestment;
 import org.joda.time.DateTimeFieldType;
 import org.joda.time.Hours;
 import org.joda.time.LocalDateTime;
+import view.Frontpage;
 
 /**
  *
@@ -37,9 +38,12 @@ public class AssignedRoomRow extends TilePane {
         this.shifts = shifts;
 
         this.setOrientation(Orientation.HORIZONTAL);
-
-        roomLabel = new LabelTile(room.getRoomName());
-
+        double tileWitdh = Xray.getInstance().getComputedTileWitdh() - (Frontpage.STANDARD_PADDING);
+        System.out.println(tileWitdh);
+        System.out.println(tileWitdh * 6);
+        
+        roomLabel = new LabelTile(room.getRoomName(), tileWitdh);
+        
         //Tilføj rumnavn til venstre.
         this.getChildren().add(roomLabel);
 
