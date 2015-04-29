@@ -19,10 +19,13 @@ public class LabelTile extends HBox{
     private Label label;
     
     public LabelTile(String text){
-        label = new Label(text);
+        label = new Label(text.toUpperCase());
         label.setFont(Font.font("Arial", FontWeight.BOLD, 22));
+        label.setWrapText(true);
+        
         this.getChildren().add(label);
         this.setAlignment(Pos.CENTER);
         this.setStyle("-fx-border-color: black;");
+        this.setPrefSize(155, 100);
     }
 }
