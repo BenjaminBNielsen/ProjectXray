@@ -5,6 +5,7 @@
  */
 package view.schema;
 
+import control.Xray;
 import java.util.ArrayList;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Label;
@@ -24,20 +25,20 @@ import org.joda.time.LocalDateTime;
  */
 public class AssignedRoomRow extends TilePane{
     private Room room;
-    private RoomLabel roomLabel;
+    private LabelTile roomLabel;
     
     public AssignedRoomRow(Room room, ArrayList<TimeInvestment> shifts, LocalDateTime startTime) {
         this.room = room;
         this.setOrientation(Orientation.HORIZONTAL);
         
-        roomLabel = new RoomLabel(room.getRoomName());
+        roomLabel = new LabelTile(room.getRoomName());
         
         //Tilføj rumnavn til venstre.
         this.getChildren().add(roomLabel);
         
         //Tilføj vagter til dagene på ugen. i0 = mandag, i6 = søndag.
-        for (int i = 0; i < 7; i++) {
-            ShiftTile shiftTile = new ShiftTile(getShiftsOnDate(startTime.plusDays(i), shifts), 155);
+        for (int i = 0; i < 5; i++) {
+            ShiftTile shiftTile = new ShiftTile(Xray.getInstance().getShiftsOnDate(startTime.plusDays(i), shifts), 155);
             this.getChildren().add(shiftTile);
         }
         
@@ -49,21 +50,4 @@ public class AssignedRoomRow extends TilePane{
         
     }
     
-    private ArrayList<TimeInvestment> getShiftsOnDate(LocalDateTime date, ArrayList<TimeInvestment> shifts){
-        ArrayList<TimeInvestment> shiftsOnDate = new ArrayList<>();
-        
-        date = date.withField(DateTimeFieldType.hourOfDay(), 0);
-        date = date.withField(DateTimeFieldType.minuteOfHour(), 0);
-        
-        LocalDateTime dateEndOfDay = date.plusHours(23).plusMinutes(59);
-        
-        for (int i = 0; i < shifts.size(); i++) {
-            if(shifts.get(i).getStartTime().isAfter(date) && shifts.get(i).
-                    getStartTime().isBefore(dateEndOfDay)){
-                shiftsOnDate.add(shifts.get(i));
-            }
-        }
-        
-        return shiftsOnDate;
-    }
 }

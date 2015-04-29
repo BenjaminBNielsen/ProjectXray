@@ -19,6 +19,7 @@ import model.LimitQualification;
 import model.Room;
 import model.RoomQualification;
 import model.TimeInvestment;
+import org.joda.time.DateTimeFieldType;
 import org.joda.time.LocalDateTime;
 import view.popups.DatabasePopup;
 
@@ -403,6 +404,30 @@ public class Xray {
         }
 
         return prioritizedRoom;
+    }
+    
+    /**
+     * Metode til at finde vagter på en given dato, i en given liste.
+     * @param date dato der skal søges efter.
+     * @param shifts liste af vagter der skal søges i.
+     * @return en liste af alle vagter på den givne dato.
+     */
+        public ArrayList<TimeInvestment> getShiftsOnDate(LocalDateTime date, ArrayList<TimeInvestment> shifts) {
+        ArrayList<TimeInvestment> shiftsOnDate = new ArrayList<>();
+
+        date = date.withField(DateTimeFieldType.hourOfDay(), 0);
+        date = date.withField(DateTimeFieldType.minuteOfHour(), 0);
+
+        LocalDateTime dateEndOfDay = date.plusHours(23).plusMinutes(59);
+
+        for (int i = 0; i < shifts.size(); i++) {
+            if (shifts.get(i).getStartTime().isAfter(date) && shifts.get(i).
+                    getStartTime().isBefore(dateEndOfDay)) {
+                shiftsOnDate.add(shifts.get(i));
+            }
+        }
+
+        return shiftsOnDate;
     }
 
 }

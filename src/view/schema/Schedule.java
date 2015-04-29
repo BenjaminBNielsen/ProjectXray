@@ -37,7 +37,6 @@ public class Schedule extends ListView {
 
     private ArrayList<Room> rooms = new ArrayList<>();
     private ArrayList<TimeInvestment> timeInvestments;
-    private ArrayList<WeekendTile> weekendTilesSat, weekendTilesSun;
     private ObservableList<Node> scheduleListItems = FXCollections.observableArrayList();
     private LocalDateTime startTime;
     private ExceptionPopup exceptionPopup = new ExceptionPopup();
@@ -50,6 +49,9 @@ public class Schedule extends ListView {
         this.startTime = startTime;
         this.setEditable(false);
         this.setFocusTraversable(false);
+        
+        //Tilføj headeren med ugens dage fra mandag til fredag:
+        scheduleListItems.add(new ScheduleHeader(startTime.getWeekOfWeekyear()));
         
         try {
             addShiftTiles();
@@ -98,20 +100,20 @@ public class Schedule extends ListView {
     }
     
     public void initWeekend() {
-        weekendTileSat = new WeekendTile("Lørdag", 100, 155);
-        weekendTileSun = new WeekendTile("Søndag", 100, 155);
-        weekendTileSatEmp = new WeekendTile();
-        weekendTileSunEmp = new WeekendTile();
-        weekendTilesSat = new ArrayList<>();
-        weekendTilesSun = new ArrayList<>();
-        weekendTilesSat.add(weekendTileSat);
-        weekendTilesSat.add(weekendTileSatEmp);
-        weekendTilesSun.add(weekendTileSun);
-        weekendTilesSun.add(weekendTileSunEmp);
-        weekendRowSat = new WeekendRow();
-        weekendRowSun = new WeekendRow();
-        weekendRowSat.addWeekendTiles(weekendTilesSat);
-        weekendRowSun.addWeekendTiles(weekendTilesSun);
-        scheduleListItems.addAll(weekendRowSat, weekendRowSun);
+//        weekendTileSat = new WeekendTile("Lørdag", 100, 155);
+//        weekendTileSun = new WeekendTile("Søndag", 100, 155);
+//        weekendTileSatEmp = new WeekendTile();
+//        weekendTileSunEmp = new WeekendTile();
+//        weekendTilesSat = new ArrayList<>();
+//        weekendTilesSun = new ArrayList<>();
+//        weekendTilesSat.add(weekendTileSat);
+//        weekendTilesSat.add(weekendTileSatEmp);
+//        weekendTilesSun.add(weekendTileSun);
+//        weekendTilesSun.add(weekendTileSunEmp);
+//        weekendRowSat = new WeekendRow();
+//        weekendRowSun = new WeekendRow();
+//        weekendRowSat.addWeekendTiles(weekendTilesSat);
+//        weekendRowSun.addWeekendTiles(weekendTilesSun);
+//        scheduleListItems.addAll(weekendRowSat, weekendRowSun);
     } 
 }
