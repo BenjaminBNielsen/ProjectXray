@@ -31,7 +31,7 @@ public class AssignedRoomRow extends TilePane{
     public AssignedRoomRow(Room room, ArrayList<TimeInvestment> shifts, LocalDateTime startTime) {
         this.room = room;
         this.setOrientation(Orientation.HORIZONTAL);
-        double tileWitdh = Xray.getInstance().getComputedTileWitdh() - ((Frontpage.STANDARD_PADDING * 2) / 3);
+        double tileWitdh = Xray.getInstance().getComputedTileWitdh() - (Frontpage.STANDARD_PADDING);
         System.out.println(tileWitdh);
         System.out.println(tileWitdh * 6);
         

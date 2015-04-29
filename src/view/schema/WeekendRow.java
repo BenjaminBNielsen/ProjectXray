@@ -35,8 +35,8 @@ public class WeekendRow extends HBox {
         
         shifts = Xray.getInstance().getShiftsOnDate(date, shifts);
         
-        labelTile = new LabelTile(dayName, tileWitdh - (padding*2));
-        shiftTile = new ShiftTile(shifts, (tileWitdh*5) - (padding*2));
+        labelTile = new LabelTile(dayName, tileWitdh - (padding));
+        shiftTile = new ShiftTile(shifts, (tileWitdh*5) - (padding*5));
         System.out.println(tileWitdh - (padding*2));
         System.out.println((tileWitdh*5) - (padding*2));
         System.out.println(tileWitdh - (padding*2) + (tileWitdh*5) - (padding*2));
