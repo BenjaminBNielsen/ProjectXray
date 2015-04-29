@@ -77,6 +77,14 @@ public class TimeInvestment {
 
     public void setRoom(Room room) {
         this.room = room;
+    } 
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override
