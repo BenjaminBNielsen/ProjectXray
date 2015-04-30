@@ -25,8 +25,8 @@ import view.buttons.SettingsButton;
 public class RoomPopup extends PopupWindow {
 
     private PopupMenuButton addRoom;
-    private TextField tFRoomName;
-    private int roomStateInsert;
+    private TextField tFRoomName, tFRoomMinOccupation, tFRoomMaxOccupation;
+    private int roomStateInsert, roomMinInsert, roomMaxInsert;
     private Label lRoomName, lRoomState;
     private String roomNameInsert;
     private SettingsButton settingsButton;
@@ -38,6 +38,8 @@ public class RoomPopup extends PopupWindow {
         ExceptionPopup exceptionPopup = new ExceptionPopup(); //Til exceptionhandling.
 
         tFRoomName = new TextField();
+        tFRoomMinOccupation = new TextField();
+        tFRoomMaxOccupation = new TextField();
 
         ObservableList<String> cBOptions
                 = FXCollections.observableArrayList(
@@ -83,6 +85,10 @@ public class RoomPopup extends PopupWindow {
             int count2 = 0;
 
             roomNameInsert = tFRoomName.getText();
+            
+            roomMinInsert = Integer.parseInt(tFRoomMinOccupation.getText());
+            
+            roomMaxInsert = Integer.parseInt(tFRoomMaxOccupation.getText());
 
                             roomStateInsert = cBRoomState.getSelectionModel().getSelectedIndex() + 1;
                             //DER MANGLER MINIMUM OG MAXIMUM

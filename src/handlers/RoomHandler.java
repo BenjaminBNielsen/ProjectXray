@@ -36,7 +36,7 @@ public class RoomHandler {
         
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
-        String sql = "insert into room(roomName, roomState) values";
+        String sql = "insert into room(roomName, roomState, minOccupation, maxOccupation) values";
         //String sql = "insert into room() values(" + roomNumber + ",'"
         //        + roomName + "'," + roomState + ");";
         
@@ -44,6 +44,8 @@ public class RoomHandler {
                 Room tempRoom = rooms.get(i);
                 sql += "('" + tempRoom.getRoomName();
                 sql += "'," + tempRoom.getRoomState();
+                sql += "," + tempRoom.getMinOccupation();
+                sql += "," + tempRoom.getMaxOccupation();
                 if (i == rooms.size() - 1) {
                     sql += ");";
                 } else {
