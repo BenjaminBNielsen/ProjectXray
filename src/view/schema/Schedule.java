@@ -63,7 +63,6 @@ public class Schedule extends ListView {
         }
         
         initWeekend();
-        
         this.setItems(scheduleListItems);
         
 
@@ -108,8 +107,6 @@ public class Schedule extends ListView {
         weekendTilesSat.add(weekendTileSatEmp);
         weekendTilesSun.add(weekendTileSun);
         weekendTilesSun.add(weekendTileSunEmp);
-        weekendRowSat = new WeekendRow();
-        weekendRowSun = new WeekendRow();
         weekendRowSat.addWeekendTiles(weekendTilesSat);
         weekendRowSun.addWeekendTiles(weekendTilesSun);
         scheduleListItems.addAll(weekendRowSat, weekendRowSun);
