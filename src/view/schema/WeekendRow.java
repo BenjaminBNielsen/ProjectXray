@@ -33,7 +33,7 @@ public class WeekendRow extends HBox {
         double tileWitdh = Xray.getInstance().getComputedTileWitdh();
         int padding = Frontpage.STANDARD_PADDING;
         
-        shifts = Xray.getInstance().getShiftsOnDate(date, shifts);
+        shifts = Xray.getInstance().getShiftsInPeriod(date, shifts, 0, 0, 23, 59);
         
         labelTile = new LabelTile(dayName, tileWitdh - (padding));
         shiftTile = new ShiftTile(shifts, (tileWitdh*5) - (padding*5));
