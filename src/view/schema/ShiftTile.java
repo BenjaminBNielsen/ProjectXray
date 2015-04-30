@@ -10,6 +10,8 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -29,13 +31,12 @@ public class ShiftTile extends BorderPane {
     ArrayList<TimeInvestment> shifts;
     VBox bottomVbox = new VBox(5);
 
-    public ShiftTile(ArrayList<TimeInvestment> shifts, double width) {
+    public ShiftTile(ArrayList<TimeInvestment> shifts) {
         this.shifts = shifts;
-        this.setPrefSize(width, 100);
         bottomVbox.setAlignment(Pos.TOP_CENTER);
         this.setCenter(bottomVbox);
-        this.setStyle("-fx-border-color: black;");
-
+        this.setStyle("-fx-border-color: #d3d3d3;"
+                + "-fx-border-width: 0.5px;");        
         initLabels();
     }
 
@@ -44,7 +45,6 @@ public class ShiftTile extends BorderPane {
             EmployeeLabel tempLabel = new EmployeeLabel(shifts.get(i));
             LocalDateTime tempShift = shifts.get(i).getStartTime();
 
-            //Label farve.
             tempLabel.setTextFill(getColorOnShiftStart(tempShift));
 
             bottomVbox.getChildren().add(tempLabel);

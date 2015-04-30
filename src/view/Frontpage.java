@@ -20,6 +20,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.stage.*;
 import model.Employee;
@@ -107,8 +108,6 @@ public class Frontpage extends Application {
             //Opsætning af skema.
             hMenuLayout.setMinHeight(PopupMenuButton.PREFERRED_HEIGHT);
             Schedule schedule = new Schedule(assigned, new LocalDateTime(2015, 04, 13, 0, 0));
-            double minimumScheduleHeight = screenHeight - (screenHeight / 7);
-            schedule.setMinHeight(minimumScheduleHeight);
             vMainLayout.getChildren().add(schedule);
 
         } catch (SQLException ex) {

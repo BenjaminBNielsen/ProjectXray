@@ -482,10 +482,11 @@ public class Xray {
     /**
      * Der bliver divideret med 6 fordi at vores frontpage indeholder 6 bokse 
      * maksimalt, derfor bruger vi boksene som en slags måleenhed.
+     * @param x Hvor meget skal skærmens bredde deles op i.
      */
-    public double getComputedTileWitdh() {
+    public double getComputedTileWitdh(int x) {
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        double witdh = primaryScreenBounds.getWidth() / 6;
+        double witdh = primaryScreenBounds.getWidth() / x;
         return witdh;
     }
 }
