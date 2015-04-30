@@ -13,6 +13,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import model.Employee;
 import model.TimeInvestment;
+import view.popups.shift.ShiftChangePopup;
 
 /**
  *
@@ -39,7 +40,8 @@ public class EmployeeLabel extends Button{
         
         this.setText(btnContent);
         this.setOnAction(e -> {
-            //new changeShiftPopup("title");
+            ShiftChangePopup scp = new ShiftChangePopup();
+            scp.display("Foretag ændring på vagt", shift);
         });
     }
 
