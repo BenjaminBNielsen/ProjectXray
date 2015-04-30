@@ -14,6 +14,7 @@ import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import static javafx.scene.paint.Color.*;
+import javafx.scene.paint.Paint;
 import model.Employee;
 import model.TimeInvestment;
 import org.joda.time.DateTimeFieldType;
@@ -23,17 +24,18 @@ import org.joda.time.LocalDateTime;
  *
  * @author Benjamin & Jonas
  */
-public class ShiftTile extends BorderPane{
-    
+public class ShiftTile extends BorderPane {
+
     ArrayList<TimeInvestment> shifts;
     VBox bottomVbox = new VBox(5);
-    
-    public ShiftTile(ArrayList<TimeInvestment> shifts, double width){
+
+    public ShiftTile(ArrayList<TimeInvestment> shifts, double width) {
         this.shifts = shifts;
         this.setPrefSize(width, 100);
         bottomVbox.setAlignment(Pos.TOP_CENTER);
         this.setCenter(bottomVbox);
-                
+        this.setStyle("-fx-border-color: black;");
+
         initLabels();
     }
 
@@ -41,27 +43,46 @@ public class ShiftTile extends BorderPane{
         for (int i = 0; i < shifts.size(); i++) {
             EmployeeLabel tempLabel = new EmployeeLabel(shifts.get(i));
             LocalDateTime tempShift = shifts.get(i).getStartTime();
-            //Hours.
-            LocalDateTime tempShiftEveningStart = tempShift.withField(DateTimeFieldType.hourOfDay(), ShiftPeriodConstants.EVENING_SHIFT_HOURS_START.getHours());
-            LocalDateTime tempShiftNightStart = tempShift.withField(DateTimeFieldType.hourOfDay(), ShiftPeriodConstants.NIGHT_SHIFT_HOURS_START.getHours());
-            LocalDateTime tempShiftDayStart = tempShift.withField(DateTimeFieldType.hourOfDay(), ShiftPeriodConstants.DAY_SHIFT_HOURS_START.getHours());
-            //Minutes.
-            tempShiftEveningStart = tempShiftEveningStart.withField(DateTimeFieldType.minuteOfHour(), ShiftPeriodConstants.EVENING_SHIFT_MINUTES_START.getMinutes());
-            tempShiftNightStart = tempShiftNightStart.withField(DateTimeFieldType.minuteOfHour(), ShiftPeriodConstants.NIGHT_SHIFT_MINUTES_START.getMinutes());
-            tempShiftDayStart = tempShiftDayStart.withField(DateTimeFieldType.minuteOfHour(), ShiftPeriodConstants.DAY_SHIFT_MINUTES_START.getMinutes());
+
             //Label farve.
-            if (tempShift.isEqual(tempShiftDayStart) || 
-                    (tempShift.isBefore(tempShiftEveningStart) && 
-                    tempShift.isAfter(tempShiftDayStart))) {
-                tempLabel.setTextFill(BLUE);
-            } else if (tempShift.isEqual(tempShiftEveningStart) || 
-                    (tempShift.isBefore(tempShiftNightStart)  && 
-                    tempShift.isAfter(tempShiftEveningStart))) {
-                tempLabel.setTextFill(GREEN);
-            } else {
-                tempLabel.setTextFill(RED);
-            }
+            tempLabel.setTextFill(getColorOnShiftStart(tempShift));
+
             bottomVbox.getChildren().add(tempLabel);
+        }
+    }
+
+    private Paint getColorOnShiftStart(LocalDateTime shiftTime) {
+        //hours
+        LocalDateTime tempShiftEveningStart
+                = shiftTime.withField(DateTimeFieldType.hourOfDay(),
+                        ShiftPeriodConstants.EVENING_SHIFT_HOURS_START.getHours());
+        LocalDateTime tempShiftNightStart
+                = shiftTime.withField(DateTimeFieldType.hourOfDay(),
+                        ShiftPeriodConstants.NIGHT_SHIFT_HOURS_START.getHours());
+        LocalDateTime tempShiftDayStart
+                = shiftTime.withField(DateTimeFieldType.hourOfDay(),
+                        ShiftPeriodConstants.DAY_SHIFT_HOURS_START.getHours());
+        //Minutes.
+        tempShiftEveningStart
+                = tempShiftEveningStart.withField(DateTimeFieldType.minuteOfHour(),
+                        ShiftPeriodConstants.EVENING_SHIFT_MINUTES_START.getMinutes());
+        tempShiftNightStart
+                = tempShiftNightStart.withField(DateTimeFieldType.minuteOfHour(),
+                        ShiftPeriodConstants.NIGHT_SHIFT_MINUTES_START.getMinutes());
+        tempShiftDayStart
+                = tempShiftDayStart.withField(DateTimeFieldType.minuteOfHour(),
+                        ShiftPeriodConstants.DAY_SHIFT_MINUTES_START.getMinutes());
+
+        if (shiftTime.isEqual(tempShiftDayStart)
+                || (shiftTime.isBefore(tempShiftEveningStart)
+                && shiftTime.isAfter(tempShiftDayStart))) {
+            return BLUE;
+        } else if (shiftTime.isEqual(tempShiftEveningStart)
+                || (shiftTime.isBefore(tempShiftNightStart)
+                && shiftTime.isAfter(tempShiftEveningStart))) {
+            return GREEN;
+        } else {
+            return RED;
         }
     }
 

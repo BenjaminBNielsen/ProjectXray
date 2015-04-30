@@ -37,19 +37,18 @@ public class Schedule extends ListView {
 
     private ArrayList<Room> rooms = new ArrayList<>();
     private ArrayList<TimeInvestment> timeInvestments;
-    private ArrayList<WeekendTile> weekendTilesSat, weekendTilesSun;
     private ObservableList<Node> scheduleListItems = FXCollections.observableArrayList();
     private LocalDateTime startTime;
     private ExceptionPopup exceptionPopup = new ExceptionPopup();
-    private WeekendRow weekendRowSat, weekendRowSun;
-    private WeekendTile weekendTileSat, weekendTileSun, weekendTileSatEmp,
-            weekendTileSunEmp;
 
     public Schedule(ArrayList<TimeInvestment> timeInvestments, LocalDateTime startTime) {
         this.timeInvestments = timeInvestments;
         this.startTime = startTime;
         this.setEditable(false);
         this.setFocusTraversable(false);
+        
+        //Tilføj headeren med ugens dage fra mandag til fredag:
+        scheduleListItems.add(new ScheduleHeader(startTime.getWeekOfWeekyear()));
         
         try {
             addShiftTiles();
@@ -62,10 +61,14 @@ public class Schedule extends ListView {
                     + "fordi der mangler en driver.");
         }
         
-        initWeekend();
+        scheduleListItems.add(new WeekendRow("Lørdag", startTime.plusDays(5), timeInvestments));
+        scheduleListItems.add(new WeekendRow("Søndag", startTime.plusDays(6), timeInvestments));
+        
+        scheduleListItems.add(new AssignedAllRoomsRow("Eftermiddag", startTime, timeInvestments, 15, 15, 5, 0));
+        scheduleListItems.add(new AssignedAllRoomsRow("Nat", startTime, timeInvestments, 23, 15, 5, 0));
+        
         this.setItems(scheduleListItems);
         
-
     }
 
     public void addShiftTiles() throws SQLException, ClassNotFoundException {
@@ -75,7 +78,7 @@ public class Schedule extends ListView {
         for (int i = 0; i < rooms.size(); i++) {
             ArrayList<TimeInvestment> shiftsOnRoom = getShiftsOnRoom(rooms.get(i), timeInvestments);
 
-            scheduleListItems.add(new AssignedRoomRow(rooms.get(i), shiftsOnRoom, startTime));
+            scheduleListItems.add(new AssignedRoomRow(rooms.get(i), shiftsOnRoom, startTime, 7, 30, 5, 0));
         }
 
         
@@ -96,19 +99,5 @@ public class Schedule extends ListView {
         return shiftsOnRoom;
     }
     
-    public void initWeekend() {
-        weekendTileSat = new WeekendTile("Lørdag", 100, 155);
-        weekendTileSun = new WeekendTile("Søndag", 100, 155);
-        weekendTileSatEmp = new WeekendTile();
-        weekendTileSunEmp = new WeekendTile();
-        weekendTilesSat = new ArrayList<>();
-        weekendTilesSun = new ArrayList<>();
-        weekendTilesSat.add(weekendTileSat);
-        weekendTilesSat.add(weekendTileSatEmp);
-        weekendTilesSun.add(weekendTileSun);
-        weekendTilesSun.add(weekendTileSunEmp);
-        weekendRowSat.addWeekendTiles(weekendTilesSat);
-        weekendRowSun.addWeekendTiles(weekendTilesSun);
-        scheduleListItems.addAll(weekendRowSat, weekendRowSun);
-    } 
+    
 }

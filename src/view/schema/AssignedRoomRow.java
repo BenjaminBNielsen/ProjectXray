@@ -5,6 +5,7 @@
  */
 package view.schema;
 
+import control.Xray;
 import java.util.ArrayList;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Label;
@@ -17,53 +18,43 @@ import model.TimeInvestment;
 import org.joda.time.DateTimeFieldType;
 import org.joda.time.Hours;
 import org.joda.time.LocalDateTime;
+import view.Frontpage;
 
 /**
  *
  * @author Jonas
  */
-public class AssignedRoomRow extends TilePane{
+public class AssignedRoomRow extends TilePane {
+
     private Room room;
+    private LocalDateTime startTime;
+    private ArrayList<TimeInvestment> shifts;
     private LabelTile roomLabel;
-    
-    public AssignedRoomRow(Room room, ArrayList<TimeInvestment> shifts, LocalDateTime startTime) {
+
+    public AssignedRoomRow(Room room, ArrayList<TimeInvestment> shifts, LocalDateTime startTime,
+            int startHour, int startMinute, int periodLengthHour, int periodLengthMinute) {
+        this.startTime = startTime;
         this.room = room;
+        this.shifts = shifts;
+
         this.setOrientation(Orientation.HORIZONTAL);
-        
-        roomLabel = new LabelTile(room.getRoomName());
+        double tileWitdh = Xray.getInstance().getComputedTileWitdh() - (Frontpage.STANDARD_PADDING);
+        System.out.println(tileWitdh);
+        System.out.println(tileWitdh * 6);
+
+        roomLabel = new LabelTile(room.getRoomName(), tileWitdh);
         
         //Tilføj rumnavn til venstre.
         this.getChildren().add(roomLabel);
-        
+
         //Tilføj vagter til dagene på ugen. i0 = mandag, i6 = søndag.
-        for (int i = 0; i < 7; i++) {
-            ShiftTile shiftTile = new ShiftTile(getShiftsOnDate(startTime.plusDays(i), shifts), 155);
+        for (int i = 0; i < 5; i++) {
+            ShiftTile shiftTile = new ShiftTile(Xray.getInstance().
+                    getShiftsInPeriod(startTime.plusDays(i), shifts, startHour, 
+                            startMinute, periodLengthHour, periodLengthMinute), 155);
             this.getChildren().add(shiftTile);
         }
-        
-        //Løb alle tiles igennem for at give dem en sort border.
-        for (int i = 0; i < this.getChildren().size(); i++) {
-            this.getChildren().get(i).setStyle("-fx-border-color: black;");
-            
-        }
-        
+
     }
-    
-    private ArrayList<TimeInvestment> getShiftsOnDate(LocalDateTime date, ArrayList<TimeInvestment> shifts){
-        ArrayList<TimeInvestment> shiftsOnDate = new ArrayList<>();
-        
-        date = date.withField(DateTimeFieldType.hourOfDay(), 0);
-        date = date.withField(DateTimeFieldType.minuteOfHour(), 0);
-        
-        LocalDateTime dateEndOfDay = date.plusHours(23).plusMinutes(59);
-        
-        for (int i = 0; i < shifts.size(); i++) {
-            if(shifts.get(i).getStartTime().isAfter(date) && shifts.get(i).
-                    getStartTime().isBefore(dateEndOfDay)){
-                shiftsOnDate.add(shifts.get(i));
-            }
-        }
-        
-        return shiftsOnDate;
-    }
+
 }
