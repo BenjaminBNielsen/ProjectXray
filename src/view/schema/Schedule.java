@@ -99,5 +99,4 @@ public class Schedule extends ListView {
         return shiftsOnRoom;
     }
     
-    
 }
