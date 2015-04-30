@@ -20,11 +20,14 @@ public class LabelTile extends HBox{
     private int witdh;
     
     public LabelTile(String text){
-        label = new Label(text);
+        label = new Label(text.toUpperCase());
         label.setFont(Font.font("Arial", FontWeight.BOLD, 22));
+        label.setWrapText(true);
+        
         this.getChildren().add(label);
         this.setAlignment(Pos.CENTER);
         this.setStyle("-fx-border-color: black;");
+        this.setPrefSize(155, 100);
     }
     
     public LabelTile(String text, double witdh) {

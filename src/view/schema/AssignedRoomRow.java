@@ -24,12 +24,19 @@ import view.Frontpage;
  *
  * @author Jonas
  */
-public class AssignedRoomRow extends TilePane{
+public class AssignedRoomRow extends TilePane {
+
     private Room room;
+    private LocalDateTime startTime;
+    private ArrayList<TimeInvestment> shifts;
     private LabelTile roomLabel;
-    
-    public AssignedRoomRow(Room room, ArrayList<TimeInvestment> shifts, LocalDateTime startTime) {
+
+    public AssignedRoomRow(Room room, ArrayList<TimeInvestment> shifts, LocalDateTime startTime,
+            int startHour, int startMinute, int periodLengthHour, int periodLengthMinute) {
+        this.startTime = startTime;
         this.room = room;
+        this.shifts = shifts;
+
         this.setOrientation(Orientation.HORIZONTAL);
         double tileWitdh = Xray.getInstance().getComputedTileWitdh() - (Frontpage.STANDARD_PADDING);
         System.out.println(tileWitdh);
@@ -39,13 +46,15 @@ public class AssignedRoomRow extends TilePane{
         
         //Tilføj rumnavn til venstre.
         this.getChildren().add(roomLabel);
-        
+
         //Tilføj vagter til dagene på ugen. i0 = mandag, i6 = søndag.
         for (int i = 0; i < 5; i++) {
-            ShiftTile shiftTile = new ShiftTile(Xray.getInstance().getShiftsOnDate(startTime.plusDays(i), shifts), tileWitdh);
+            ShiftTile shiftTile = new ShiftTile(Xray.getInstance().
+                    getShiftsInPeriod(startTime.plusDays(i), shifts, startHour, 
+                            startMinute, periodLengthHour, periodLengthMinute), 155);
             this.getChildren().add(shiftTile);
         }
-        
+
     }
-    
+
 }

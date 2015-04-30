@@ -64,9 +64,11 @@ public class Schedule extends ListView {
         scheduleListItems.add(new WeekendRow("Lørdag", startTime.plusDays(5), timeInvestments));
         scheduleListItems.add(new WeekendRow("Søndag", startTime.plusDays(6), timeInvestments));
         
+        scheduleListItems.add(new AssignedAllRoomsRow("Eftermiddag", startTime, timeInvestments, 15, 15, 5, 0));
+        scheduleListItems.add(new AssignedAllRoomsRow("Nat", startTime, timeInvestments, 23, 15, 5, 0));
+        
         this.setItems(scheduleListItems);
         
-
     }
 
     public void addShiftTiles() throws SQLException, ClassNotFoundException {
@@ -76,7 +78,7 @@ public class Schedule extends ListView {
         for (int i = 0; i < rooms.size(); i++) {
             ArrayList<TimeInvestment> shiftsOnRoom = getShiftsOnRoom(rooms.get(i), timeInvestments);
 
-            scheduleListItems.add(new AssignedRoomRow(rooms.get(i), shiftsOnRoom, startTime));
+            scheduleListItems.add(new AssignedRoomRow(rooms.get(i), shiftsOnRoom, startTime, 7, 30, 5, 0));
         }
 
         

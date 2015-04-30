@@ -409,13 +409,21 @@ public class Xray {
     }
 
     /**
-     * Metode til at finde vagter på en given dato, i en given liste.
+     * Metode til at finde vagter på en given dato og i en given tidsperiode, 
+     * i en given liste.
      *
      * @param date dato der skal søges efter.
      * @param shifts liste af vagter der skal søges i.
-     * @return en liste af alle vagter på den givne dato.
+     * @param startHour Hvornår perioden starter i timer.
+     * @param startMinute Hvornår perioden starter i minutter.
+     * @param periodLengthHour Hvor lang tid perioden tager i timer.
+     * @param periodLengthMinute Hvor lang tid perioden tager i minutter.
+     * @return en liste af alle vagter i en given tidsperiode på en given dato.
      */
-    public ArrayList<TimeInvestment> getShiftsOnDate(LocalDateTime date, ArrayList<TimeInvestment> shifts) {
+
+    public ArrayList<TimeInvestment> getShiftsInPeriod(LocalDateTime date, 
+            ArrayList<TimeInvestment> shifts,
+            int startHour, int startMinute, int periodLengthHour, int periodLengthMinute) {
         ArrayList<TimeInvestment> shiftsOnDate = new ArrayList<>();
 
         date = date.withField(DateTimeFieldType.hourOfDay(), 0);
@@ -429,11 +437,52 @@ public class Xray {
                 shiftsOnDate.add(shifts.get(i));
             }
         }
-
+        
+        for (int j = 0; j < shiftsOnDate.size(); j++) {
+                boolean isInPeriod = Xray.getInstance().isDateInPeriod(shiftsOnDate.get(j).getStartTime(), 
+                        startHour, startMinute, periodLengthHour, periodLengthMinute);
+                if(!isInPeriod){
+                    shiftsOnDate.remove(j);
+                    if(shiftsOnDate.size() > 0){
+                        j--;
+                    }
+                }
+            }
+            
         return shiftsOnDate;
     }
-    //Der bliver divideret med 6 fordi at vores frontpage indeholder 6 bokse 
-    //maksimalt, derfor bruger vi boksene som en slags måleenhed.
+
+    /**
+     * Tjekker om en given dato er i en given tidsperiode.
+     * @param date Dato der skal være i den givne periode hvis betingelsen skal
+     * blive sand.
+     * @param startHour Hvornår perioden starter i timer.
+     * @param startMinute Hvornår perioden starter i minutter.
+     * @param periodLengthHour Hvor lang tid perioden tager i timer.
+     * @param periodLengthMinute Hvor lang tid perioden tager i minutter.
+     * @return En boolean som er sand hvis den givne dato er i den givne tidsperiode.
+     */
+    public boolean isDateInPeriod(LocalDateTime date,
+            int startHour, int startMinute, int periodLengthHour, int periodLengthMinute) {
+        boolean inPeriod = false;
+
+        LocalDateTime dateStartOfPeriod = date.withField(DateTimeFieldType.hourOfDay(), startHour);
+        dateStartOfPeriod = dateStartOfPeriod.withField(DateTimeFieldType.minuteOfHour(), startMinute);
+        LocalDateTime dateEndOfPeriod = dateStartOfPeriod.plusHours(periodLengthHour)
+                .plusMinutes(periodLengthMinute);
+        if (date.isEqual(dateStartOfPeriod)
+                || (date.isBefore(dateEndOfPeriod)
+                && date.isAfter(dateStartOfPeriod))) {
+            inPeriod = true;
+        }
+
+        return inPeriod;
+    }
+
+    /**
+     * Der bliver divideret med 6 fordi at vores frontpage indeholder 6 bokse 
+     * maksimalt, derfor bruger vi boksene som en slags måleenhed.
+     */
     public double getComputedTileWitdh() {
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
         double witdh = primaryScreenBounds.getWidth() / 6;
