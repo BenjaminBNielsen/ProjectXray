@@ -8,6 +8,7 @@ package view.popups.shift;
 import control.Xray;
 import handlers.TimeInvestmentHandler;
 import java.sql.SQLException;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,6 +18,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javax.swing.text.DateFormatter;
 import model.Room;
 import model.TimeInvestment;
 import org.joda.time.Hours;
@@ -33,7 +35,7 @@ import view.popups.PopupWindow;
 public class ShiftChangePopup extends PopupWindow {
 
     private PopupMenuButton changeShift;
-    private Label lCurrentShiftEmployee, lCurrentShiftDate, lCurrentShiftTime, lCurrentShiftRoom, lChangeShift, lChangeToRoom, lChangeToDate, lChangeStartTime, lChangeEndTime;
+    private Label lCurrentShiftEmployee, lCurrentShiftDate, lCurrentShiftTime, lCurrentShiftRoom, lChangeShift, lChangeToRoom, lChangeToDate, lChangeStartTime, lChangeEndTime, lShiftChanged;
     private ComboBox cChangeRoom;
     private TextField tChangeStartHour, tChangeStartMinute, tChangeEndHour, tChangeEndMinute, tChangeYear, tChangeMonth, tChangeDay;
     private ExceptionPopup exceptionPopup = new ExceptionPopup();
@@ -45,8 +47,8 @@ public class ShiftChangePopup extends PopupWindow {
     public void display(String title, TimeInvestment shift) {
 
         lCurrentShiftEmployee = new Label("Navn: " + shift.getEmployee().getFirstName() + " " + shift.getEmployee().getLastName());
-        lCurrentShiftDate = new Label("Vagtdato: " + shift.getStartTime().toLocalDate());
-        lCurrentShiftTime = new Label("Vagttidspunkt: " + shift.getStartTime().toLocalTime());
+        lCurrentShiftDate = new Label("Vagtdato: " + shift.getStartTime().toLocalDate().getDayOfMonth()+"-"+shift.getStartTime().toLocalDate().getMonthOfYear()+"-"+shift.getStartTime().toLocalDate().getYear());
+        lCurrentShiftTime = new Label("Vagttidspunkt: " + shift.getStartTime().toLocalTime().getHourOfDay()+":"+shift.getStartTime().toLocalTime().getMinuteOfHour());
         lCurrentShiftRoom = new Label("Rum: " + shift.getRoom().getRoomName());
         
         
@@ -55,23 +57,26 @@ public class ShiftChangePopup extends PopupWindow {
         lChangeToDate = new Label("Indskriv en ny dato");
         lChangeStartTime = new Label("Vælg et nyt starttidspunkt");
         lChangeEndTime = new Label("Vælg et nyt starttidspunkt");
+        lShiftChanged = new Label("Vagten er nu ændret");
+        lShiftChanged.setVisible(false);
+       
 
         cChangeRoom = new ComboBox();
 
         tChangeYear = new TextField("Indtast årstal");
         tChangeMonth = new TextField("Indtast måned");
         tChangeDay = new TextField("Indtast dag");
-        tChangeStartHour = new TextField("HH");
-        tChangeStartMinute = new TextField("MM");
-        tChangeEndHour = new TextField("HH");
-        tChangeEndMinute = new TextField("MM");
+        tChangeStartHour = new TextField("Timeantal");
+        tChangeStartMinute = new TextField("Minutantal");
+        tChangeEndHour = new TextField("Timeantal");
+        tChangeEndMinute = new TextField("Minutantal");
 
         try {
             cChangeRoom.setPrefWidth(120);
             ArrayList<Room> rooms;
             rooms = Xray.getInstance().getRoomControl().getRooms();
             for (Room room : rooms) {
-                cChangeRoom.getItems().add(room.getRoomName());
+                cChangeRoom.getItems().add(room);
             }
             cChangeRoom.setPrefWidth(200);
            
@@ -96,14 +101,14 @@ public class ShiftChangePopup extends PopupWindow {
                 lChangeToRoom, cChangeRoom,
                 lChangeToDate, tChangeDay, tChangeMonth, tChangeYear,
                 lChangeStartTime, tChangeStartHour, tChangeStartMinute,
-                lChangeEndTime, tChangeEndHour, tChangeEndMinute
+                lChangeEndTime, tChangeEndHour, tChangeEndMinute,
+                lShiftChanged
         );
-
         changeShift = new PopupMenuButton("Ændre vagt");
 
         changeShift.setOnAction(e -> {
 
-            Room changedRoom = (Room) cChangeRoom.getValue();
+            Room changedRoom = (Room) cChangeRoom.getSelectionModel().getSelectedItem();
 
             shift.setRoom(changedRoom);
 
@@ -156,6 +161,8 @@ public class ShiftChangePopup extends PopupWindow {
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(ShiftChangePopup.class.getName()).log(Level.SEVERE, null, ex);
             }
+            lShiftChanged.setVisible(true);
+           
 
         });
         
