@@ -23,6 +23,7 @@ import model.Employee;
 import model.TimeInvestment;
 import org.joda.time.LocalDateTime;
 import view.buttons.PopupMenuButton;
+import view.buttons.ShiftManualButton;
 import view.popups.ExceptionPopup;
 import view.popups.PopupWindow;
 
@@ -33,8 +34,8 @@ import view.popups.PopupWindow;
 public class ShiftPopup extends PopupWindow {
 
     //Layouts
-    private VBox contentPane;
-    private HBox datePicker, employeePicker;
+    private VBox contentPane, dateEmployeePicker;
+    private HBox datePicker, employeePicker, manualDateEmployeePicker;
 
     //Labels
     private Label lDate, lEmployee;
@@ -44,6 +45,7 @@ public class ShiftPopup extends PopupWindow {
 
     //Knapper
     private PopupMenuButton addShifts;
+    private ShiftManualButton shiftManual;
 
     //ExceptionPopup
     private ExceptionPopup exceptionPopup = new ExceptionPopup();
@@ -77,6 +79,10 @@ public class ShiftPopup extends PopupWindow {
         datePicker.setAlignment(Pos.CENTER);
         employeePicker = new HBox(25);
         employeePicker.setAlignment(Pos.CENTER);
+        manualDateEmployeePicker = new HBox(25);
+        manualDateEmployeePicker.setAlignment(Pos.CENTER);
+        dateEmployeePicker = new VBox(20);
+
     }
 
     private void initComboboxes() {
@@ -100,15 +106,15 @@ public class ShiftPopup extends PopupWindow {
         addShifts.setOnAction(e -> {
             ArrayList<TimeInvestment> shifts = new ArrayList<>();
             for (int i = 0; i < shiftPanels.length; i++) {
-                if(shiftPanels[i].getShift() != null){
+                if (shiftPanels[i].getShift() != null) {
                     shifts.add(shiftPanels[i].getShift());
                 }
-                
+
             }
             for (int i = 0; i < shifts.size(); i++) {
                 System.out.println(shifts.get(i));
             }
-            
+
             //TimeInvestmenthandler skal indsætte dem i databasen.
             try {
                 Xray.getInstance().addTimeInvestments(shifts);
@@ -117,6 +123,11 @@ public class ShiftPopup extends PopupWindow {
             } catch (ClassNotFoundException ex) {
                 System.out.println(ex.getMessage());
             }
+        });
+        
+        shiftManual = new ShiftManualButton("Manuel vagt");
+        shiftManual.setOnAction(e -> {
+            shiftManual.setOnActionCode();
         });
     }
 
@@ -140,8 +151,12 @@ public class ShiftPopup extends PopupWindow {
 
     private void setup() {
         super.addToCenter(contentPane);
-        contentPane.getChildren().addAll(datePicker, employeePicker);
+        contentPane.getChildren().addAll(manualDateEmployeePicker);
+        
+        manualDateEmployeePicker.getChildren().addAll(dateEmployeePicker, shiftManual);
 
+        dateEmployeePicker.getChildren().addAll(datePicker, employeePicker);
+        
         datePicker.getChildren().addAll(lDate, cDate);
         employeePicker.getChildren().addAll(lEmployee, cEmployee);
 
@@ -189,7 +204,7 @@ public class ShiftPopup extends PopupWindow {
                             String error = "Der kunne ikke oprettes forbindelse til databasen, kontakt venligst"
                                     + "din systemadministrator.";
                             exceptionPopup.display(error);
-                        } 
+                        }
                         //Når man har valgt en dato skal comboboksen med ansatte komme frem
                         cEmployee.setDisable(false);
                     }
