@@ -98,9 +98,9 @@ public class Frontpage extends Application {
             ArrayList<Room> rooms = RoomHandler.getInstance().getRooms();
             
             ArrayList<RoomQualification> roomQuals = new ArrayList<>();
-            roomQuals.add(new RoomQualification(1, false, "all rooms and emps", employees, rooms));
+            roomQuals.add(new RoomQualification(1, "all rooms and emps", employees, rooms));
             ArrayList<LimitQualification> limitQuals = new ArrayList<>();
-            limitQuals.add(new LimitQualification(1, false, "all rooms and emp limits (PVK)", employees, rooms, 1));
+            limitQuals.add(new LimitQualification(1, "all rooms and emp limits (PVK)", employees, rooms, 1));
             
             //tildel via assign rooms metode:
             ArrayList<TimeInvestment> assigned = Xray.getInstance().assignRooms(unAssigned, roomQuals, limitQuals);
