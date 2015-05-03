@@ -6,6 +6,8 @@ import view.popups.EmployeePopup;
 import view.popups.DatabasePopup;
 import control.Xray;
 import dbc.DatabaseConnection;
+import handlers.EmployeeHandler;
+import handlers.RoomHandler;
 import handlers.TimeInvestmentHandler;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
@@ -18,8 +20,14 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.stage.*;
+import model.Employee;
+import model.LimitQualification;
+import model.Room;
+import model.RoomQualification;
+import model.TimeInvestment;
 import org.joda.time.LocalDateTime;
 import view.buttons.PopupMenuButton;
 import view.popups.StudentPopup;
@@ -60,7 +68,7 @@ public class Frontpage extends Application {
 
         screenWidth = primaryScreenBounds.getWidth();
         screenHeight = primaryScreenBounds.getHeight();
-        
+
         try {
             Xray.getInstance().createConnection();
         } catch (SQLException ex) {
@@ -78,10 +86,28 @@ public class Frontpage extends Application {
         }
 
         try {
+            //Tildeling af rum til ansatte for uge 16/2015:
+            //Kør 'Røntgen projekt\DB\Script 3a - insert_shifts_week16-2015.sql'.
+            ArrayList<TimeInvestment> unAssigned = TimeInvestmentHandler.getInstance()
+                    .getUnassignedTimeInvestments();
+            
+            //Hent emps for at oprette quals:
+            ArrayList<Employee> employees = EmployeeHandler.getInstance().getEmployees();
+            
+            //Hent rum:
+            ArrayList<Room> rooms = RoomHandler.getInstance().getRooms();
+            
+            ArrayList<RoomQualification> roomQuals = new ArrayList<>();
+            roomQuals.add(new RoomQualification(1, false, "all rooms and emps", employees, rooms));
+            ArrayList<LimitQualification> limitQuals = new ArrayList<>();
+            limitQuals.add(new LimitQualification(1, false, "all rooms and emp limits (PVK)", employees, rooms, 1));
+            
+            //tildel via assign rooms metode:
+            ArrayList<TimeInvestment> assigned = Xray.getInstance().assignRooms(unAssigned, roomQuals, limitQuals);
+            
+            //Opsætning af skema.
             hMenuLayout.setMinHeight(PopupMenuButton.PREFERRED_HEIGHT);
-            Schedule schedule = new Schedule(TimeInvestmentHandler.getInstance().getAssignedTimeInvestments(), new LocalDateTime(2015 - 03 - 23));
-            double minimumScheduleHeight = screenHeight - (screenHeight/7);
-            schedule.setMinHeight(minimumScheduleHeight);
+            Schedule schedule = new Schedule(assigned, new LocalDateTime(2015, 04, 13, 0, 0));
             vMainLayout.getChildren().add(schedule);
 
         } catch (SQLException ex) {

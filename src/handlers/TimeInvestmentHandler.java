@@ -11,6 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Employee;
 import model.Room;
 import model.TimeInvestment;
@@ -107,9 +109,34 @@ public class TimeInvestmentHandler {
             Room room = RoomHandler.getInstance().getRoom(rs.getString("roomName"));
             
             timeInvestments.add(new TimeInvestment(id, hours, minutes, startTime, emp, room));
-        }
+        }   
         
         return timeInvestments;
+    }
+    
+    /**
+     * 
+     * @param timeInvestment Det timeinvestment som skal opdateres i forhold til vagtskemaet.
+     */
+    public void updateTimeInvestment(TimeInvestment timeInvestment) throws SQLException, ClassNotFoundException {
+        
+       
+            Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
+       
+        
+        int id = timeInvestment.getId();
+        String roomName = timeInvestment.getRoom().getRoomName();
+        int hours = timeInvestment.getHours().getHours();
+        int minutes = timeInvestment.getMinutes().getMinutes();
+        String starttime = timeInvestment.getStartTime().toString();
+        
+        String sql = "Update timeInvestment"
+                + "set roomName = '" +roomName+"', hours = "+hours+", minutes = "+minutes+",startTime = "+starttime+" where id = "+id;
+        
+            stmt.execute(sql);
+            stmt.close();
+        
+        
     }
 
 }

@@ -14,11 +14,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.geometry.Rectangle2D;
+import javafx.stage.Screen;
 import model.Employee;
 import model.LimitQualification;
 import model.Room;
 import model.RoomQualification;
 import model.TimeInvestment;
+import org.joda.time.DateTimeFieldType;
 import org.joda.time.LocalDateTime;
 import view.popups.DatabasePopup;
 
@@ -54,18 +57,18 @@ public class Xray {
         databaseConnection = DatabaseConnection.getInstance().getConnection();
         
     }
-    
-    public void addTimeInvestments(ArrayList<TimeInvestment> shifts) throws 
-            SQLException, ClassNotFoundException{
+
+    public void addTimeInvestments(ArrayList<TimeInvestment> shifts) throws
+            SQLException, ClassNotFoundException {
         TimeInvestmentHandler.getInstance().addTimeInvestments(shifts);
     }
-    
-    public ArrayList<TimeInvestment> getUnassignedTimeInvestments() throws 
-            SQLException, ClassNotFoundException{
+
+    public ArrayList<TimeInvestment> getUnassignedTimeInvestments() throws
+            SQLException, ClassNotFoundException {
         return TimeInvestmentHandler.getInstance().getUnassignedTimeInvestments();
     }
 
-    public static Xray getInstance(){
+    public static Xray getInstance() {
         if (Instance == null) {
             try {
                 Instance = new Xray();
@@ -95,8 +98,8 @@ public class Xray {
     public PersonControl getPersonControl() {
         return personControl;
     }
-    
-        /**
+
+    /**
      * Denne metode tildeler rum til medarbejdere.
      *
      * @param shifts liste over vagter.
@@ -160,10 +163,9 @@ public class Xray {
         //starttidspunkt. Tællingen består i at alle Room-objekter i rooms får talt
         //op på deres count felt, så dette passer med antal tildelinger.
         countDateAssignmentsOfRoom(rooms, currentShift, timeInvestments);
-        
+
         ArrayList<Room> roomsLimitNotReached = getRoomsLimitNotReached(currentShift.getEmployee(), limitQualifications);
 
-        
         if (!roomsLimitNotReached.isEmpty()) {
             //Her inde bliver alle rum der stadig mangler at opfylde 
             //limit på limitQualifications behandlet.
@@ -298,11 +300,12 @@ public class Xray {
     }
 
     /**
-     * Denne metode tjekker at en given tidsinvestering findes i en anden tidsinvesterings 
-     * tidsperiode. Denne tidsperiode er givet ved otherShift's starttidspunkt, 
-     * og dens sluttidspunkt som udregnes ved at lægge tidsinvesteringens timer og 
-     * minutter til.
-     * @param currentShift Den nuværende shift, hvis starttidspunkt skal være i 
+     * Denne metode tjekker at en given tidsinvestering findes i en anden
+     * tidsinvesterings tidsperiode. Denne tidsperiode er givet ved otherShift's
+     * starttidspunkt, og dens sluttidspunkt som udregnes ved at lægge
+     * tidsinvesteringens timer og minutter til.
+     *
+     * @param currentShift Den nuværende shift, hvis starttidspunkt skal være i
      * otherShifts.
      * @param otherShift Den anden vagt som currentShift skal sammenlignes med.
      * @return En boolean hvis værdi er sand hvis currentShift's starttidspunkt
@@ -312,7 +315,7 @@ public class Xray {
         boolean isInPeriod = false;
         LocalDateTime otherShiftEndTime = otherShift.getStartTime().
                 plus(otherShift.getHours()).plus(otherShift.getMinutes());
-        
+
         //Other shift som sammenlignes med currentShift skal have sit starttidspunkt
         //før eller samtidig med currentShifts, og dens sluttidspunkt skal være
         //efter eller samtidig med currentShifts starttidspunkt.
@@ -410,4 +413,85 @@ public class Xray {
         return prioritizedRoom;
     }
 
+    /**
+     * Metode til at finde vagter på en given dato og i en given tidsperiode, 
+     * i en given liste.
+     *
+     * @param date dato der skal søges efter.
+     * @param shifts liste af vagter der skal søges i.
+     * @param startHour Hvornår perioden starter i timer.
+     * @param startMinute Hvornår perioden starter i minutter.
+     * @param periodLengthHour Hvor lang tid perioden tager i timer.
+     * @param periodLengthMinute Hvor lang tid perioden tager i minutter.
+     * @return en liste af alle vagter i en given tidsperiode på en given dato.
+     */
+
+    public ArrayList<TimeInvestment> getShiftsInPeriod(LocalDateTime date, 
+            ArrayList<TimeInvestment> shifts,
+            int startHour, int startMinute, int periodLengthHour, int periodLengthMinute) {
+        ArrayList<TimeInvestment> shiftsOnDate = new ArrayList<>();
+
+        date = date.withField(DateTimeFieldType.hourOfDay(), 0);
+        date = date.withField(DateTimeFieldType.minuteOfHour(), 0);
+
+        LocalDateTime dateEndOfDay = date.plusHours(23).plusMinutes(59);
+
+        for (int i = 0; i < shifts.size(); i++) {
+            if (shifts.get(i).getStartTime().isAfter(date) && shifts.get(i).
+                    getStartTime().isBefore(dateEndOfDay)) {
+                shiftsOnDate.add(shifts.get(i));
+            }
+        }
+        
+        for (int j = 0; j < shiftsOnDate.size(); j++) {
+                boolean isInPeriod = Xray.getInstance().isDateInPeriod(shiftsOnDate.get(j).getStartTime(), 
+                        startHour, startMinute, periodLengthHour, periodLengthMinute);
+                if(!isInPeriod){
+                    shiftsOnDate.remove(j);
+                    if(shiftsOnDate.size() > 0){
+                        j--;
+                    }
+                }
+            }
+            
+        return shiftsOnDate;
+    }
+
+    /**
+     * Tjekker om en given dato er i en given tidsperiode.
+     * @param date Dato der skal være i den givne periode hvis betingelsen skal
+     * blive sand.
+     * @param startHour Hvornår perioden starter i timer.
+     * @param startMinute Hvornår perioden starter i minutter.
+     * @param periodLengthHour Hvor lang tid perioden tager i timer.
+     * @param periodLengthMinute Hvor lang tid perioden tager i minutter.
+     * @return En boolean som er sand hvis den givne dato er i den givne tidsperiode.
+     */
+    public boolean isDateInPeriod(LocalDateTime date,
+            int startHour, int startMinute, int periodLengthHour, int periodLengthMinute) {
+        boolean inPeriod = false;
+
+        LocalDateTime dateStartOfPeriod = date.withField(DateTimeFieldType.hourOfDay(), startHour);
+        dateStartOfPeriod = dateStartOfPeriod.withField(DateTimeFieldType.minuteOfHour(), startMinute);
+        LocalDateTime dateEndOfPeriod = dateStartOfPeriod.plusHours(periodLengthHour)
+                .plusMinutes(periodLengthMinute);
+        if (date.isEqual(dateStartOfPeriod)
+                || (date.isBefore(dateEndOfPeriod)
+                && date.isAfter(dateStartOfPeriod))) {
+            inPeriod = true;
+        }
+
+        return inPeriod;
+    }
+
+    /**
+     * Der bliver divideret med 6 fordi at vores frontpage indeholder 6 bokse 
+     * maksimalt, derfor bruger vi boksene som en slags måleenhed.
+     * @param x Hvor meget skal skærmens bredde deles op i.
+     */
+    public double getComputedTileWitdh(int x) {
+        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+        double witdh = primaryScreenBounds.getWidth() / x;
+        return witdh;
+    }
 }

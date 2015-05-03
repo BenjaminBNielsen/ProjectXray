@@ -18,13 +18,8 @@ import model.Room;
  * @author Jonas
  */
 public class RoomControl {
-    private static RoomControl instance;
-    private int roomCount;
-    private ArrayList<Room> rooms;
     
     public RoomControl() throws SQLException, ClassNotFoundException {
-        //roomCount = RoomHandler.getInstance().getRoomsRows();
-        rooms = new ArrayList<Room>();
     }
     
 //    public static RoomControl getInstance() throws SQLException, ClassNotFoundException {
@@ -42,12 +37,8 @@ public class RoomControl {
         RoomHandler.getInstance().addRooms(rooms);
     }
     
-    public ArrayList getRooms() throws SQLException, ClassNotFoundException {
+    public ArrayList<Room> getRooms() throws SQLException, ClassNotFoundException {
         return RoomHandler.getInstance().getRooms();
     }
-    
-//    public Room getRoom(int roomNumber) throws SQLException, ClassNotFoundException {
-//        return RoomHandler.getInstance().getRoom(roomNumber);
-//    }
     
 }

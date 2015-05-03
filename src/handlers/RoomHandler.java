@@ -20,10 +20,8 @@ import model.Room;
 public class RoomHandler {
     
     private static RoomHandler instance;
-    private ArrayList<Room> rooms;
     
     RoomHandler() {
-         rooms = new ArrayList<>();
     }
     
     public static RoomHandler getInstance() {
@@ -38,7 +36,7 @@ public class RoomHandler {
         
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
-        String sql = "insert into room(roomName, roomState) values";
+        String sql = "insert into room(roomName, roomState, minOccupation, maxOccupation) values";
         //String sql = "insert into room() values(" + roomNumber + ",'"
         //        + roomName + "'," + roomState + ");";
         
@@ -46,6 +44,8 @@ public class RoomHandler {
                 Room tempRoom = rooms.get(i);
                 sql += "('" + tempRoom.getRoomName();
                 sql += "'," + tempRoom.getRoomState();
+                sql += "," + tempRoom.getMinOccupation();
+                sql += "," + tempRoom.getMaxOccupation();
                 if (i == rooms.size() - 1) {
                     sql += ");";
                 } else {
@@ -59,7 +59,8 @@ public class RoomHandler {
     }
     
     public ArrayList<Room> getRooms() throws SQLException, ClassNotFoundException {
-
+        ArrayList<Room> rooms = new ArrayList<>();
+        
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
         String sql = "select * from room;";
