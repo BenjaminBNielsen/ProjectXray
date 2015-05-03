@@ -27,11 +27,12 @@ public class RoomPopup extends PopupWindow {
     private PopupMenuButton addRoom;
     private TextField tFRoomName, tFRoomMinOccupation, tFRoomMaxOccupation;
     private int roomStateInsert, roomMinInsert, roomMaxInsert;
-    private Label lRoomName, lRoomState;
+    private Label lRoomName, lRoomState, lRoomMinInsert, lRoomMaxInsert;
     private String roomNameInsert;
     private SettingsButton settingsButton;
     private AddButton addButton;
     private ComboBox cBRoomState;
+    private boolean exceptionFejl;
 
     @Override
     public void display(String title) {
@@ -47,14 +48,16 @@ public class RoomPopup extends PopupWindow {
                         "Lukket",
                         "Service"
                 );
-        
+
         cBRoomState = new ComboBox(cBOptions);
         cBRoomState.setValue("Åbent");
 
         lRoomName = new Label("Skriv rum navn her");
 
         lRoomState = new Label("Sæt rum status her");
-        
+        lRoomMinInsert = new Label("Skriv minimum antal personer der skal være i rummet her");
+        lRoomMaxInsert = new Label("Skriv maximum antal personer der skal være i rummet her");
+
         lRoomState.setTextAlignment(TextAlignment.CENTER);
         ListView<Room> roomView = new ListView();                                   //List
         ObservableList<Room> rooms = FXCollections.observableArrayList();           //List
@@ -75,26 +78,37 @@ public class RoomPopup extends PopupWindow {
         super.addToCenter(vBoxCenter);
         vBoxLeft.getChildren().addAll(
                 lRoomName, tFRoomName,
-                lRoomState, cBRoomState);
+                lRoomState, cBRoomState,
+                lRoomMinInsert, tFRoomMinOccupation,
+                lRoomMaxInsert, tFRoomMaxOccupation);
 
         vBoxRight.getChildren().addAll(roomView);
         vBoxCenter.getChildren().addAll(addButton, settingsButton);
 
         addButton.setOnAction(e -> {
-            int count = 0;
-            int count2 = 0;
+            exceptionFejl = false;
 
             roomNameInsert = tFRoomName.getText();
-            
-            roomMinInsert = Integer.parseInt(tFRoomMinOccupation.getText());
-            
-            roomMaxInsert = Integer.parseInt(tFRoomMaxOccupation.getText());
+            try {
+                roomMinInsert = Integer.parseInt(tFRoomMinOccupation.getText());
+            } catch (NumberFormatException ex) {
+                exceptionPopup.display("Der må kun være tal i tekstfeldtet til minimum antal ansatte");
+                exceptionFejl = true;
+            }
 
-                            roomStateInsert = cBRoomState.getSelectionModel().getSelectedIndex() + 1;
-                            //DER MANGLER MINIMUM OG MAXIMUM
-                            //rooms.add(new Room(roomNameInsert, roomStateInsert));
-                            roomView.setItems(rooms);
+            try {
+                roomMaxInsert = Integer.parseInt(tFRoomMaxOccupation.getText());
+            } catch (NumberFormatException ex) {
+                exceptionPopup.display("Der må kun være tal i tekstfeldtet til maximum antal ansatte");
+                exceptionFejl = true;
+            }
 
+            roomStateInsert = cBRoomState.getSelectionModel().getSelectedIndex() + 1;
+
+            if (exceptionFejl != true) {
+                rooms.add(new Room(roomNameInsert, roomStateInsert, roomMinInsert, roomMaxInsert));
+                roomView.setItems(rooms);
+            }
 
         });
 
@@ -117,7 +131,7 @@ public class RoomPopup extends PopupWindow {
                     System.out.println(ex.getMessage());
                 } catch (ClassNotFoundException ex) {
                     exceptionPopup.display("Der mangler en database driver, kontakt systemadministrator");
-                } 
+                }
                 System.out.println(roomNameInsert + "\n" + roomStateInsert);
             } else {
                 exceptionPopup.display("Der er ingen rum i listen der skal indsættes");

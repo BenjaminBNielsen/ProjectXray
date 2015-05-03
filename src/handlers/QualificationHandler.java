@@ -221,5 +221,42 @@ public class QualificationHandler {
         }
         return instance;
     }
+    
+    
+    
+    
+    
+    /* NY METODE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    Der skal først sættes et navn ind i databasen på Qualification så jeg får et 
+    auto-incremented ID som jeg skal bruge til at indsætte data i QualToRoom og 
+    QualToEmployee og det skal være hvis der er flere rum, Qualification id + roomname
+    hvor det hele tiden er samme ID men forskellig roomname hvis der er flere af dem.
+    
+    Til sidst skal der, hvis det er en roomqualification laves et room qualification objekt
+    med samme ID som qualification.
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    */
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 }

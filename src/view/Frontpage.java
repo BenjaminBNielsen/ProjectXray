@@ -29,6 +29,7 @@ import model.RoomQualification;
 import model.TimeInvestment;
 import org.joda.time.LocalDateTime;
 import view.buttons.PopupMenuButton;
+import view.popups.RoomQualificationPopup;
 import view.popups.StudentPopup;
 import view.popups.shift.ShiftPopup;
 
@@ -40,6 +41,9 @@ public class Frontpage extends Application {
 
     private double screenWidth;
     private double screenHeight;
+    
+    private ArrayList<Room> rooms;
+    private ArrayList<Employee> employees;
 
     private Stage window;
 
@@ -128,7 +132,12 @@ public class Frontpage extends Application {
         frontPageScene = new Scene(vMainLayout, screenWidth, screenHeight);
         vMainLayout.setPadding(new Insets(STANDARD_PADDING, STANDARD_PADDING, STANDARD_PADDING, STANDARD_PADDING));
         window.setTitle(TITLE);
-
+        
+        rooms = new ArrayList<>();
+        employees = new ArrayList<>();
+        
+        initArrayLists();
+        
         //initialiser knapper:
         initButtons();
 
@@ -163,16 +172,17 @@ public class Frontpage extends Application {
 
         createQualificationButton = new PopupMenuButton("Opret kvalifikation");
         createQualificationButton.setOnAction(e -> {
-            //QualificationTypePopup qualificationTypeWindow = new QualificationTypePopup();
-            //qualificationTypeWindow.display("Kvalifikationer");
+            RoomQualificationPopup roomQualificationWindow = 
+                    new RoomQualificationPopup(rooms, employees);
+            roomQualificationWindow.display("Kvalifikationer");
 
         });
         menuButtons.add(createQualificationButton);
 
         createRoomButton = new PopupMenuButton("Opret rum");
         createRoomButton.setOnAction(e -> {
-//            RoomPopup roomWindow = new RoomPopup();
-//            roomWindow.display("Rum");
+            RoomPopup roomWindow = new RoomPopup();
+            roomWindow.display("Rum");
         });
         menuButtons.add(createRoomButton);
 
@@ -187,5 +197,31 @@ public class Frontpage extends Application {
             hMenuLayout.getChildren().add(menuButton);
         }
 
+    }
+    
+    public void initArrayLists() {
+        
+        //Der skal skrives færdigt på de her try and catches!!!!!!!!!!!!!!!!!!!
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        try {
+        rooms = Xray.getInstance().getRoomControl().getRooms();
+        } catch (SQLException ex) {
+            
+        } catch (ClassNotFoundException ex) {
+            
+        }
+        
+        try {
+        employees = Xray.getInstance().getPersonControl().getEmployees();
+        } catch (SQLException ex) {
+            
+        } catch (ClassNotFoundException ex) {
+            
+        }
+        
+        
+        
     }
 }

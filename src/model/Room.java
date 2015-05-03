@@ -83,6 +83,8 @@ public class Room {
     
     @Override
     public String toString() {
-        return roomName + " (" + count + ")";
+        //return roomName + " (" + count + ")";
+        return roomName + ", " + roomState + ", "
+                + minOccupation + ", " + maxOccupation;
     }
 }
