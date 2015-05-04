@@ -131,7 +131,7 @@ public class TimeInvestmentHandler {
         String starttime = timeInvestment.getStartTime().toString();
         
         String sql = "Update timeInvestment"
-                + "set roomName = '" +roomName+"', hours = "+hours+", minutes = "+minutes+",startTime = "+starttime+" where id = "+id;
+                + " set roomName = '" +roomName+"', hours = "+hours+", minutes = "+minutes+",startTime = '"+starttime+"' where id = "+id;
         
             stmt.execute(sql);
             stmt.close();
