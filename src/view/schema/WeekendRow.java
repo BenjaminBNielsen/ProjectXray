@@ -7,6 +7,8 @@ package view.schema;
 
 import control.Xray;
 import java.util.ArrayList;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.TimeInvestment;
@@ -17,35 +19,37 @@ import view.Frontpage;
  *
  * @author Jonas
  */
-public class WeekendRow extends HBox {
+public class WeekendRow extends HBox implements HasChildren {
 
     private String dayName;
     private ArrayList<TimeInvestment> shifts;
     private LabelTile labelTile;
     private ShiftTile shiftTile;
     private LocalDateTime date;
-    
 
-    public WeekendRow(String dayName, LocalDateTime date, ArrayList<TimeInvestment> shifts){
+    public WeekendRow(String dayName, LocalDateTime date, ArrayList<TimeInvestment> shifts) {
         this.dayName = dayName;
         this.date = date;
         this.shifts = shifts;
-        double tileWitdh = Xray.getInstance().getComputedTileWitdh();
-        int padding = Frontpage.STANDARD_PADDING;
-        
+
         shifts = Xray.getInstance().getShiftsInPeriod(date, shifts, 0, 0, 23, 59);
-        
-        labelTile = new LabelTile(dayName, tileWitdh - (padding));
-        shiftTile = new ShiftTile(shifts, (tileWitdh*5) - (padding*5));
-        System.out.println(tileWitdh - (padding*2));
-        System.out.println((tileWitdh*5) - (padding*2));
-        System.out.println(tileWitdh - (padding*2) + (tileWitdh*5) - (padding*2));
-        
-        
-        
-        
+
+        labelTile = new LabelTile(dayName);
+        shiftTile = new ShiftTile(shifts);
+
         this.getChildren().addAll(labelTile, shiftTile);
-        
-        
+
+    }
+
+    @Override
+    public Node[] getChildrenList(){
+        ObservableList<Node> sliChildren = this.getChildren();
+
+            Node[] childrenAsArray = new Node[sliChildren.size()];
+
+            for (int i = 0; i < sliChildren.size(); i++) {
+                childrenAsArray[i] = sliChildren.get(i);
+            }
+        return childrenAsArray;
     }
 }

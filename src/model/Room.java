@@ -39,19 +39,7 @@ public class Room {
 
     public void setClosed(int roomState) {
         this.roomState = roomState;
-    }
-    
-    private String getRoomStateString() {
-        String roomStateString = "";
-//        if (roomState == 1) {
-//            roomStateString = "Åbent";
-//        } else if (roomState == 2) {
-//            roomStateString = "Lukket";
-//        } else if (roomState == 3) {
-//            roomStateString = "Service";
-//        }
-        return roomStateString;
-    }   
+    } 
 
     public int getMinOccupation() {
         return minOccupation;
@@ -83,8 +71,6 @@ public class Room {
     
     @Override
     public String toString() {
-        //return roomName + " (" + count + ")";
-        return roomName + ", " + roomState + ", "
-                + minOccupation + ", " + maxOccupation;
+        return roomName;
     }
 }

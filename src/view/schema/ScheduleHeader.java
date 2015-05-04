@@ -1,7 +1,11 @@
 package view.schema;
 
+import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.TilePane;
 
 /**
@@ -14,7 +18,7 @@ import javafx.scene.layout.TilePane;
  *
  * @author Benjamin
  */
-public class ScheduleHeader extends TilePane {
+public class ScheduleHeader extends HBox implements HasChildren{
 
     //Opslagstabel til at få navne på ugedagene.
     public static final String[] WEEK_DAY_NAMES
@@ -22,7 +26,6 @@ public class ScheduleHeader extends TilePane {
 
     public ScheduleHeader(int week) {
 
-        this.setOrientation(Orientation.HORIZONTAL);
         LabelTile weekLabel = new LabelTile("UGE " + week);
 
         this.getChildren().add(weekLabel);
@@ -31,8 +34,18 @@ public class ScheduleHeader extends TilePane {
         for (int i = 0; i < 5; i++) {
             this.getChildren().add(new LabelTile(WEEK_DAY_NAMES[i]));
         }
+        
+    }
+    
+    @Override
+    public Node[] getChildrenList(){
+        ObservableList<Node> sliChildren = this.getChildren();
 
-        //Sæt border og bredde.
-        this.setPrefTileWidth(155);
+            Node[] childrenAsArray = new Node[sliChildren.size()];
+
+            for (int i = 0; i < sliChildren.size(); i++) {
+                childrenAsArray[i] = sliChildren.get(i);
+            }
+        return childrenAsArray;
     }
 }

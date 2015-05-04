@@ -7,10 +7,13 @@ package view.schema;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import model.Employee;
 import model.TimeInvestment;
+import view.popups.shift.ShiftChangePopup;
 
 /**
  *
@@ -31,12 +34,14 @@ public class EmployeeLabel extends Button{
                 + "-fx-font-size: 18px;");
         this.setTextAlignment(TextAlignment.CENTER);
         this.setWrapText(true);
+        
         String btnContent = shift.getEmployee().getFirstName().toUpperCase() +
                 " " + shift.getEmployee().getLastName().toUpperCase().charAt(0);
         
         this.setText(btnContent);
         this.setOnAction(e -> {
-            //new changeShiftPopup("title");
+            ShiftChangePopup scp = new ShiftChangePopup();
+            scp.display("Foretag ændring på vagt", shift);
         });
     }
 

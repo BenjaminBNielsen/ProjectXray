@@ -8,6 +8,7 @@ package view.schema;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
@@ -17,25 +18,16 @@ import javafx.scene.text.FontWeight;
  */
 public class LabelTile extends HBox{
     private Label label;
-    private int witdh;
     
     public LabelTile(String text){
         label = new Label(text.toUpperCase());
         label.setFont(Font.font("Arial", FontWeight.BOLD, 22));
         label.setWrapText(true);
+        this.setStyle("-fx-border-color: #d3d3d3;"
+                + "-fx-border-width: 0.5px;"); 
         
         this.getChildren().add(label);
         this.setAlignment(Pos.CENTER);
-        this.setStyle("-fx-border-color: black;");
-        this.setPrefSize(155, 100);
-    }
-    
-    public LabelTile(String text, double witdh) {
-        label = new Label(text);
-        label.setFont(Font.font("Arial", FontWeight.BOLD, 22));
-        this.getChildren().add(label);
-        this.setAlignment(Pos.CENTER);
-        this.setStyle("-fx-border-color: black;");
-        this.setPrefSize(witdh, 100);
+        
     }
 }
