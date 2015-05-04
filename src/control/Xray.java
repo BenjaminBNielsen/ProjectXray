@@ -137,11 +137,6 @@ public class Xray {
             }
         }
 
-        for (int i = 0; i < assignedShifts.size(); i++) {
-            System.out.println(assignedShifts.get(i));
-
-        }
-
         return assignedShifts;
     }
 
@@ -168,12 +163,11 @@ public class Xray {
 
         ArrayList<Room> roomsLimitNotReached = getRoomsLimitNotReached(currentShift.getEmployee(), limitQualifications);
 
-        if (roomsLimitNotReached.size() != 0) {
+        countDateAssignmentsOfRoom(roomsLimitNotReached, currentShift, timeInvestments);
+        if (!roomsLimitNotReached.isEmpty()) {
             //Her inde bliver alle rum der stadig mangler at opfylde 
             //limit på limitQualifications behandlet.
-            System.out.println(roomsLimitNotReached.size() + " XXX " + prioritizedRoom);
             prioritizedRoom = getRoomMinMaxCompared(roomsLimitNotReached);
-            System.out.println(roomsLimitNotReached.size() + " reaeraewraew " + prioritizedRoom);
 
         } else {
             prioritizedRoom = getRoomMinMaxCompared(rooms);
@@ -361,7 +355,6 @@ public class Xray {
                                 //Hvis begrænsningen endnu ikke er nået så tilføj
                                 //til roomsLimitNotReached.
                                 if (limitRoom.getCount() < limitQualifications.get(i).getLimit()) {
-                                    System.out.println("X " + limitRooms.get(k).getRoomName() + " count: " + limitRooms.get(k).getCount());
                                     roomsLimitNotReached.add(limitRoom);
                                 }
 
