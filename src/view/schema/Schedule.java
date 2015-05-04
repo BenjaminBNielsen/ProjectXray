@@ -86,7 +86,9 @@ public class Schedule extends ScrollPane {
             grid.addRow(i, scheduleListItems.get(i).getChildrenList());
 
         }
-
+        
+        VBox.setVgrow(this, Priority.ALWAYS);
+        
         this.setFitToWidth(true);
     }
 
@@ -133,4 +135,8 @@ public class Schedule extends ScrollPane {
         }
     }
 
+    public void updateSchedule(ArrayList<TimeInvestment> timeInvestements, LocalDateTime startTime){
+        this.timeInvestments = timeInvestments;
+        this.startTime = startTime;
+    }
 }

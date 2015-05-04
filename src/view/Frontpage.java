@@ -20,6 +20,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.stage.*;
@@ -28,6 +30,7 @@ import model.LimitQualification;
 import model.Room;
 import model.RoomQualification;
 import model.TimeInvestment;
+import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDateTime;
 import view.buttons.PopupMenuButton;
 import view.popups.StudentPopup;
@@ -39,6 +42,8 @@ public class Frontpage extends Application {
 
     public static final int STANDARD_PADDING = 15;
 
+    private Schedule schedule;
+
     private double screenWidth;
     private double screenHeight;
 
@@ -49,20 +54,38 @@ public class Frontpage extends Application {
 
     //layout-panes:
     private VBox vMainLayout;
-    private HBox hMenuLayout;
+    private HBox hMenuLayout, hWeekPicker;
 
     //buttons:
     private PopupMenuButton createEmployee, createQualificationButton, createRoomButton,
             createStudent, createShift;
+
+    private Button jumpForwardWeek, jumpBackWeek;
+
+    //combobox
+    private ComboBox cWeek;
+
+    //Denne her uges mandag
+    private LocalDateTime today = LocalDateTime.now();
+    private LocalDateTime thisMonday, chosenMonday;
+
+    ArrayList<TimeInvestment> assigned;
 
     public static void main(String[] args) {
         launch(args);
 
     }
 
+    public Frontpage() {
+
+    }
+
     //Hovedmetoden der bliver kørt i gui'en.
     @Override
     public void start(Stage window) {
+        //Initialisere datoer
+        thisMonday = today.withDayOfWeek(DateTimeConstants.MONDAY);
+
         //Hent skærmens størrelse.
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 
@@ -90,24 +113,24 @@ public class Frontpage extends Application {
             //Kør 'Røntgen projekt\DB\Script 3a - insert_shifts_week16-2015.sql'.
             ArrayList<TimeInvestment> unAssigned = TimeInvestmentHandler.getInstance()
                     .getUnassignedTimeInvestments();
-            
+
             //Hent emps for at oprette quals:
             ArrayList<Employee> employees = EmployeeHandler.getInstance().getEmployees();
-            
+
             //Hent rum:
             ArrayList<Room> rooms = RoomHandler.getInstance().getRooms();
-            
+
             ArrayList<RoomQualification> roomQuals = new ArrayList<>();
             roomQuals.add(new RoomQualification(1, "all rooms and emps", employees, rooms));
             ArrayList<LimitQualification> limitQuals = new ArrayList<>();
             limitQuals.add(new LimitQualification(1, "all rooms and emp limits (PVK)", employees, rooms, 1));
-            
+
             //tildel via assign rooms metode:
-            ArrayList<TimeInvestment> assigned = Xray.getInstance().assignRooms(unAssigned, roomQuals, limitQuals);
-            
+            assigned = Xray.getInstance().assignRooms(unAssigned, roomQuals, limitQuals);
+
             //Opsætning af skema.
             hMenuLayout.setMinHeight(PopupMenuButton.PREFERRED_HEIGHT);
-            Schedule schedule = new Schedule(assigned, new LocalDateTime(2015, 04, 13, 0, 0));
+            schedule = new Schedule(assigned, today);
             vMainLayout.getChildren().add(schedule);
 
         } catch (SQLException ex) {
@@ -124,18 +147,26 @@ public class Frontpage extends Application {
 
         hMenuLayout = new HBox(STANDARD_PADDING);
 
+        hWeekPicker = new HBox(STANDARD_PADDING);
+
         frontPageScene = new Scene(vMainLayout, screenWidth, screenHeight);
         vMainLayout.setPadding(new Insets(STANDARD_PADDING, STANDARD_PADDING, STANDARD_PADDING, STANDARD_PADDING));
         window.setTitle(TITLE);
 
         //initialiser knapper:
         initButtons();
+        initCombobox();
 
         //Tilføj knapper til hMainLayout:
         hMenuLayout.setAlignment(Pos.CENTER_LEFT);
 
         vMainLayout.setAlignment(Pos.TOP_LEFT);
         vMainLayout.getChildren().addAll(hMenuLayout);
+
+        //Tilføj combobox og pile til hWeekPicker:
+        hWeekPicker.setAlignment(Pos.CENTER_LEFT);
+
+        vMainLayout.getChildren().addAll(hWeekPicker);
 
         window.setScene(frontPageScene);
         window.show();
@@ -184,5 +215,83 @@ public class Frontpage extends Application {
             hMenuLayout.getChildren().add(menuButton);
         }
 
+        jumpForwardWeek = new Button("Frem >");
+        jumpForwardWeek.setOnAction(e -> {
+            cWeek.getSelectionModel().selectNext();
+            chosenMonday = (LocalDateTime) cWeek.getSelectionModel().getSelectedItem();
+
+            vMainLayout.getChildren().remove(2);
+            Schedule schedule1 = new Schedule(assigned, new LocalDateTime(chosenMonday));
+            vMainLayout.getChildren().add(2, schedule1);
+        });
+
+        jumpBackWeek = new Button("< Tilbage");
+        jumpBackWeek.setOnAction(e -> {
+            cWeek.getSelectionModel().selectPrevious();
+            chosenMonday = (LocalDateTime) cWeek.getSelectionModel().getSelectedItem();
+
+            vMainLayout.getChildren().remove(2);
+            Schedule schedule1 = new Schedule(assigned, new LocalDateTime(chosenMonday));
+            vMainLayout.getChildren().add(2, schedule1);
+        });
+
+        hWeekPicker.getChildren().addAll(jumpBackWeek, jumpForwardWeek);
+    }
+
+    private void initCombobox() {
+        cWeek = new ComboBox();
+        cWeek.setPrefWidth(170);
+
+        ArrayList<LocalDateTime> mondaysHalfYearBack = getHalfYearBack(this.thisMonday);
+        ArrayList<LocalDateTime> mondaysHalfYearForward = getHalfYearForwards(this.thisMonday);
+
+        ArrayList<LocalDateTime> allMondays = new ArrayList<>();
+        for (int i = 0; i < mondaysHalfYearBack.size(); i++) {
+            allMondays.add(mondaysHalfYearBack.get(i));
+
+        }
+        for (int i = 0; i < mondaysHalfYearForward.size(); i++) {
+            allMondays.add(mondaysHalfYearForward.get(i));
+        }
+
+        for (int i = 0; i < allMondays.size(); i++) {
+            cWeek.getItems().add(allMondays.get(i));
+        }
+
+        hWeekPicker.getChildren().add(cWeek);
+
+        cWeek.setOnAction(e -> {
+            chosenMonday = (LocalDateTime) cWeek.getSelectionModel().getSelectedItem();
+            
+            vMainLayout.getChildren().remove(2);
+            Schedule schedule1 = new Schedule(assigned, new LocalDateTime(chosenMonday));
+            vMainLayout.getChildren().add(2, schedule1);
+        });
+    }
+
+    public ArrayList<LocalDateTime> getHalfYearForwards(LocalDateTime thisMonday) {
+        ArrayList<LocalDateTime> mondays = new ArrayList<>();
+        LocalDateTime monday = thisMonday;
+
+        for (int i = 0; i < 27; i++) {
+            monday = thisMonday.plusWeeks(i);
+
+            mondays.add(monday);
+        }
+
+        return mondays;
+    }
+
+    public ArrayList<LocalDateTime> getHalfYearBack(LocalDateTime thisMonday) {
+        ArrayList<LocalDateTime> mondays = new ArrayList<>();
+        LocalDateTime monday = thisMonday;
+
+        for (int i = 26; i > 0; i--) {
+            monday = thisMonday.minusWeeks(i);
+
+            mondays.add(monday);
+        }
+
+        return mondays;
     }
 }
