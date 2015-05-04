@@ -120,7 +120,7 @@ public class Frontpage extends Application {
             System.out.println("LORT2");
         }
 
-            //tildel via assign rooms metode:
+        //tildel via assign rooms metode:
         //Opsætning af skema.
         hMenuLayout.setMinHeight(PopupMenuButton.PREFERRED_HEIGHT);
         schedule = new Schedule(assigned, today);
@@ -214,7 +214,7 @@ public class Frontpage extends Application {
         jumpForwardWeek.setOnAction(e -> {
             cWeek.getSelectionModel().selectNext();
             chosenMonday = (LocalDateTime) cWeek.getSelectionModel().getSelectedItem();
-
+            
             vMainLayout.getChildren().remove(2);
             Schedule schedule1 = new Schedule(assigned, new LocalDateTime(chosenMonday));
             vMainLayout.getChildren().add(2, schedule1);
@@ -252,7 +252,10 @@ public class Frontpage extends Application {
         for (int i = 0; i < allMondays.size(); i++) {
             cWeek.getItems().add(allMondays.get(i));
         }
-
+        cWeek.getSelectionModel().select((cWeek.getItems().size()-1)>>>1);
+//>>> er det der hedder en unsigned shift operator, at skrive >>> 1 er det samme som at sige divideret med 2
+//Der er bare en bedre udgave da den ikke skal beregne noget, den flytte bare alle bits i heltallet en gang til højre,
+//        hvilket svarer til at skrive heltal/2... Cool cool nok er vi færdige? Jep vi er helt og aldeles komplet og uomtruffeligt anderimljsFNAL??? FÆRDIG
         hWeekPicker.getChildren().add(cWeek);
 
         cWeek.setOnAction(e -> {
