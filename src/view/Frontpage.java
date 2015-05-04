@@ -60,7 +60,7 @@ public class Frontpage extends Application {
 
     //buttons:
     private PopupMenuButton createEmployee, createQualificationButton, createRoomButton,
-            createStudent, createShift;
+            createStudent, createShift, assignRoomsButton;
 
     private Button jumpForwardWeek, jumpBackWeek;
 
@@ -110,38 +110,22 @@ public class Frontpage extends Application {
             initNodes(window);
         }
 
+        //Tildeling af rum til ansatte for uge 16/2015:
+        //Kør 'Røntgen projekt\DB\Script 3a - insert_shifts_week16-2015.sql'.
         try {
-            //Tildeling af rum til ansatte for uge 16/2015:
-            //Kør 'Røntgen projekt\DB\Script 3a - insert_shifts_week16-2015.sql'.
-            ArrayList<TimeInvestment> unAssigned = TimeInvestmentHandler.getInstance()
-                    .getUnassignedTimeInvestments();
-
-            //Hent emps for at oprette quals:
-            ArrayList<Employee> employees = EmployeeHandler.getInstance().getEmployees();
-
-            //Hent rum:
-            ArrayList<Room> rooms = RoomHandler.getInstance().getRooms();
-
-            ArrayList<RoomQualification> roomQuals = new ArrayList<>();
-            roomQuals.add(new RoomQualification(1, "all rooms and emps", employees, rooms));
-            ArrayList<RoomQualification> roomQuals2 = QualificationHandler.getInstance().getRoomQualifications();
-
-            ArrayList<LimitQualification> limitQuals = new ArrayList<>();
+            assigned = Xray.getInstance().assignRooms();
+        } catch (SQLException ex) {
+            System.out.println("LORT1");
+        } catch (ClassNotFoundException ex) {
+            System.out.println("LORT2");
+        }
 
             //tildel via assign rooms metode:
-            limitQuals.add(new LimitQualification(1, "all rooms and emp limits (PVK)", employees, rooms, 1));
-            limitQuals.add(new LimitQualification(2, "all rooms and emp limits (PVK)", roomQuals2.get(0).getEmployees(), roomQuals2.get(0).getRooms(), 1));
+        //Opsætning af skema.
+        hMenuLayout.setMinHeight(PopupMenuButton.PREFERRED_HEIGHT);
+        schedule = new Schedule(assigned, today);
+        vMainLayout.getChildren().add(schedule);
 
-            //Opsætning af skema.
-            hMenuLayout.setMinHeight(PopupMenuButton.PREFERRED_HEIGHT);
-            schedule = new Schedule(assigned, today);
-            vMainLayout.getChildren().add(schedule);
-
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-        } catch (ClassNotFoundException ex) {
-            System.out.println("erameåwrmewaårmeawåpmr");
-        }
     }
 
     private void initNodes(Stage window) {
@@ -215,7 +199,12 @@ public class Frontpage extends Application {
         });
         menuButtons.add(createShift);
 
-        
+        assignRoomsButton = new PopupMenuButton("Tildel vagter");
+        assignRoomsButton.setOnAction(e -> {
+
+        });
+
+        menuButtons.add(assignRoomsButton);
 
         for (PopupMenuButton menuButton : menuButtons) {
             hMenuLayout.getChildren().add(menuButton);
@@ -268,11 +257,12 @@ public class Frontpage extends Application {
 
         cWeek.setOnAction(e -> {
             chosenMonday = (LocalDateTime) cWeek.getSelectionModel().getSelectedItem();
-            
+
             vMainLayout.getChildren().remove(2);
             Schedule schedule1 = new Schedule(assigned, new LocalDateTime(chosenMonday));
             vMainLayout.getChildren().add(2, schedule1);
         });
+
     }
 
     public ArrayList<LocalDateTime> getHalfYearForwards(LocalDateTime thisMonday) {

@@ -86,7 +86,7 @@ public class Schedule extends ScrollPane {
             grid.addRow(i, scheduleListItems.get(i).getChildrenList());
 
         }
-        
+
         VBox.setVgrow(this, Priority.ALWAYS);
         
         this.setFitToWidth(true);

@@ -102,13 +102,6 @@ public class QualificationHandler {
                 
                 roomQualifications.add(new RoomQualification(id, type, qualEmployees, qualRooms));
             }
-            
-            for (int i = 0; i < roomQualifications.size(); i++) {
-                System.out.println(roomQualifications.get(i));
-                System.out.println(Arrays.asList(roomQualifications.get(i).getEmployees().toArray()));
-                System.out.println(Arrays.asList(roomQualifications.get(i).getRooms().toArray()));
-                
-            }
 
             stmt.close();
             rs.close();

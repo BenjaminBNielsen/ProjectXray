@@ -8,10 +8,10 @@ package control;
 import handlers.QualificationHandler;
 import java.sql.SQLException;
 import java.util.ArrayList;
-//import javafx.collections.ObservableList;
-//import model.Employee;
-//import model.Qualification;
-//import model.Room;
+import javafx.collections.ObservableList;
+import model.Employee;
+import model.Qualification;
+import model.Room;
 import model.RoomQualification;
 import model.LimitQualification;
 
@@ -31,6 +31,7 @@ public class QualificationControl {
     public ArrayList<LimitQualification> getLimitQualifications() throws ClassNotFoundException{
         return QualificationHandler.getInstance().getLimitQualifications();
     }
+    
    
 //    public void createQualification(QualificationType type, Boolean training, Room room) throws SQLException{
 //        QualificationHandler.getInstance().createQualification(type, training, room);

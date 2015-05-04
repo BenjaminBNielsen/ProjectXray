@@ -110,15 +110,13 @@ public class Xray {
      * @return Returnerer en liste af timeInvestments der har fået sine rum
      * tildelt.
      */
-    public ArrayList<TimeInvestment> assignRooms(ArrayList<TimeInvestment> unassignedShifts,
-            ArrayList<RoomQualification> roomQualifications,
-            ArrayList<LimitQualification> limitQualifications) throws SQLException, ClassNotFoundException {
-//        ArrayList<TimeInvestment> unassignedShifts = TimeInvestmentHandler.getInstance().
-//                getUnassignedTimeInvestments();
-//        ArrayList<RoomQualification> roomQualifications = qualificationControl.
-//                getRoomQualifications();
-//        ArrayList<LimitQualification> limitQualifications = qualificationControl.
-//                getLimitQualifications();
+    public ArrayList<TimeInvestment> assignRooms() throws SQLException, ClassNotFoundException {
+        ArrayList<TimeInvestment> unassignedShifts = TimeInvestmentHandler.getInstance().
+                getUnassignedTimeInvestments();
+        ArrayList<RoomQualification> roomQualifications = qualificationControl.
+                getRoomQualifications();
+        ArrayList<LimitQualification> limitQualifications = qualificationControl.
+                getLimitQualifications();
         ArrayList<TimeInvestment> assignedShifts = new ArrayList<>();
         
         //Sortér liste af vagter ud fra denne prioritet: 1: dato, 2: timer, 3: minutter
@@ -140,11 +138,6 @@ public class Xray {
             } else {
                 System.out.println("DENNE VAGT HAR IKKE FÅET TILDELT ET RUM");
             }
-        }
-
-        for (int i = 0; i < assignedShifts.size(); i++) {
-            System.out.println(assignedShifts.get(i));
-
         }
 
         return assignedShifts;
@@ -173,7 +166,8 @@ public class Xray {
 
         ArrayList<Room> roomsLimitNotReached = getRoomsLimitNotReached(currentShift.getEmployee(), limitQualifications);
 
-        if (roomsLimitNotReached.size() != 0) {
+        countDateAssignmentsOfRoom(roomsLimitNotReached, currentShift, timeInvestments);
+        if (!roomsLimitNotReached.isEmpty()) {
             //Her inde bliver alle rum der stadig mangler at opfylde 
             //limit på limitQualifications behandlet.
             System.out.println(roomsLimitNotReached.size() + " XXX " + prioritizedRoom);
