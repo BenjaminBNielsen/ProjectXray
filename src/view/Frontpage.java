@@ -7,11 +7,13 @@ import view.popups.DatabasePopup;
 import control.Xray;
 import dbc.DatabaseConnection;
 import handlers.EmployeeHandler;
+import handlers.QualificationHandler;
 import handlers.RoomHandler;
 import handlers.TimeInvestmentHandler;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.*;
@@ -122,11 +124,13 @@ public class Frontpage extends Application {
 
             ArrayList<RoomQualification> roomQuals = new ArrayList<>();
             roomQuals.add(new RoomQualification(1, "all rooms and emps", employees, rooms));
+            ArrayList<RoomQualification> roomQuals2 = QualificationHandler.getInstance().getRoomQualifications();
+
             ArrayList<LimitQualification> limitQuals = new ArrayList<>();
-            limitQuals.add(new LimitQualification(1, "all rooms and emp limits (PVK)", employees, rooms, 1));
 
             //tildel via assign rooms metode:
-            assigned = Xray.getInstance().assignRooms(unAssigned, roomQuals, limitQuals);
+            limitQuals.add(new LimitQualification(1, "all rooms and emp limits (PVK)", employees, rooms, 1));
+            limitQuals.add(new LimitQualification(2, "all rooms and emp limits (PVK)", roomQuals2.get(0).getEmployees(), roomQuals2.get(0).getRooms(), 1));
 
             //Opsætning af skema.
             hMenuLayout.setMinHeight(PopupMenuButton.PREFERRED_HEIGHT);
@@ -210,6 +214,8 @@ public class Frontpage extends Application {
             shiftPopup.display("Vagter");
         });
         menuButtons.add(createShift);
+
+        
 
         for (PopupMenuButton menuButton : menuButtons) {
             hMenuLayout.getChildren().add(menuButton);
