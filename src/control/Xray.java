@@ -105,38 +105,44 @@ public class Xray {
      * @return Returnerer en liste af timeInvestments der har fået sine rum
      * tildelt.
      */
-    public ArrayList<TimeInvestment> assignRooms(ArrayList<TimeInvestment> shifts,
+    public ArrayList<TimeInvestment> assignRooms(ArrayList<TimeInvestment> unassignedShifts,
             ArrayList<RoomQualification> roomQualifications,
-            ArrayList<LimitQualification> limitQualifications) {
-        ArrayList<TimeInvestment> timeInvestments = new ArrayList<>();
-
+            ArrayList<LimitQualification> limitQualifications) throws SQLException, ClassNotFoundException {
+//        ArrayList<TimeInvestment> unassignedShifts = TimeInvestmentHandler.getInstance().
+//                getUnassignedTimeInvestments();
+//        ArrayList<RoomQualification> roomQualifications = qualificationControl.
+//                getRoomQualifications();
+//        ArrayList<LimitQualification> limitQualifications = qualificationControl.
+//                getLimitQualifications();
+        ArrayList<TimeInvestment> assignedShifts = new ArrayList<>();
+        
         //Sortér liste af vagter ud fra denne prioritet: 1: dato, 2: timer, 3: minutter
         //4: Antal tilgængelige rum for medarbejder (lavest først) 5: fornavn 6: efternavn.
-        shifts.sort(new RoomAmountComparator(roomQualifications));
+        unassignedShifts.sort(new RoomAmountComparator(roomQualifications));
 
         //Gennemløbnign af shifts, til tildeling af rum.
-        for (int i = 0; i < shifts.size(); i++) {
-            ArrayList<Room> rooms = getEmployeeRooms(shifts.get(i).getEmployee(), roomQualifications);
-            TimeInvestment assignedShift = shifts.get(i);
+        for (int i = 0; i < unassignedShifts.size(); i++) {
+            ArrayList<Room> rooms = getEmployeeRooms(unassignedShifts.get(i).getEmployee(), roomQualifications);
+            TimeInvestment assignedShift = unassignedShifts.get(i);
 
             if (assignedShift.getRoom() == null) {
-                assignedShift.setRoom(roomPriority(timeInvestments, rooms, assignedShift, limitQualifications));
+                assignedShift.setRoom(roomPriority(assignedShifts, rooms, assignedShift, limitQualifications));
 
             }
 
             if (assignedShift.getRoom() != null) {
-                timeInvestments.add(assignedShift);
+                assignedShifts.add(assignedShift);
             } else {
                 System.out.println("DENNE VAGT HAR IKKE FÅET TILDELT ET RUM");
             }
         }
 
-        for (int i = 0; i < timeInvestments.size(); i++) {
-            System.out.println(timeInvestments.get(i));
+        for (int i = 0; i < assignedShifts.size(); i++) {
+            System.out.println(assignedShifts.get(i));
 
         }
 
-        return timeInvestments;
+        return assignedShifts;
     }
 
     /**
@@ -157,14 +163,17 @@ public class Xray {
         //Tæl hvor mange gange de forskellige rum er blevet tildelt i currentShifts
         //starttidspunkt. Tællingen består i at alle Room-objekter i rooms får talt
         //op på deres count felt, så dette passer med antal tildelinger.
+
         countDateAssignmentsOfRoom(rooms, currentShift, timeInvestments);
 
         ArrayList<Room> roomsLimitNotReached = getRoomsLimitNotReached(currentShift.getEmployee(), limitQualifications);
 
-        if (!roomsLimitNotReached.isEmpty()) {
+        if (roomsLimitNotReached.size() != 0) {
             //Her inde bliver alle rum der stadig mangler at opfylde 
             //limit på limitQualifications behandlet.
+            System.out.println(roomsLimitNotReached.size() + " XXX " + prioritizedRoom);
             prioritizedRoom = getRoomMinMaxCompared(roomsLimitNotReached);
+            System.out.println(roomsLimitNotReached.size() + " reaeraewraew " + prioritizedRoom);
 
         } else {
             prioritizedRoom = getRoomMinMaxCompared(rooms);
@@ -287,10 +296,13 @@ public class Xray {
                         TimeInvestment currentTI = timeInvestments.get(i);
                         if (shiftIsInPeriod(currentShift, currentTI)) {
                             rooms.get(j).increment();
+                            break; //break OK i søgning for optimering.
                         }
+                        break;
                     }
                 }
             }
+            
         }
     }
 
@@ -349,6 +361,7 @@ public class Xray {
                                 //Hvis begrænsningen endnu ikke er nået så tilføj
                                 //til roomsLimitNotReached.
                                 if (limitRoom.getCount() < limitQualifications.get(i).getLimit()) {
+                                    System.out.println("X " + limitRooms.get(k).getRoomName() + " count: " + limitRooms.get(k).getCount());
                                     roomsLimitNotReached.add(limitRoom);
                                 }
 
@@ -479,14 +492,4 @@ public class Xray {
         return inPeriod;
     }
 
-    /**
-     * Der bliver divideret med 6 fordi at vores frontpage indeholder 6 bokse 
-     * maksimalt, derfor bruger vi boksene som en slags måleenhed.
-     * @param x Hvor meget skal skærmens bredde deles op i.
-     */
-    public double getComputedTileWitdh(int x) {
-        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        double witdh = primaryScreenBounds.getWidth() / x;
-        return witdh;
-    }
 }

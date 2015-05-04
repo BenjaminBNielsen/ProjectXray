@@ -13,9 +13,9 @@ import java.util.ArrayList;
  */
 public class RoomQualification extends Qualification {
 
-    public RoomQualification(int id, boolean training, String type,
+    public RoomQualification(int id, String type,
             ArrayList<Employee> employees, ArrayList<Room> rooms) {
-        super(id, training, type, employees, rooms);
+        super(id, type, employees, rooms);
     }
 
     @Override
