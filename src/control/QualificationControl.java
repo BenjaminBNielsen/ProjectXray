@@ -56,4 +56,8 @@ public class QualificationControl {
 //    }
 //    
     
+    public void addRoomQualification(ObservableList<Room> observableRooms, ObservableList<Employee> observableEmployees, String type) throws SQLException, ClassNotFoundException {
+        QualificationHandler.getInstance().addRoomQualification(observableRooms, observableEmployees, type);
+    }
+    
 }

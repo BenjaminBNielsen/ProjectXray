@@ -87,6 +87,8 @@ public class Schedule extends ScrollPane {
 
         }
 
+        VBox.setVgrow(this, Priority.ALWAYS);
+        
         this.setFitToWidth(true);
     }
 

@@ -5,7 +5,11 @@
  */
 package view.popups;
 
+import control.Xray;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -38,7 +42,7 @@ public class RoomQualificationPopup extends PopupWindow{
     private ListView listViewRoom, listViewEmployee;
     private SettingsButton settingsButton;
     private AddButtonV2 addButtonRoom, addButtonEmployee;
-    private PopupMenuButton addRoom;
+    private PopupMenuButton addQualification;
     private Label lRoomLabel, lEmployeeLabel, lType, 
             lRoomListView, lEmployeeListView;
     private Room roomInsert;
@@ -72,7 +76,7 @@ public class RoomQualificationPopup extends PopupWindow{
         for (int i = 0; i < rooms.size(); i++) {
             cBRoomBox.getItems().add(rooms.get(i));
         }
-        
+        cBRoomBox.setValue(rooms.get(0));
         //cBRoomBox.setValue(observableRooms.get(0));
         
        //Nu er det employee comboboksens tur
@@ -82,7 +86,7 @@ public class RoomQualificationPopup extends PopupWindow{
         for (int i = 0; i < employees.size(); i++) {
             cBEmployeeBox.getItems().add(employees.get(i));
         }
-        
+        cBEmployeeBox.setValue(employees.get(0));
         
         //cBEmployeeBox.setValue(observableEmployees.get(0));
         
@@ -90,6 +94,7 @@ public class RoomQualificationPopup extends PopupWindow{
         
         ListView<Room> listViewRoom = new ListView();
         ListView<Employee> listViewEmployee = new ListView();
+        
         
         setBottomHBoxPadding(15, 15, 15, 15);
         settingsButton = new SettingsButton();
@@ -129,26 +134,45 @@ public class RoomQualificationPopup extends PopupWindow{
             listViewEmployee.setItems(observableListEmployees);
         });
         
+        //Skal bruge hjælp til at kunne fjerne fokus fra det ene listview når det anden vælges
         settingsButton.setOnAction(e -> {
-            int indexRoom = listViewRoom.getSelectionModel().getSelectedIndex();
-            int indexEmployee = listViewEmployee.getSelectionModel().getSelectedIndex();
-            if (listViewRoom.isFocused()) {
-                observableListRooms.remove(indexRoom);
+//            int indexRoom = listViewRoom.getSelectionModel().getSelectedIndex();
+//            int indexEmployee = listViewEmployee.getSelectionModel().getSelectedIndex();
+//            if (listViewRoom.isFocused()) {
+//                observableListRooms.remove(indexRoom);
+//                listViewRoom.setItems(observableListRooms);
+//            } else if (listViewEmployee.isFocused()) {
+//                observableListEmployees.remove(indexEmployee);
+//                listViewEmployee.setItems(observableListEmployees);
+//            }
+            int index = listViewRoom.getSelectionModel().getSelectedIndex();
+            if (!listViewRoom.getSelectionModel().isEmpty()) {
+                observableListRooms.remove(index);
                 listViewRoom.setItems(observableListRooms);
-            } else if (listViewEmployee.isFocused()) {
-                observableListEmployees.remove(indexEmployee);
+            }
+            
+            int index2 = listViewEmployee.getSelectionModel().getSelectedIndex();
+            if (!listViewEmployee.getSelectionModel().isEmpty()) {
+                observableListEmployees.remove(index2);
                 listViewEmployee.setItems(observableListEmployees);
             }
         });
         
-        addRoom = new PopupMenuButton("Tilføj kvalifikationer"); // Her skal listen køres igennem og der indsættes data i databasen
-        addRoom.setOnAction(e -> {
+        addQualification = new PopupMenuButton("Tilføj kvalifikationer"); // Her skal listen køres igennem og der indsættes data i databasen
+        addQualification.setOnAction(e -> {
             typeInsert = tFType.getText();
-            
+            try {
+                Xray.getInstance().getQualificationControl().addRoomQualification(observableListRooms, observableListEmployees, typeInsert);
+            } catch (SQLException ex) {
+                exceptionPopup.display("Der kan ikke sættes 2 af samme person / rum ind eller en ny kvalifikation med det navn.");
+                System.out.println(ex.getMessage());
+            } catch (ClassNotFoundException ex) {
+                exceptionPopup.display(ex.getMessage());
+            }
             
         });
         
-        super.addToBottomHBox(addRoom);
+        super.addToBottomHBox(addQualification);
         super.display(title);
         
         
