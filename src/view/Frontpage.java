@@ -24,10 +24,13 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.*;
+import javafx.util.Callback;
 import model.Employee;
 import model.LimitQualification;
 import model.Room;
@@ -247,6 +250,37 @@ public class Frontpage extends Application {
     private void initCombobox() {
         cWeek = new ComboBox();
         cWeek.setPrefWidth(170);
+        
+        //Her definere vi hvordan hver celle i en comboBox's ListView bliver "omdannet"
+        //eller bygget op. Callback er et interface i JavaFX, der gøre det lettere
+        //at definere udformningen/handlingen for (i det her tilfælde) comboBoxens
+        //ListView (altså drop-down menu) og dets individuelle celler (hvor items
+        //er gemt). Vi laver et nyt Callback-objekt, hvor vi definere hvad der skal stå
+        //i hver celle. Vi kalder objektet for cellFactory, da CallBacks kan fungere som
+        //kode der kaldes til hver gang en celle i et listView skal dannes. JavaFX er 
+        //opstillet på den måde at en Combobox har en "CellFactory" den danner celler udfra. 
+        //Derfor sætter vi cWeeks CellFactory til at være vores custom-lavede da det
+        //sørger for at hver celle viser deres item (kun hvis de har en item) sådan 
+        //som vi ønsker i updateItem metoden (hvor vi sætter teksen).
+        Callback<ListView<LocalDateTime>, ListCell<LocalDateTime>> cellFactory = new Callback<ListView<LocalDateTime>, ListCell<LocalDateTime>>() {
+            @Override
+            public ListCell<LocalDateTime> call(ListView<LocalDateTime> param) {
+
+                return new ListCell<LocalDateTime>() {
+                    @Override
+                    public void updateItem(LocalDateTime item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (!empty) {
+                            setText("Uge " + item.getWeekOfWeekyear() + " " + item.toString("/yy"));
+                        }
+                    }
+
+                };
+            }
+        };
+
+        cWeek.setButtonCell(cellFactory.call(null));
+        cWeek.setCellFactory(cellFactory);
 
         ArrayList<LocalDateTime> mondaysHalfYearBack = getHalfYearBack(this.thisMonday);
         ArrayList<LocalDateTime> mondaysHalfYearForward = getHalfYearForwards(this.thisMonday);
