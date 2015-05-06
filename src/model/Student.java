@@ -8,11 +8,13 @@ package model;
 /* @author Benjamin */
 public class Student extends Person {
 
+    private int id;
     private int module;
 
     public Student(int id, String firstName, String lastName, int module) {
         super(id, firstName, lastName);
 
+        this.id = id;
         this.module = module;
     }
 

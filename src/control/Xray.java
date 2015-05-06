@@ -8,7 +8,7 @@ package control;
 import control.comparators.*;
 import dbc.DatabaseConnection;
 import exceptions.DatabaseException;
-import handlers.TimeInvestmentHandler;
+import technicalServices.persistence.TimeInvestmentHandler;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -42,16 +42,24 @@ public class Xray {
         roomControl = new RoomControl();
         qualificationControl = new QualificationControl();
         personControl = new PersonControl();
+
     }
 
     public void createConnection() throws DatabaseException {
         //Opret forbindelse til databasen
+
         if (!DatabaseConnection.getInstance().hasConnection()) {
-            DatabaseConnection.getInstance().createConnection();
+                System.out.println("heheheh");
+                DatabaseConnection.getInstance().createConnection();
+                                roomControl = new RoomControl();
+        qualificationControl = new QualificationControl();
+        personControl = new PersonControl();
+
+            
         }
 
         databaseConnection = DatabaseConnection.getInstance().getConnection();
-
+        
     }
 
     public void addTimeInvestments(ArrayList<TimeInvestment> shifts) throws
@@ -106,15 +114,15 @@ public class Xray {
      * @return Returnerer en liste af timeInvestments der har fået sine rum
      * tildelt.
      */
-    public ArrayList<TimeInvestment> assignRooms(ArrayList<TimeInvestment> unassignedShifts,
-            ArrayList<RoomQualification> roomQualifications,
-            ArrayList<LimitQualification> limitQualifications) throws DatabaseException {
-//        ArrayList<TimeInvestment> unassignedShifts = TimeInvestmentHandler.getInstance().
-//                getUnassignedTimeInvestments();
-//        ArrayList<RoomQualification> roomQualifications = qualificationControl.
-//                getRoomQualifications();
-//        ArrayList<LimitQualification> limitQualifications = qualificationControl.
-//                getLimitQualifications();
+
+    public ArrayList<TimeInvestment> assignRooms() throws DatabaseException {
+        ArrayList<TimeInvestment> unassignedShifts = TimeInvestmentHandler.getInstance().
+                getUnassignedTimeInvestments();
+        ArrayList<RoomQualification> roomQualifications = qualificationControl.
+                getRoomQualifications();
+        ArrayList<LimitQualification> limitQualifications = qualificationControl.
+                getLimitQualifications();
+
         ArrayList<TimeInvestment> assignedShifts = new ArrayList<>();
         
         //Sortér liste af vagter ud fra denne prioritet: 1: dato, 2: timer, 3: minutter
@@ -168,7 +176,9 @@ public class Xray {
         if (!roomsLimitNotReached.isEmpty()) {
             //Her inde bliver alle rum der stadig mangler at opfylde 
             //limit på limitQualifications behandlet.
+            System.out.println(roomsLimitNotReached.size() + " XXX " + prioritizedRoom);
             prioritizedRoom = getRoomMinMaxCompared(roomsLimitNotReached);
+            System.out.println(roomsLimitNotReached.size() + " reaeraewraew " + prioritizedRoom);
 
         } else {
             prioritizedRoom = getRoomMinMaxCompared(rooms);
@@ -356,6 +366,7 @@ public class Xray {
                                 //Hvis begrænsningen endnu ikke er nået så tilføj
                                 //til roomsLimitNotReached.
                                 if (limitRoom.getCount() < limitQualifications.get(i).getLimit()) {
+                                    System.out.println("X " + limitRooms.get(k).getRoomName() + " count: " + limitRooms.get(k).getCount());
                                     roomsLimitNotReached.add(limitRoom);
                                 }
 

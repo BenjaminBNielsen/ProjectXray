@@ -4,10 +4,9 @@
  * and open the template in the editor.
  */
 
-package handlers;
+package technicalServices.persistence;
 
 import dbc.DatabaseConnection;
-import exceptions.DatabaseException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -33,8 +32,8 @@ public class RoomHandler {
     }
     
     public void addRooms(ObservableList<Room> rooms) 
-        throws DatabaseException {
-        try {
+        throws SQLException, ClassNotFoundException {
+        
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
         String sql = "insert into room(roomName, roomState, minOccupation, maxOccupation) values";
@@ -57,14 +56,11 @@ public class RoomHandler {
         stmt.execute(sql);
 
         stmt.close();
-        } catch(SQLException ex) {
-            throw new DatabaseException("Der kunne ikke indsættes rum i databasen.");    
-        }
     }
     
-    public ArrayList<Room> getRooms() throws DatabaseException {
+    public ArrayList<Room> getRooms() throws SQLException, ClassNotFoundException {
         ArrayList<Room> rooms = new ArrayList<>();
-        try {
+        
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
         String sql = "select * from room;";
@@ -84,13 +80,9 @@ public class RoomHandler {
         stmt.close();
 
         return rooms;
-        } catch(SQLException ex) {
-            throw new DatabaseException("Der kunne ikke hentes nogle rum.");    
-        }
     }
     
-    public Room getRoom(String roomName) throws DatabaseException{
-        try {
+    public Room getRoom(String roomName) throws SQLException, ClassNotFoundException{
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
         Room room = null;
         
@@ -110,13 +102,10 @@ public class RoomHandler {
         stmt.close();
         
         return room;
-        } catch(SQLException ex) {
-            throw new DatabaseException("Der kunne ikke hentes noget rum med det navn.");    
-        }
     }
     
-    public int getRoomsRows() throws DatabaseException {
-        try {
+    public int getRoomsRows() throws SQLException, ClassNotFoundException {
+        
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
         
         String sql = "select count(*) as rowNumber from room;";
@@ -132,8 +121,5 @@ public class RoomHandler {
         stmt.close();
         
         return roomCount;
-        } catch(SQLException ex) {
-            throw new DatabaseException("Der kunne ikke hentes antal af rum i databasen.");    
-        }
     }
 }

@@ -7,7 +7,7 @@
 package control;
 
 import exceptions.DatabaseException;
-import handlers.RoomHandler;
+import technicalServices.persistence.RoomHandler;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Observable;
@@ -22,6 +22,13 @@ public class RoomControl {
     
     public RoomControl() throws DatabaseException {
     }
+    
+//    public static RoomControl getInstance() throws SQLException, ClassNotFoundException {
+//        if (instance == null) {
+//            instance = new RoomControl();
+//        }
+//        return instance;
+//    }
 
     public int getRoomCount() throws DatabaseException {
         return RoomHandler.getInstance().getRoomsRows();

@@ -88,8 +88,8 @@ public class RoomControlTest {
             System.out.println(errorMessage);
         }
         ObservableList<Room> rooms = FXCollections.observableArrayList();
-        Room testRoom1 = new Room("test3", 1);
-        Room testRoom2 = new Room("test4", 2);
+        Room testRoom1 = new Room("test3", 1,1,1);
+        Room testRoom2 = new Room("test4", 2,1,1);
         rooms.addAll(testRoom1, testRoom2);
         
         //Indsæt data i databasen.

@@ -140,4 +140,8 @@ public class Schedule extends ScrollPane {
         }
     }
 
+    public void updateSchedule(ArrayList<TimeInvestment> timeInvestements, LocalDateTime startTime){
+        this.timeInvestments = timeInvestments;
+        this.startTime = startTime;
+    }
 }

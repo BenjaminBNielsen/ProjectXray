@@ -6,7 +6,7 @@
 package control;
 
 import dbc.DatabaseConnection;
-import handlers.EmployeeHandler;
+import technicalServices.persistence.EmployeeHandler;
 import handlers.ShiftHandler;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;

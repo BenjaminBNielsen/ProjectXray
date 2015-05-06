@@ -6,7 +6,7 @@
 package control;
 
 import exceptions.DatabaseException;
-import handlers.QualificationHandler;
+import technicalServices.persistence.QualificationHandler;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javafx.collections.ObservableList;
@@ -32,6 +32,7 @@ public class QualificationControl {
     public ArrayList<LimitQualification> getLimitQualifications() throws DatabaseException{
         return QualificationHandler.getInstance().getLimitQualifications();
     }
+    
    
 //    public void createQualification(QualificationType type, Boolean training, Room room) throws SQLException{
 //        QualificationHandler.getInstance().createQualification(type, training, room);

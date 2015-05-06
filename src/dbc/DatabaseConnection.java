@@ -1,3 +1,4 @@
+
 package dbc;
 
 import exceptions.DatabaseException;
@@ -118,3 +119,4 @@ public class DatabaseConnection {
         conn = null;
     }
 }
+
