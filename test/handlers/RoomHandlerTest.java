@@ -5,6 +5,7 @@
  */
 package handlers;
 
+import technicalServices.persistence.RoomHandler;
 import dbc.DatabaseConnection;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;

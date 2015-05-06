@@ -23,7 +23,7 @@ public class LabelTile extends HBox{
         label = new Label(text.toUpperCase());
         label.setFont(Font.font("Arial", FontWeight.BOLD, 22));
         label.setWrapText(true);
-        this.setStyle("-fx-border-color: #d3d3d3;"
+        this.setStyle("-fx-border-color: black;"
                 + "-fx-border-width: 0.5px;"); 
         
         this.getChildren().add(label);

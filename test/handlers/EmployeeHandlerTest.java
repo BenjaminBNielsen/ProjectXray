@@ -5,6 +5,8 @@
  */
 package handlers;
 
+import technicalServices.persistence.EmployeeHandler;
+import technicalServices.persistence.OccupationHandler;
 import dbc.DatabaseConnection;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;

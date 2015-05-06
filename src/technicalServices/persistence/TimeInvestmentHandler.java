@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package handlers;
+package technicalServices.persistence;
 
 import dbc.DatabaseConnection;
 import java.sql.ResultSet;

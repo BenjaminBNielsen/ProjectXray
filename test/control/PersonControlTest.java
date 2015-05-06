@@ -6,8 +6,8 @@
 package control;
 
 import dbc.DatabaseConnection;
-import handlers.EmployeeHandler;
-import handlers.StudentHandler;
+import technicalServices.persistence.EmployeeHandler;
+import technicalServices.persistence.StudentHandler;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;

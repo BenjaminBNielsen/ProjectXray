@@ -35,7 +35,7 @@ public class ShiftTile extends BorderPane {
         this.shifts = shifts;
         bottomVbox.setAlignment(Pos.TOP_CENTER);
         this.setCenter(bottomVbox);
-        this.setStyle("-fx-border-color: #d3d3d3;"
+        this.setStyle("-fx-border-color: black;"
                 + "-fx-border-width: 0.5px;");        
         initLabels();
     }

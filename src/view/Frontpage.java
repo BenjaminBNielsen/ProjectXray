@@ -6,10 +6,10 @@ import view.popups.EmployeePopup;
 import view.popups.DatabasePopup;
 import control.Xray;
 import dbc.DatabaseConnection;
-import handlers.EmployeeHandler;
-import handlers.QualificationHandler;
-import handlers.RoomHandler;
-import handlers.TimeInvestmentHandler;
+import technicalServices.persistence.EmployeeHandler;
+import technicalServices.persistence.QualificationHandler;
+import technicalServices.persistence.RoomHandler;
+import technicalServices.persistence.TimeInvestmentHandler;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -26,6 +26,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.*;
 import model.Employee;
 import model.LimitQualification;
@@ -34,6 +35,7 @@ import model.RoomQualification;
 import model.TimeInvestment;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDateTime;
+import techincalServices.printing.PrinterThread;
 import view.buttons.PopupMenuButton;
 import view.popups.StudentPopup;
 import view.popups.shift.ShiftPopup;
@@ -45,6 +47,8 @@ public class Frontpage extends Application {
     public static final int STANDARD_PADDING = 15;
 
     private Schedule schedule;
+
+    private PrinterThread printer = new PrinterThread();
 
     private double screenWidth;
     private double screenHeight;
@@ -62,7 +66,7 @@ public class Frontpage extends Application {
     private PopupMenuButton createEmployee, createQualificationButton, createRoomButton,
             createStudent, createShift, assignRoomsButton;
 
-    private Button jumpForwardWeek, jumpBackWeek;
+    private Button jumpForwardWeek, jumpBackWeek, printButton;
 
     //combobox
     private ComboBox cWeek;
@@ -85,6 +89,8 @@ public class Frontpage extends Application {
     //Hovedmetoden der bliver kørt i gui'en.
     @Override
     public void start(Stage window) {
+        printer.start();
+
         //Initialisere datoer
         thisMonday = today.withDayOfWeek(DateTimeConstants.MONDAY);
 
@@ -214,7 +220,7 @@ public class Frontpage extends Application {
         jumpForwardWeek.setOnAction(e -> {
             cWeek.getSelectionModel().selectNext();
             chosenMonday = (LocalDateTime) cWeek.getSelectionModel().getSelectedItem();
-            
+
             vMainLayout.getChildren().remove(2);
             Schedule schedule1 = new Schedule(assigned, new LocalDateTime(chosenMonday));
             vMainLayout.getChildren().add(2, schedule1);
@@ -230,7 +236,12 @@ public class Frontpage extends Application {
             vMainLayout.getChildren().add(2, schedule1);
         });
 
-        hWeekPicker.getChildren().addAll(jumpBackWeek, jumpForwardWeek);
+        printButton = new Button("Print skema");
+        printButton.setOnAction(e -> {
+            printer.print(schedule);
+        });
+
+        hWeekPicker.getChildren().addAll(jumpBackWeek, jumpForwardWeek, printButton);
     }
 
     private void initCombobox() {
@@ -252,11 +263,8 @@ public class Frontpage extends Application {
         for (int i = 0; i < allMondays.size(); i++) {
             cWeek.getItems().add(allMondays.get(i));
         }
-        cWeek.getSelectionModel().select((cWeek.getItems().size()-1)>>>1);
-//>>> er det der hedder en unsigned shift operator, at skrive >>> 1 er det samme som at sige divideret med 2
-//Der er bare en bedre udgave da den ikke skal beregne noget, den flytte bare alle bits i heltallet en gang til højre,
-//        hvilket svarer til at skrive heltal/2... Cool cool nok er vi færdige? Jep vi er helt og aldeles komplet og uomtruffeligt anderimljsFNAL??? FÆRDIG
-        hWeekPicker.getChildren().add(cWeek);
+        cWeek.getSelectionModel().select((cWeek.getItems().size() - 1) >>> 1);
+        hWeekPicker.getChildren().add(2, cWeek);
 
         cWeek.setOnAction(e -> {
             chosenMonday = (LocalDateTime) cWeek.getSelectionModel().getSelectedItem();

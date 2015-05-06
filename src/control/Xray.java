@@ -7,7 +7,7 @@ package control;
 
 import control.comparators.*;
 import dbc.DatabaseConnection;
-import handlers.TimeInvestmentHandler;
+import technicalServices.persistence.TimeInvestmentHandler;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.SQLException;

@@ -5,7 +5,7 @@
  */
 package control;
 
-import handlers.QualificationHandler;
+import technicalServices.persistence.QualificationHandler;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javafx.collections.ObservableList;

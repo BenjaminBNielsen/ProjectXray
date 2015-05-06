@@ -6,7 +6,7 @@
 package view.popups.shift;
 
 import control.Xray;
-import handlers.TimeInvestmentHandler;
+import technicalServices.persistence.TimeInvestmentHandler;
 import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;

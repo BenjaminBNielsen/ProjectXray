@@ -5,9 +5,9 @@
  */
 package control;
 
-import handlers.EmployeeHandler;
-import handlers.OccupationHandler;
-import handlers.StudentHandler;
+import technicalServices.persistence.EmployeeHandler;
+import technicalServices.persistence.OccupationHandler;
+import technicalServices.persistence.StudentHandler;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javafx.collections.ObservableList;

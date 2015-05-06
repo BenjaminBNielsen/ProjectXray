@@ -6,7 +6,7 @@
 
 package control;
 
-import handlers.RoomHandler;
+import technicalServices.persistence.RoomHandler;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Observable;
