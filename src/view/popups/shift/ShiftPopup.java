@@ -6,6 +6,7 @@
 package view.popups.shift;
 
 import control.Xray;
+import exceptions.DatabaseException;
 import handlers.TimeInvestmentHandler;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -112,11 +113,9 @@ public class ShiftPopup extends PopupWindow {
             //TimeInvestmenthandler skal indsætte dem i databasen.
             try {
                 Xray.getInstance().addTimeInvestments(shifts);
-            } catch (SQLException ex) {
+            } catch (DatabaseException ex) {
                 System.out.println(ex.getMessage());
-            } catch (ClassNotFoundException ex) {
-                System.out.println(ex.getMessage());
-            }
+            } 
         });
     }
 
@@ -181,15 +180,16 @@ public class ShiftPopup extends PopupWindow {
                             for (Employee employee : employees) {
                                 cEmployee.getItems().add(employee);
                             }
-                        } catch (SQLException ex) {
-                            String error = "Der kunne ikke hentes ansatte ind i drop-ned menuen"
-                                    + " kontakt venligst systemadministrator.";
-                            exceptionPopup.display(error);
-                        } catch (ClassNotFoundException ex) {
-                            String error = "Der kunne ikke oprettes forbindelse til databasen, kontakt venligst"
-                                    + "din systemadministrator.";
-                            exceptionPopup.display(error);
+                        } catch (DatabaseException ex) {
+//                            String error = "Der kunne ikke hentes ansatte ind i drop-ned menuen"
+//                                    + " kontakt venligst systemadministrator.";
+                            exceptionPopup.display(ex.getMessage());
                         } 
+//                            catch (ClassNotFoundException ex) {
+//                            String error = "Der kunne ikke oprettes forbindelse til databasen, kontakt venligst"
+//                                    + "din systemadministrator.";
+//                            exceptionPopup.display(error);
+//                        } 
                         //Når man har valgt en dato skal comboboksen med ansatte komme frem
                         cEmployee.setDisable(false);
                     }

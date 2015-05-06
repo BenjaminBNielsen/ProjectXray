@@ -6,6 +6,7 @@
 package view.popups.shift;
 
 import control.Xray;
+import exceptions.DatabaseException;
 import handlers.TimeInvestmentHandler;
 import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
@@ -80,9 +81,7 @@ public class ShiftChangePopup extends PopupWindow {
 
             cChangeRoom.setValue("Vælg et nyt rum på listen");
 
-        } catch (SQLException ex) {
-
-        } catch (ClassNotFoundException ex) {
+        } catch (DatabaseException ex) {
 
         }
 
@@ -152,11 +151,9 @@ public class ShiftChangePopup extends PopupWindow {
                 lShiftChanged.setVisible(true);
                 
 
-            } catch (SQLException ex) {
+            } catch (DatabaseException ex) {
                 Logger.getLogger(ShiftChangePopup.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(ShiftChangePopup.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            } 
             }
 
         });

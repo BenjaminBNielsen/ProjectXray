@@ -1,6 +1,7 @@
 package view.popups;
 
 import control.Xray;
+import exceptions.DatabaseException;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -81,10 +82,9 @@ public class EmployeePopup extends PopupWindow {
         addEmployee.setOnAction(e -> {
             try {
                 Xray.getInstance().getPersonControl().addEmployees(employees);
-            } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
-            } catch (ClassNotFoundException ex) {
-                System.out.println(ex.getMessage());
+            } catch (DatabaseException ex) {
+                exceptionPopup.display(ex.getMessage());
+            
             }
         });
         super.addToBottomHBox(addEmployee);
@@ -178,9 +178,8 @@ public class EmployeePopup extends PopupWindow {
     private void initComboBoxes() {
         try {
             cOccupation = new ComboBox(Xray.getInstance().getPersonControl().getOccupations());
-        } catch (SQLException ex) {
-        } catch (ClassNotFoundException ex) {
-        }
+        } catch (DatabaseException ex) {
+        } 
         
         cOccupation.getSelectionModel().selectFirst();
         cOccupation.setPrefWidth(COLUMN_STANDARD_WIDTH);

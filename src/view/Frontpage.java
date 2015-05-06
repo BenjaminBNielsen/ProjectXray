@@ -6,6 +6,7 @@ import view.popups.EmployeePopup;
 import view.popups.DatabasePopup;
 import control.Xray;
 import dbc.DatabaseConnection;
+import exceptions.DatabaseException;
 import handlers.EmployeeHandler;
 import handlers.QualificationHandler;
 import handlers.RoomHandler;
@@ -79,16 +80,10 @@ public class Frontpage extends Application {
 
         try {
             Xray.getInstance().createConnection();
-        } catch (SQLException ex) {
+        } catch (DatabaseException ex) {
             DatabasePopup dbp = new DatabasePopup();
-            dbp.display("Ingen forbindelse til database");
-        } catch (ClassNotFoundException ex) {
-            DatabasePopup dbp = new DatabasePopup();
-            dbp.display("Database library skal tilføjes");
-        } catch (FileNotFoundException ex) {
-            DatabasePopup dbp = new DatabasePopup();
-            dbp.display("Databasefil mangler");
-        }
+            dbp.display(ex.getMessage());
+        } 
         if (DatabaseConnection.getInstance().hasConnection()) {
             initNodes(window);
         }
@@ -111,11 +106,9 @@ public class Frontpage extends Application {
             Schedule schedule = new Schedule(assigned, new LocalDateTime(2015, 04, 13, 0, 0));
             vMainLayout.getChildren().add(schedule);
 
-        } catch (SQLException ex) {
+        } catch (DatabaseException ex) {
             System.out.println(ex.getMessage());
-        } catch (ClassNotFoundException ex) {
-            System.out.println("erameåwrmewaårmeawåpmr");
-        }
+        } 
     }
 
     private void initNodes(Stage window) {
@@ -209,19 +202,15 @@ public class Frontpage extends Application {
         //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         try {
         rooms = Xray.getInstance().getRoomControl().getRooms();
-        } catch (SQLException ex) {
+        } catch (DatabaseException ex) {
             
-        } catch (ClassNotFoundException ex) {
-            
-        }
+        } 
         
         try {
         employees = Xray.getInstance().getPersonControl().getEmployees();
-        } catch (SQLException ex) {
+        } catch (DatabaseException ex) {
             
-        } catch (ClassNotFoundException ex) {
-            
-        }
+        } 
         
         
         

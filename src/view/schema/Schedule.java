@@ -7,6 +7,7 @@ package view.schema;
 
 import view.schema.AssignedRoomRow;
 import control.Xray;
+import exceptions.DatabaseException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -57,14 +58,16 @@ public class Schedule extends ScrollPane {
 
         try {
             addShiftTiles();
-        } catch (SQLException ex) {
-            exceptionPopup.display("I forbindelse med indhentning af rum fra databasen"
-                    + " er der sket en fejl, kontakt din systemadministrator. SQL gav"
-                    + " følgende fejlbesked: " + ex.getMessage());
-        } catch (ClassNotFoundException ex) {
-            exceptionPopup.display("Der er ikke oprettet forbindelse til databasen, "
-                    + "fordi der mangler en driver.");
+        } catch (DatabaseException ex) {
+            exceptionPopup.display(ex.getMessage());
         }
+//            exceptionPopup.display("I forbindelse med indhentning af rum fra databasen"
+//                    + " er der sket en fejl, kontakt din systemadministrator. SQL gav"
+//                    + " følgende fejlbesked: " + ex.getMessage());
+//        } catch (ClassNotFoundException ex) {
+//            exceptionPopup.display("Der er ikke oprettet forbindelse til databasen, "
+//                    + "fordi der mangler en driver.");
+//        }
 
         scheduleListItems.add(new AssignedAllRoomsRow("Eftermiddag", startTime, timeInvestments, 15, 15, 5, 0));
         scheduleListItems.add(new AssignedAllRoomsRow("Nat", startTime, timeInvestments, 23, 15, 5, 0));
@@ -92,7 +95,9 @@ public class Schedule extends ScrollPane {
         this.setFitToWidth(true);
     }
 
-    public void addShiftTiles() throws SQLException, ClassNotFoundException {
+    //Den thrower en exception fordi metoden bliver kaldt i samme klasse oven over. Der bliver
+    //exceptionen fanget.
+    public void addShiftTiles() throws DatabaseException {
 
         rooms = Xray.getInstance().getRoomControl().getRooms();
 

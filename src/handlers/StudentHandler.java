@@ -6,6 +6,7 @@
 package handlers;
 
 import dbc.DatabaseConnection;
+import exceptions.DatabaseException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -28,7 +29,8 @@ public class StudentHandler {
         return instance;
     }
 
-    public void addStudents(ObservableList<Student> students) throws SQLException {
+    public void addStudents(ObservableList<Student> students) throws DatabaseException {
+        try {
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
         String sql = "insert into person() values";
@@ -50,10 +52,15 @@ public class StudentHandler {
         //Eksekver sql statementen
         System.out.println(sql);
         stmt.execute(sql);
+        stmt.close();
+        } catch(SQLException ex) {
+            throw new DatabaseException("Der kan ikke være flere personer med samme ID.");    
+        }
 
         //Lav en ny statement
-        stmt = DatabaseConnection.getInstance().getConnection().createStatement();
-        sql = "insert into student() values";
+        try {
+        Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
+        String sql = "insert into student() values";
         for (int i = 0; i < students.size(); i++) {
             Student student = students.get(i);
 
@@ -69,10 +76,13 @@ public class StudentHandler {
 
         stmt.execute(sql);
         stmt.close();
+        } catch(SQLException ex) {
+            throw new DatabaseException("Der findes allerede en elev med det ID.");    
+        }
     }
 
-    public void addStudent(Student student) throws SQLException, ClassNotFoundException {
-
+    public void addStudent(Student student) throws DatabaseException {
+        try {
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
         String firstName = student.getFirstName();
@@ -92,11 +102,14 @@ public class StudentHandler {
         stmt.execute(sql);
 
         stmt.close();
+        } catch(SQLException ex) {
+            throw new DatabaseException("Der findes allerede en person med det ID.");    
+        }
     }
 
-    public ArrayList<Student> getStudents() throws SQLException, ClassNotFoundException {
+    public ArrayList<Student> getStudents() throws DatabaseException {
         ArrayList<Student> students = new ArrayList<>();
-
+        try {
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
         String sql = "select * from person,student where id = nr;";
@@ -116,9 +129,13 @@ public class StudentHandler {
         stmt.close();
 
         return students;
+        } catch(SQLException ex) {
+            throw new DatabaseException("Der kunne ikke hentes elever fra databasen.");    
+        }
     }
 
-    public Student getStudent(int id) throws SQLException {
+    public Student getStudent(int id) throws DatabaseException {
+        try {
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
         Student student = null;
 
@@ -138,6 +155,9 @@ public class StudentHandler {
         rs.close();
         stmt.close();
         return student;
+        } catch(SQLException ex) {
+            throw new DatabaseException("Der kunne ikke findes nogen elev med det ID.");    
+        }
     }
 
 }

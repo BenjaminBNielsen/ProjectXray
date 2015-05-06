@@ -6,6 +6,7 @@
 package view.popups;
 
 import control.Xray;
+import exceptions.DatabaseException;
 import java.sql.SQLException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -85,9 +86,8 @@ public class StudentPopup extends PopupWindow{
         addStudent.setOnAction(e -> {
             try {
                 Xray.getInstance().getPersonControl().addStudents(students);
-            } catch (SQLException ex) {
-            } catch (ClassNotFoundException ex) {
-            }
+            } catch (DatabaseException ex) {
+            } 
         });
         super.addToBottomHBox(addStudent);
 

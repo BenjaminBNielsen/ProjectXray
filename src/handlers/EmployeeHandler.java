@@ -7,6 +7,7 @@ package handlers;
 
 import control.Xray;
 import dbc.DatabaseConnection;
+import exceptions.DatabaseException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -30,8 +31,8 @@ public class EmployeeHandler {
         return instance;
     }
 
-    public void addEmployee(Employee employee) throws SQLException, ClassNotFoundException {
-
+    public void addEmployee(Employee employee) throws DatabaseException {
+        try{
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
         int nr = employee.getId();
@@ -56,11 +57,14 @@ public class EmployeeHandler {
         stmt.execute(sql);
 
         stmt.close();
+        } catch(SQLException ex) {
+            throw new DatabaseException("Der findes allerede en ansat med det ID.");
+        }
     }
 
-    public ArrayList<Employee> getEmployees() throws SQLException, ClassNotFoundException {
+    public ArrayList<Employee> getEmployees() throws DatabaseException {
         ArrayList<Employee> employees = new ArrayList<>();
-
+        try {
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
         String sql = "select * from person,employee where id = nr";
@@ -86,10 +90,13 @@ public class EmployeeHandler {
         stmt.close();
 
         return employees;
+        } catch(SQLException ex) {
+            throw new DatabaseException("Der kan ikke være flere employees med det nummer.");
+        }
     }
     
-    public Employee getEmployee(int employeeNr) throws SQLException, ClassNotFoundException {
-        
+    public Employee getEmployee(int employeeNr) throws DatabaseException {
+        try {
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
         Employee employee = null;
         
@@ -112,9 +119,13 @@ public class EmployeeHandler {
         rs.close();
         stmt.close();
         return employee;
+        } catch(SQLException ex) {
+            throw new DatabaseException("Der kunne ikke findes en ansat med det ID.");
+        }
     }
 
-    public void addEmployees(ObservableList<Employee> employees) throws SQLException {
+    public void addEmployees(ObservableList<Employee> employees) throws DatabaseException {
+        try {
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
 
         String sql = "insert into person() values";
@@ -132,13 +143,17 @@ public class EmployeeHandler {
             }
 
         }
+        
 
         //Eksekver sql statementen
         stmt.execute(sql);
-        
+        } catch(SQLException ex) {
+            throw new DatabaseException("Der findes allerede en person med det ID.");
+        }
         //Lav en ny statement
-        stmt = DatabaseConnection.getInstance().getConnection().createStatement();
-        sql = "insert into employee() values";
+        try {
+        Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
+        String sql = "insert into employee() values";
         for (int i = 0; i < employees.size(); i++) {
             Employee employee = employees.get(i);
             
@@ -156,6 +171,9 @@ public class EmployeeHandler {
 
         stmt.execute(sql);
         stmt.close();
+        } catch(SQLException ex) {
+            throw new DatabaseException("Der findes allerede en person med det ID.");
+        }
         
     }
 

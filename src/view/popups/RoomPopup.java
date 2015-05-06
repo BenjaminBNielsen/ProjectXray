@@ -8,6 +8,7 @@ package view.popups;
 import view.popups.PopupWindow;
 import view.popups.ExceptionPopup;
 import control.*;
+import exceptions.DatabaseException;
 import java.sql.*;
 import java.util.logging.*;
 import javafx.collections.FXCollections;
@@ -126,12 +127,10 @@ public class RoomPopup extends PopupWindow {
                 try {
                     Xray.getInstance().getRoomControl().addRooms(rooms);
                     rooms.removeAll(rooms);
-                } catch (SQLException ex) {
-                    exceptionPopup.display("Der findes allerede et rum med det navn");
+                } catch (DatabaseException ex) {
+                    exceptionPopup.display(ex.getMessage());
                     System.out.println(ex.getMessage());
-                } catch (ClassNotFoundException ex) {
-                    exceptionPopup.display("Der mangler en database driver, kontakt systemadministrator");
-                }
+                } 
                 System.out.println(roomNameInsert + "\n" + roomStateInsert);
             } else {
                 exceptionPopup.display("Der er ingen rum i listen der skal indsættes");

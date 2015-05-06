@@ -1,7 +1,9 @@
 package dbc;
 
+import exceptions.DatabaseException;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -31,13 +33,16 @@ public class DatabaseConnection {
         return instance;
     }
 
-    public void createConnection() throws FileNotFoundException, SQLException, ClassNotFoundException {
+    public void createConnection() throws DatabaseException {
 //Hvis der er forbindelse i forvejen når metoden kaldes, vil den blive lukket.
+        Scanner textScan = null;
+        try {
+            
         if (conn == null) {
         //Sætter et String variable på et filnavn. Derefter sættes en ny fil til navnet, 
             //og den tekstfil der bliver fundet, scannes igennem for Database login info.
             String filename = "xraydb.txt";
-            Scanner textScan;
+            
 
             File file = new File(filename);
             textScan = new Scanner(file);
@@ -64,7 +69,13 @@ public class DatabaseConnection {
                         break;
                 }
             }
+        }
             textScan.close();
+            } catch(IOException ex) {
+            throw new DatabaseException("Der kunne ikke hentes nogen fil til oprettelse af forbindelse til databasen.");    
+        }
+        
+        try {
 
             db = "jdbc:mysql://" + host + ":" + port + "/" + dbNavn;
 
@@ -81,8 +92,17 @@ public class DatabaseConnection {
         }
         //Hvis programmet når her til uden at støde på exceptions må den have forbindelse.
         hasConnection = true;
+        
+        } catch(ClassNotFoundException ex) {
+            throw new DatabaseException("Der kunne ikke findes en driver.");    
+        } catch(SQLException ex) {
+            throw new DatabaseException("Der kunne ikke oprettes forbindelse til databasen.");    
         }
-    }
+        
+        }
+    
+    
+    
 
     public Connection getConnection() {
         return conn;
