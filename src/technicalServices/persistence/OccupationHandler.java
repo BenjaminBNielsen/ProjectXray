@@ -6,6 +6,7 @@
 package technicalServices.persistence;
 
 import dbc.DatabaseConnection;
+import exceptions.DatabaseException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -28,8 +29,9 @@ public class OccupationHandler {
         return instance;
     }
     
-    public ObservableList<Occupation> getOccupations() throws SQLException{
+    public ObservableList<Occupation> getOccupations() throws DatabaseException {
         ObservableList<Occupation> occupations = FXCollections.observableArrayList();
+        try {
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
         
         String sql = "select * from occupation";
@@ -47,11 +49,14 @@ public class OccupationHandler {
             System.out.println(occupation);
         }
         return occupations;
+        } catch(SQLException ex) {
+            throw new DatabaseException("Der kunne ikke hentes nogle job.");
+        }
     }
     
-    public Occupation getOccupation(int id) throws SQLException {
+    public Occupation getOccupation(int id) throws DatabaseException {
         Occupation occupation = null;
-        
+        try {
         Statement stmt = DatabaseConnection.getInstance().getConnection().createStatement();
         
         String sql = "select * from occupation where id = " + id;
@@ -65,5 +70,8 @@ public class OccupationHandler {
         
         
         return occupation;
+        } catch(SQLException ex) {
+            throw new DatabaseException("Der blev ikke fundet noget job med det ID. ");    
+        }
     }
 }
