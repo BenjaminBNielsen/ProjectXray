@@ -14,15 +14,13 @@ import java.util.ArrayList;
 public abstract class Qualification {
 
     private int id;
-    private boolean training;
     private ArrayList<Employee> employees;
     private ArrayList<Room> rooms;
     String type;
 
-    public Qualification(int id, boolean training, String type, ArrayList<Employee> employees,
+    public Qualification(int id, String type, ArrayList<Employee> employees,
             ArrayList<Room> rooms) {
         this.id = id;
-        this.training = training;
         this.type = type;
         this.employees = employees;
         this.rooms = rooms;
@@ -32,16 +30,8 @@ public abstract class Qualification {
         return id;
     }
 
-    public boolean isTraining() {
-        return training;
-    }
-
     public void setId(int id) {
         this.id = id;
-    }
-
-    public void setTraining(boolean training) {
-        this.training = training;
     }
 
     public String getType() {

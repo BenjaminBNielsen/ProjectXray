@@ -38,7 +38,7 @@ public class RoomAmountComparator implements Comparator<TimeInvestment> {
                     //Find dernæst antallet af de rum som de to medarbejdere der 
                     //hører til de to vagter har adgang til igennem sine kvalifikationer.
                     ArrayList<Room> firstEmpRooms;
-                        firstEmpRooms = Xray.getInstance().getEmployeeRooms(s1.getEmployee(), roomQualifications);
+                    firstEmpRooms = Xray.getInstance().getEmployeeRooms(s1.getEmployee(), roomQualifications);
                     ArrayList<Room> nextEmpRooms = Xray.getInstance().getEmployeeRooms(s2.getEmployee(), roomQualifications);
                     int firstQualAmount = firstEmpRooms.size();
                     int nextQualAmount = nextEmpRooms.size();

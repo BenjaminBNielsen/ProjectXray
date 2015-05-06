@@ -74,14 +74,12 @@ public class EmployeeHandler {
             int phoneNumber = rs.getInt("telephone");
             String address = rs.getString("address");
             String eMail = rs.getString("mail");
+            Occupation occupation = OccupationHandler.getInstance().
+                    getOccupation(rs.getInt("occupationId"));
 
             employees.add(new Employee(firstName, lastName, nr, phoneNumber, address,
-                    eMail, new Occupation(1, "eare")));
+                    eMail, occupation));
             
-        }
-        
-        for (Employee employee1 : employees) {
-            System.out.println(employee1);
         }
 
         rs.close();

@@ -14,9 +14,9 @@ import java.util.ArrayList;
 public class LimitQualification extends Qualification {
     private int limit;
 
-    public LimitQualification(int id, boolean training, String type,
+    public LimitQualification(int id, String type,
             ArrayList<Employee> employees, ArrayList<Room> rooms, int limit) {
-        super(id, training, type,employees,rooms);
+        super(id, type,employees,rooms);
         this.limit = limit;
     }
 

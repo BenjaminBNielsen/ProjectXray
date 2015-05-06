@@ -23,6 +23,14 @@ public class QualificationControl {
     public QualificationControl() throws SQLException, ClassNotFoundException {
         
     }
+    
+    public ArrayList<RoomQualification> getRoomQualifications(){
+        return QualificationHandler.getInstance().getRoomQualifications();
+    }
+    
+    public ArrayList<LimitQualification> getLimitQualifications() throws ClassNotFoundException{
+        return QualificationHandler.getInstance().getLimitQualifications();
+    }
    
 //    public void createQualification(QualificationType type, Boolean training, Room room) throws SQLException{
 //        QualificationHandler.getInstance().createQualification(type, training, room);
@@ -34,10 +42,10 @@ public class QualificationControl {
 //        
 //    }
     
-    public ArrayList<LimitQualification> getSingleQualifications(Employee employee) throws ClassNotFoundException{
-        return QualificationHandler.getInstance().getSingleQualifications(employee);
-        
-    }
+//    public ArrayList<LimitQualification> getSingleQualifications(Employee employee) throws ClassNotFoundException{
+//        return QualificationHandler.getInstance().getSingleQualifications();
+//        
+//    }
     
 //        public ArrayList<RoomQualification> getRoomQualifications(Room room) throws ClassNotFoundException{
 //        //return QualificationHandler.getInstance().getRoomQualifications(room);
