@@ -24,9 +24,11 @@ import model.TimeInvestment;
 import org.joda.time.Hours;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Minutes;
+import view.Frontpage;
 import view.buttons.PopupMenuButton;
 import view.popups.ExceptionPopup;
 import view.popups.PopupWindow;
+
 
 /**
  *
@@ -145,20 +147,21 @@ public class ShiftChangePopup extends PopupWindow {
             } catch (NumberFormatException ex) {
                 exceptionPopup.display("Datoen skal skrives ind med tal.");
             }
-            
+
 
             try {
                 TimeInvestmentHandler.getInstance().updateTimeInvestment(shift);
                 lShiftChanged.setVisible(true);
+                Frontpage.getLastCreatedFrontpage().updateSchedule();
                 
 
             } catch (SQLException ex) {
                 Logger.getLogger(ShiftChangePopup.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ClassNotFoundException ex) {
-                Logger.getLogger(ShiftChangePopup.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ShiftChangePopup.class.getName()).log(Level.SEVERE, null, ex); 
             }
             }
-
+              
         });
 
         super.addToBottomHBox(changeShift);

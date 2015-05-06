@@ -85,8 +85,14 @@ public class Frontpage extends Application {
 
     }
 
+    static Frontpage currentFrontPage;
+    
+    public static Frontpage getLastCreatedFrontpage() {
+        return currentFrontPage;
+    }
+    
     public Frontpage() {
-
+        currentFrontPage = this;
     }
 
     //Hovedmetoden der bliver kørt i gui'en.
@@ -149,7 +155,7 @@ public class Frontpage extends Application {
         frontPageScene = new Scene(vMainLayout, screenWidth, screenHeight);
         vMainLayout.setPadding(new Insets(STANDARD_PADDING, STANDARD_PADDING, STANDARD_PADDING, STANDARD_PADDING));
         window.setTitle(TITLE);
-
+        
         //initialiser knapper:
         initButtons();
         initCombobox();
@@ -243,7 +249,7 @@ public class Frontpage extends Application {
         printButton.setOnAction(e -> {
             printer.print(schedule);
         });
-
+        
         hWeekPicker.getChildren().addAll(jumpBackWeek, jumpForwardWeek, printButton);
     }
 
@@ -335,4 +341,12 @@ public class Frontpage extends Application {
 
         return mondays;
     }
+    public void updateSchedule(){
+        
+        vMainLayout.getChildren().remove(2);
+        Schedule schedule = new Schedule(assigned, new LocalDateTime(chosenMonday));
+        vMainLayout.getChildren().add(2, schedule);
+    
+}
+    
 }
