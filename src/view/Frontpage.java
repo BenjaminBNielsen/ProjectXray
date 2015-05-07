@@ -21,6 +21,7 @@ import static javafx.application.Application.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
+import javafx.print.PrinterJob;
 import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -52,6 +53,7 @@ public class Frontpage extends Application {
     private Schedule schedule;
 
     private PrinterThread printer = new PrinterThread();
+    private PrinterJob job = PrinterJob.createPrinterJob();
 
     private double screenWidth;
     private double screenHeight;
@@ -241,7 +243,8 @@ public class Frontpage extends Application {
 
         printButton = new Button("Print skema");
         printButton.setOnAction(e -> {
-            printer.print(schedule);
+            Schedule node = new Schedule(assigned, new LocalDateTime(chosenMonday));
+            printer.print(job, node);
         });
 
         hWeekPicker.getChildren().addAll(jumpBackWeek, jumpForwardWeek, printButton);
@@ -250,7 +253,7 @@ public class Frontpage extends Application {
     private void initCombobox() {
         cWeek = new ComboBox();
         cWeek.setPrefWidth(170);
-        
+
         //Her definere vi hvordan hver celle i en comboBox's ListView bliver "omdannet"
         //eller bygget op. Callback er et interface i JavaFX, der gøre det lettere
         //at definere udformningen/handlingen for (i det her tilfælde) comboBoxens
