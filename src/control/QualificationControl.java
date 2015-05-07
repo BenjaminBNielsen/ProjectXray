@@ -70,4 +70,8 @@ public class QualificationControl {
         QualificationHandler.getInstance().addRoomQualification(observableRooms, observableEmployees, type);
     }
     
+    public void addLimitQualification(ObservableList<Room> observableRooms, ObservableList<Employee> observableEmployees, String type, int limit) throws DatabaseException {
+        QualificationHandler.getInstance().addLimitQualification(observableRooms, observableEmployees, type, limit);
+    }
+    
 }

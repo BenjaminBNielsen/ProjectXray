@@ -18,8 +18,10 @@ import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.RadialGradient;
 import javafx.scene.text.TextAlignment;
 import model.Employee;
 import model.Room;
@@ -33,13 +35,12 @@ import view.buttons.SettingsButton;
  * @author Jonas
  */
 public class RoomQualificationPopup extends PopupWindow {
-
     private ComboBox cBRoomBox, cBEmployeeBox;
     private ArrayList<Room> rooms, roomsInsert;
     private ArrayList<Employee> employees, employeesInsert;
     private ObservableList<Room> observableListRooms;
     private ObservableList<Employee> observableListEmployees;
-    private TextField tFType;
+    private TextField tFType, tFLimit;
     private String type, typeInsert;
     private ListView listViewRoom, listViewEmployee;
     private SettingsButton settingsButton;
@@ -49,12 +50,15 @@ public class RoomQualificationPopup extends PopupWindow {
             lRoomListView, lEmployeeListView;
     private Room roomInsert;
     private Employee employeeInsert;
-
+    private RadioButton rButton;
+    private boolean limitCheck;
+    private int limit;
+    
     public RoomQualificationPopup(ArrayList<Room> rooms, ArrayList<Employee> employees) {
         this.rooms = rooms;
         this.employees = employees;
     }
-
+    
     @Override
     public void display(String title) {
         ExceptionPopup exceptionPopup = new ExceptionPopup(); //Til exceptionhandling.
@@ -64,11 +68,27 @@ public class RoomQualificationPopup extends PopupWindow {
         lRoomLabel = new Label("Vælg rum der skal bearbejdes");
         lRoomListView = new Label("Her lægges alle rum:");
         lEmployeeListView = new Label("Her lægges alle ansatte:");
-
         tFType = new TextField();
-
+        tFLimit = new TextField();
+        tFLimit.setDisable(true);
         cBRoomBox = new ComboBox();
         cBEmployeeBox = new ComboBox();
+
+        rButton = new RadioButton("Universel kvalifikation");
+        limitCheck = false;
+        rButton.setOnAction(e -> {
+
+            if (rButton.isSelected()) {
+                limitCheck = true;
+                tFLimit.setDisable(false);
+
+            } else {
+                limitCheck = false;
+                tFLimit.setDisable(true);
+
+            }
+            System.out.println(limitCheck);
+        });
 
         // Der skal lægges elementer ind i vores combobokse.
         ObservableList<Room> observableListRooms
@@ -119,7 +139,7 @@ public class RoomQualificationPopup extends PopupWindow {
 
         vBoxRight.getChildren().addAll(lEmployeeListView, listViewEmployee,
                 lRoomListView, listViewRoom);
-        vBoxCenter.getChildren().addAll(addButtonEmployee, settingsButton, addButtonRoom);
+        vBoxCenter.getChildren().addAll(addButtonEmployee, settingsButton, addButtonRoom, rButton, tFLimit);
 
         addButtonRoom.setOnAction(e -> {
             roomInsert = (Room) cBRoomBox.getSelectionModel().getSelectedItem();
@@ -162,11 +182,22 @@ public class RoomQualificationPopup extends PopupWindow {
 
         addQualification = new PopupMenuButton("Tilføj kvalifikationer"); // Her skal listen køres igennem og der indsættes data i databasen
         addQualification.setOnAction(e -> {
-            typeInsert = tFType.getText();
-            try {
-                Xray.getInstance().getQualificationControl().addRoomQualification(observableListRooms, observableListEmployees, typeInsert);
-            } catch (DatabaseException ex) {
-                exceptionPopup.display(ex.getMessage());
+
+            if (limitCheck != true) {
+                typeInsert = tFType.getText();
+                try {
+                    Xray.getInstance().getQualificationControl().addRoomQualification(observableListRooms, observableListEmployees, typeInsert);
+                } catch (DatabaseException ex) {
+                    exceptionPopup.display(ex.getMessage());
+                }
+            } else if (limitCheck == true) {
+                try {
+                    typeInsert = tFType.getText();
+                    limit = Integer.parseInt(tFLimit.getText());
+                    Xray.getInstance().getQualificationControl().addLimitQualification(observableListRooms, observableListEmployees, typeInsert, limit);
+                } catch (DatabaseException ex) {
+                    exceptionPopup.display(ex.getMessage());
+                }
             }
         });
 

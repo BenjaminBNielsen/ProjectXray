@@ -322,4 +322,102 @@ public class QualificationHandler {
 
     }
 
+    public void addLimitQualification(ObservableList<Room> observableRooms, ObservableList<Employee> observableEmployees, String type, int limit) 
+        throws DatabaseException {
+
+        int qualId = 0;
+        boolean hasFailed = false;
+        Statement stmt = null;
+        Statement stmt1 = null;
+        Statement stmt2 = null;
+        Statement stmt3 = null;
+        try {
+            stmt = DatabaseConnection.getInstance().getConnection().createStatement();
+            String sql = "insert into qualification(type) values";
+
+            sql += "('" + type + "');";
+
+            stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+
+            ResultSet rs = stmt.getGeneratedKeys();
+
+            while (rs.next()) {
+                qualId = rs.getInt(1);
+            }
+            System.out.println(qualId);
+        } catch (SQLException ex) {
+            hasFailed = true;
+            throw new DatabaseException("Der må ikke være flere kvalifikationer med samme navn. sqllimit");
+
+        }
+        try {
+            stmt1 = DatabaseConnection.getInstance().getConnection().createStatement();
+            String sql1 = "insert into qualToRoom(roomName, qualId) values";
+
+            for (int i = 0; i < observableRooms.size(); i++) {
+                Room tempRoom = observableRooms.get(i);
+                sql1 += "('" + tempRoom.getRoomName();
+                sql1 += "'," + qualId;
+                if (i == observableRooms.size() - 1) {
+                    sql1 += ");";
+                } else {
+                    sql1 += "),\n";
+                }
+            }
+            stmt1.execute(sql1);
+
+        } catch (SQLException ex) {
+            hasFailed = true;
+            throw new DatabaseException("Der må ikke være flere af samme rum. sql 2limit");
+        }
+        try {
+            stmt2 = DatabaseConnection.getInstance().getConnection().createStatement();
+            String sql2 = "insert into qualToEmp(employeeNr, qualId) values";
+
+            for (int i = 0; i < observableEmployees.size(); i++) {
+                Employee tempEmployee = observableEmployees.get(i);
+                sql2 += "(" + tempEmployee.getId();
+                sql2 += ", " + qualId;
+                if (i == observableEmployees.size() - 1) {
+                    sql2 += ");";
+                } else {
+                    sql2 += "),\n";
+                }
+
+            }
+            stmt2.execute(sql2);
+
+        } catch (SQLException ex) {
+            hasFailed = true;
+            throw new DatabaseException("Der må ikke være flere af samme medarbejder.");
+        }
+        try {
+            stmt3 = DatabaseConnection.getInstance().getConnection().createStatement();
+            String sql3 = "insert into limitQualification(id, `limit`) values";
+
+            sql3 += "(" + qualId + ", " + limit +");";
+
+            stmt3.execute(sql3);
+
+        } catch (SQLException ex) {
+            hasFailed = true;
+            throw new DatabaseException("sql3limitqual");
+        }
+
+        try {
+            if (hasFailed == true) {
+                stmt.cancel();
+                stmt1.cancel();
+                stmt2.cancel();
+                stmt3.cancel();
+            }
+            stmt3.close();
+            stmt2.close();
+            stmt1.close();
+            stmt.close();
+        } catch (SQLException ex) {
+            throw new DatabaseException("Hersf");
+        }
+    }
+
 }
