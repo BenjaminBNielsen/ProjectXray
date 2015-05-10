@@ -6,6 +6,7 @@
 
 package control;
 
+import exceptions.DatabaseException;
 import technicalServices.persistence.RoomHandler;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import model.Room;
  */
 public class RoomControl {
     
-    public RoomControl() throws SQLException, ClassNotFoundException {
+    public RoomControl() throws DatabaseException {
     }
     
 //    public static RoomControl getInstance() throws SQLException, ClassNotFoundException {
@@ -29,15 +30,15 @@ public class RoomControl {
 //        return instance;
 //    }
 
-    public int getRoomCount() throws SQLException, ClassNotFoundException {
+    public int getRoomCount() throws DatabaseException {
         return RoomHandler.getInstance().getRoomsRows();
     }
     
-    public void addRooms(ObservableList<Room> rooms) throws SQLException, ClassNotFoundException {
+    public void addRooms(ObservableList<Room> rooms) throws DatabaseException {
         RoomHandler.getInstance().addRooms(rooms);
     }
     
-    public ArrayList<Room> getRooms() throws SQLException, ClassNotFoundException {
+    public ArrayList<Room> getRooms() throws DatabaseException {
         return RoomHandler.getInstance().getRooms();
     }
     

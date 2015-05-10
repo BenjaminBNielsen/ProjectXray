@@ -7,6 +7,7 @@ package control;
 
 import control.comparators.*;
 import dbc.DatabaseConnection;
+import exceptions.DatabaseException;
 import technicalServices.persistence.TimeInvestmentHandler;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
@@ -37,13 +38,16 @@ public class Xray {
     private PersonControl personControl;
     private Connection databaseConnection;
 
-    private Xray() throws SQLException, ClassNotFoundException {
+    private Xray() throws DatabaseException {
+        roomControl = new RoomControl();
+        qualificationControl = new QualificationControl();
+        personControl = new PersonControl();
 
-        
     }
 
-    public void createConnection() throws FileNotFoundException, SQLException, ClassNotFoundException{
-                //Opret forbindelse til databasen
+    public void createConnection() throws DatabaseException {
+        //Opret forbindelse til databasen
+
         if (!DatabaseConnection.getInstance().hasConnection()) {
                 System.out.println("heheheh");
                 DatabaseConnection.getInstance().createConnection();
@@ -59,12 +63,12 @@ public class Xray {
     }
 
     public void addTimeInvestments(ArrayList<TimeInvestment> shifts) throws
-            SQLException, ClassNotFoundException {
+            DatabaseException {
         TimeInvestmentHandler.getInstance().addTimeInvestments(shifts);
     }
 
     public ArrayList<TimeInvestment> getUnassignedTimeInvestments() throws
-            SQLException, ClassNotFoundException {
+            DatabaseException {
         return TimeInvestmentHandler.getInstance().getUnassignedTimeInvestments();
     }
 
@@ -72,8 +76,8 @@ public class Xray {
         if (Instance == null) {
             try {
                 Instance = new Xray();
-            } catch (SQLException ex) {
-            } catch (ClassNotFoundException ex) {
+            } catch (DatabaseException ex) {
+                
             }
         }
         return Instance;
@@ -110,13 +114,15 @@ public class Xray {
      * @return Returnerer en liste af timeInvestments der har fået sine rum
      * tildelt.
      */
-    public ArrayList<TimeInvestment> assignRooms() throws SQLException, ClassNotFoundException {
+
+    public ArrayList<TimeInvestment> assignRooms() throws DatabaseException {
         ArrayList<TimeInvestment> unassignedShifts = TimeInvestmentHandler.getInstance().
                 getUnassignedTimeInvestments();
         ArrayList<RoomQualification> roomQualifications = qualificationControl.
                 getRoomQualifications();
         ArrayList<LimitQualification> limitQualifications = qualificationControl.
                 getLimitQualifications();
+
         ArrayList<TimeInvestment> assignedShifts = new ArrayList<>();
         
         //Sortér liste af vagter ud fra denne prioritet: 1: dato, 2: timer, 3: minutter
