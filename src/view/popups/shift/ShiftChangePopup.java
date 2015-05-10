@@ -235,8 +235,8 @@ public class ShiftChangePopup extends PopupWindow {
             } catch (DatabaseException ex) {
                 Logger.getLogger(ShiftChangePopup.class.getName()).log(Level.SEVERE, null, ex);
             } 
-            //}
-              
+            }
+
         });
 
         super.addToBottomHBox(changeShift);
