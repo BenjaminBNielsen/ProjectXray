@@ -5,9 +5,13 @@
  */
 package control;
 
+
+import exceptions.DatabaseException;
+
 import technicalServices.persistence.EmployeeHandler;
 import technicalServices.persistence.OccupationHandler;
 import technicalServices.persistence.StudentHandler;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javafx.collections.ObservableList;
@@ -21,25 +25,25 @@ import model.Student;
  */
 public class PersonControl {
 
-    public void addEmployees(ObservableList<Employee> employees) throws SQLException, ClassNotFoundException {
+    public void addEmployees(ObservableList<Employee> employees) throws DatabaseException {
 
         EmployeeHandler.getInstance().addEmployees(employees);
     }
 
-    public void addStudents(ObservableList<Student> students) throws SQLException, ClassNotFoundException {
+    public void addStudents(ObservableList<Student> students) throws DatabaseException {
 
         StudentHandler.getInstance().addStudents(students);
     }
 
-    public ArrayList<Employee> getEmployees() throws SQLException, ClassNotFoundException {
+    public ArrayList<Employee> getEmployees() throws DatabaseException {
         return EmployeeHandler.getInstance().getEmployees();
     }
 
-    public ArrayList<Student> getStudents() throws SQLException, ClassNotFoundException {
+    public ArrayList<Student> getStudents() throws DatabaseException {
         return StudentHandler.getInstance().getStudents();
     }
     
-    public ObservableList<Occupation> getOccupations() throws SQLException, ClassNotFoundException {
+    public ObservableList<Occupation> getOccupations() throws DatabaseException {
         return OccupationHandler.getInstance().getOccupations();
     }
 

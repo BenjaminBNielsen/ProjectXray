@@ -6,6 +6,7 @@ import view.popups.EmployeePopup;
 import view.popups.DatabasePopup;
 import control.Xray;
 import dbc.DatabaseConnection;
+import exceptions.DatabaseException;
 import technicalServices.persistence.EmployeeHandler;
 import technicalServices.persistence.QualificationHandler;
 import technicalServices.persistence.RoomHandler;
@@ -44,6 +45,7 @@ import org.joda.time.LocalDateTime;
 import techincalServices.printing.PrinterThread;
 import view.buttons.PopupMenuButton;
 import view.popups.PrintReviewPopup;
+import view.popups.RoomQualificationPopup;
 import view.popups.StudentPopup;
 import view.popups.shift.ShiftPopup;
 
@@ -59,6 +61,9 @@ public class Frontpage extends Application {
 
     private double screenWidth;
     private double screenHeight;
+    
+    private ArrayList<Room> rooms;
+    private ArrayList<Employee> employees;
 
     private Stage window;
 
@@ -89,8 +94,14 @@ public class Frontpage extends Application {
 
     }
 
+    static Frontpage currentFrontPage;
+    
+    public static Frontpage getLastCreatedFrontpage() {
+        return currentFrontPage;
+    }
+    
     public Frontpage() {
-
+        currentFrontPage = this;
     }
 
     //Hovedmetoden der bliver kørt i gui'en.
@@ -109,16 +120,10 @@ public class Frontpage extends Application {
 
         try {
             Xray.getInstance().createConnection();
-        } catch (SQLException ex) {
+        } catch (DatabaseException ex) {
             DatabasePopup dbp = new DatabasePopup();
-            dbp.display("Ingen forbindelse til database");
-        } catch (ClassNotFoundException ex) {
-            DatabasePopup dbp = new DatabasePopup();
-            dbp.display("Database library skal tilføjes");
-        } catch (FileNotFoundException ex) {
-            DatabasePopup dbp = new DatabasePopup();
-            dbp.display("Databasefil mangler");
-        }
+            dbp.display(ex.getMessage());
+        } 
         if (DatabaseConnection.getInstance().hasConnection()) {
             initNodes(window);
         }
@@ -126,18 +131,18 @@ public class Frontpage extends Application {
         //Tildeling af rum til ansatte for uge 16/2015:
         //Kør 'Røntgen projekt\DB\Script 3a - insert_shifts_week16-2015.sql'.
         try {
+
             assigned = Xray.getInstance().assignRooms();
-        } catch (SQLException ex) {
+        } catch (DatabaseException ex) {
             System.out.println("LORT1");
-        } catch (ClassNotFoundException ex) {
-            System.out.println("LORT2");
-        }
+        } 
 
         //tildel via assign rooms metode:
         //Opsætning af skema.
         hMenuLayout.setMinHeight(PopupMenuButton.PREFERRED_HEIGHT);
         schedule = new Schedule(assigned, today);
         vMainLayout.getChildren().add(schedule);
+
 
     }
 
@@ -153,7 +158,12 @@ public class Frontpage extends Application {
         frontPageScene = new Scene(vMainLayout, screenWidth, screenHeight);
         vMainLayout.setPadding(new Insets(STANDARD_PADDING, STANDARD_PADDING, STANDARD_PADDING, STANDARD_PADDING));
         window.setTitle(TITLE);
-
+        
+        rooms = new ArrayList<>();
+        employees = new ArrayList<>();
+        
+        initArrayLists();
+        
         //initialiser knapper:
         initButtons();
         initCombobox();
@@ -192,16 +202,17 @@ public class Frontpage extends Application {
 
         createQualificationButton = new PopupMenuButton("Opret kvalifikation");
         createQualificationButton.setOnAction(e -> {
-            //QualificationTypePopup qualificationTypeWindow = new QualificationTypePopup();
-            //qualificationTypeWindow.display("Kvalifikationer");
+            RoomQualificationPopup roomQualificationWindow = 
+                    new RoomQualificationPopup(rooms, employees);
+            roomQualificationWindow.display("Kvalifikationer");
 
         });
         menuButtons.add(createQualificationButton);
 
         createRoomButton = new PopupMenuButton("Opret rum");
         createRoomButton.setOnAction(e -> {
-//            RoomPopup roomWindow = new RoomPopup();
-//            roomWindow.display("Rum");
+            RoomPopup roomWindow = new RoomPopup();
+            roomWindow.display("Rum");
         });
         menuButtons.add(createRoomButton);
 
@@ -250,7 +261,7 @@ public class Frontpage extends Application {
             printPopup.display("Print Menu");
            
         });
-
+        
         hWeekPicker.getChildren().addAll(jumpBackWeek, jumpForwardWeek, printButton);
     }
 
@@ -342,4 +353,34 @@ public class Frontpage extends Application {
 
         return mondays;
     }
+    
+    public void initArrayLists() {
+        
+        //Der skal skrives færdigt på de her try and catches!!!!!!!!!!!!!!!!!!!
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        try {
+        rooms = Xray.getInstance().getRoomControl().getRooms();
+        } catch (DatabaseException ex) {
+            
+        } 
+        
+        try {
+        employees = Xray.getInstance().getPersonControl().getEmployees();
+        } catch (DatabaseException ex) {
+            
+        } 
+        
+        
+        
+    }
+    public void updateSchedule(){
+        
+        vMainLayout.getChildren().remove(2);
+        Schedule schedule = new Schedule(assigned, new LocalDateTime(chosenMonday));
+        vMainLayout.getChildren().add(2, schedule);
+    
+}
+    
 }

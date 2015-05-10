@@ -5,6 +5,7 @@
  */
 package control;
 
+import exceptions.DatabaseException;
 import technicalServices.persistence.QualificationHandler;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -20,15 +21,15 @@ import model.LimitQualification;
  * @author Yousef
  */
 public class QualificationControl {
-    public QualificationControl() throws SQLException, ClassNotFoundException {
+    public QualificationControl() throws DatabaseException {
         
     }
     
-    public ArrayList<RoomQualification> getRoomQualifications(){
+    public ArrayList<RoomQualification> getRoomQualifications() throws DatabaseException{
         return QualificationHandler.getInstance().getRoomQualifications();
     }
     
-    public ArrayList<LimitQualification> getLimitQualifications() throws ClassNotFoundException{
+    public ArrayList<LimitQualification> getLimitQualifications() throws DatabaseException{
         return QualificationHandler.getInstance().getLimitQualifications();
     }
     
@@ -64,5 +65,9 @@ public class QualificationControl {
 //        QualificationHandler.getInstance().setEmployeeQualifications(selectedQualifications);
 //    }
 //    
+    
+    public void addRoomQualification(ObservableList<Room> observableRooms, ObservableList<Employee> observableEmployees, String type) throws DatabaseException {
+        QualificationHandler.getInstance().addRoomQualification(observableRooms, observableEmployees, type);
+    }
     
 }
