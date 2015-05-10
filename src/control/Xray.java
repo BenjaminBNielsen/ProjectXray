@@ -7,11 +7,14 @@ package control;
 
 import control.comparators.*;
 import dbc.DatabaseConnection;
+import exceptions.ControlException;
+import exceptions.DatabaseException;
 import technicalServices.persistence.TimeInvestmentHandler;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.geometry.Rectangle2D;
@@ -19,8 +22,10 @@ import javafx.stage.Screen;
 import model.Employee;
 import model.LimitQualification;
 import model.Room;
+import model.RoomAssignmentCounter;
 import model.RoomQualification;
 import model.TimeInvestment;
+import model.TimePeriod;
 import org.joda.time.DateTimeFieldType;
 import org.joda.time.LocalDateTime;
 import view.popups.DatabasePopup;
@@ -35,36 +40,40 @@ public class Xray {
     private RoomControl roomControl;
     private QualificationControl qualificationControl;
     private PersonControl personControl;
+    private TimePeriodControl timePeriodControl;
     private Connection databaseConnection;
 
-    private Xray() throws SQLException, ClassNotFoundException {
-
-        
-    }
-
-    public void createConnection() throws FileNotFoundException, SQLException, ClassNotFoundException{
-                //Opret forbindelse til databasen
-        if (!DatabaseConnection.getInstance().hasConnection()) {
-                System.out.println("heheheh");
-                DatabaseConnection.getInstance().createConnection();
-                                roomControl = new RoomControl();
+    private Xray() throws DatabaseException {
+        roomControl = new RoomControl();
         qualificationControl = new QualificationControl();
         personControl = new PersonControl();
+        timePeriodControl = new TimePeriodControl();
 
-            
+    }
+
+    public void createConnection() throws DatabaseException {
+        //Opret forbindelse til databasen
+
+        if (!DatabaseConnection.getInstance().hasConnection()) {
+            System.out.println("heheheh");
+            DatabaseConnection.getInstance().createConnection();
+            roomControl = new RoomControl();
+            qualificationControl = new QualificationControl();
+            personControl = new PersonControl();
+
         }
 
         databaseConnection = DatabaseConnection.getInstance().getConnection();
-        
+
     }
 
     public void addTimeInvestments(ArrayList<TimeInvestment> shifts) throws
-            SQLException, ClassNotFoundException {
+            DatabaseException {
         TimeInvestmentHandler.getInstance().addTimeInvestments(shifts);
     }
 
     public ArrayList<TimeInvestment> getUnassignedTimeInvestments() throws
-            SQLException, ClassNotFoundException {
+            DatabaseException {
         return TimeInvestmentHandler.getInstance().getUnassignedTimeInvestments();
     }
 
@@ -72,8 +81,8 @@ public class Xray {
         if (Instance == null) {
             try {
                 Instance = new Xray();
-            } catch (SQLException ex) {
-            } catch (ClassNotFoundException ex) {
+            } catch (DatabaseException ex) {
+
             }
         }
         return Instance;
@@ -110,15 +119,16 @@ public class Xray {
      * @return Returnerer en liste af timeInvestments der har fået sine rum
      * tildelt.
      */
-    public ArrayList<TimeInvestment> assignRooms() throws SQLException, ClassNotFoundException {
+    public ArrayList<TimeInvestment> assignRooms() throws DatabaseException {
         ArrayList<TimeInvestment> unassignedShifts = TimeInvestmentHandler.getInstance().
                 getUnassignedTimeInvestments();
         ArrayList<RoomQualification> roomQualifications = qualificationControl.
                 getRoomQualifications();
         ArrayList<LimitQualification> limitQualifications = qualificationControl.
                 getLimitQualifications();
+
         ArrayList<TimeInvestment> assignedShifts = new ArrayList<>();
-        
+
         //Sortér liste af vagter ud fra denne prioritet: 1: dato, 2: timer, 3: minutter
         //4: Antal tilgængelige rum for medarbejder (lavest først) 5: fornavn 6: efternavn.
         unassignedShifts.sort(new RoomAmountComparator(roomQualifications));
@@ -153,15 +163,25 @@ public class Xray {
      */
     private Room roomPriority(ArrayList<TimeInvestment> timeInvestments,
             ArrayList<Room> rooms, TimeInvestment currentShift,
-            ArrayList<LimitQualification> limitQualifications) {
+            ArrayList<LimitQualification> limitQualifications) throws DatabaseException {
         //Room objekt som starter med en null pointer, bliver uanset hvad defineret
         //senere.
         Room prioritizedRoom = null;
 
+        //Tæl tildelinger til specifikke rum op for medarbejderen sluttet til 
+        //currentShift. Så hvis rumX er blevet tildelt 5 gange til medarbejderen
+        //i currentShift's tidsperiode, vil denne RoomAssignmentCounter blive 5,
+        //og have rum reference til rumX.
+        countDateAssignmentsOfRoomForEmp(rooms, currentShift, timeInvestments);
+        
+        ArrayList<RoomAssignmentCounter> rac = currentShift.getEmployee().getCounters();
+//        for (RoomAssignmentCounter rac1 : rac) {
+//            System.out.println("room: " + rac1.getRoom().getRoomName() + " count: " + rac1.getCount());
+//        }
+
         //Tæl hvor mange gange de forskellige rum er blevet tildelt i currentShifts
         //starttidspunkt. Tællingen består i at alle Room-objekter i rooms får talt
         //op på deres count felt, så dette passer med antal tildelinger.
-
         countDateAssignmentsOfRoom(rooms, currentShift, timeInvestments);
 
         ArrayList<Room> roomsLimitNotReached = getRoomsLimitNotReached(currentShift.getEmployee(), limitQualifications);
@@ -170,12 +190,10 @@ public class Xray {
         if (!roomsLimitNotReached.isEmpty()) {
             //Her inde bliver alle rum der stadig mangler at opfylde 
             //limit på limitQualifications behandlet.
-            System.out.println(roomsLimitNotReached.size() + " XXX " + prioritizedRoom);
-            prioritizedRoom = getRoomMinMaxCompared(roomsLimitNotReached);
-            System.out.println(roomsLimitNotReached.size() + " reaeraewraew " + prioritizedRoom);
+            prioritizedRoom = getRoomMinMaxCompared(roomsLimitNotReached, currentShift);
 
         } else {
-            prioritizedRoom = getRoomMinMaxCompared(rooms);
+            prioritizedRoom = getRoomMinMaxCompared(rooms, currentShift);
         }
 
         return prioritizedRoom;
@@ -293,7 +311,13 @@ public class Xray {
                 for (int j = 0; j < rooms.size(); j++) {
                     if (roomName.equals(rooms.get(j).getRoomName())) {
                         TimeInvestment currentTI = timeInvestments.get(i);
-                        if (shiftIsInPeriod(currentShift, currentTI)) {
+
+                        LocalDateTime date = currentShift.getStartTime();
+                        LocalDateTime periodStart = currentTI.getStartTime();
+                        LocalDateTime periodEnd = new LocalDateTime(periodStart);
+                        periodEnd = periodEnd.plus(currentTI.getHours());
+                        periodEnd = periodEnd.plus(currentTI.getMinutes());
+                        if (isDateInPeriod(date, periodStart, periodEnd)) {
                             rooms.get(j).increment();
                             break; //break OK i søgning for optimering.
                         }
@@ -301,41 +325,94 @@ public class Xray {
                     }
                 }
             }
-            
+
         }
     }
 
     /**
-     * Denne metode tjekker at en given tidsinvestering findes i en anden
-     * tidsinvesterings tidsperiode. Denne tidsperiode er givet ved otherShift's
-     * starttidspunkt, og dens sluttidspunkt som udregnes ved at lægge
-     * tidsinvesteringens timer og minutter til.
      *
-     * @param currentShift Den nuværende shift, hvis starttidspunkt skal være i
-     * otherShifts.
-     * @param otherShift Den anden vagt som currentShift skal sammenlignes med.
-     * @return En boolean hvis værdi er sand hvis currentShift's starttidspunkt
-     * befinder sig i otherShift's tidsperiode.
+     *
+     * @param rooms
+     * @param currentShift
+     * @param timeInvestments
+     * @throws DatabaseException
      */
-    private boolean shiftIsInPeriod(TimeInvestment currentShift, TimeInvestment otherShift) {
-        boolean isInPeriod = false;
-        LocalDateTime otherShiftEndTime = otherShift.getStartTime().
-                plus(otherShift.getHours()).plus(otherShift.getMinutes());
+    public void countDateAssignmentsOfRoomForEmp(ArrayList<Room> rooms, TimeInvestment currentShift,
+            ArrayList<TimeInvestment> timeInvestments) throws DatabaseException {
 
-        //Other shift som sammenlignes med currentShift skal have sit starttidspunkt
-        //før eller samtidig med currentShifts, og dens sluttidspunkt skal være
-        //efter eller samtidig med currentShifts starttidspunkt.
-        if (otherShift.getStartTime().isBefore(currentShift.getStartTime())
-                || otherShift.getStartTime().isEqual(currentShift.getStartTime())) {
-            if (otherShiftEndTime.isAfter(currentShift.getStartTime())) {
-                //Hvis disse betingelser bliver opfyldt må det betyde at currentShift
-                //er i otherShift's tidsperiode.
-                isInPeriod = true;
+        Employee employee = currentShift.getEmployee();
+
+        //Opret roomAssignment counters på currentShift's employee.
+        createCounters(employee);
+
+        ArrayList<TimeInvestment> empTimeInvestments
+                = getEmpTimeInvestments(timeInvestments, currentShift);
+
+        if (timeInvestments.size() > 0) {
+            for (int i = 0; i < empTimeInvestments.size(); i++) {
+                String roomName = empTimeInvestments.get(i).getRoom().getRoomName();
+                
+                //Lineær søgning. Hvis det givne rum findes så skal dets tæller,
+                //i den passende roomCounter på employee tælle én op.
+                for (int j = 0; j < rooms.size(); j++) {
+                    if (roomName.equals(rooms.get(j).getRoomName())) {
+                            employee.increment(rooms.get(j));
+                            break; //break OK i søgning for optimering.
+                    }
+                }
             }
+
         }
-        return isInPeriod;
     }
 
+    /**
+     * Returnerer en liste af vagter som hører til currentShift's employee, og
+     * som er i samme tidsperiode som currentShift.
+     *
+     * @param timeInvestments den totale mængde af tidsinvesteringer.
+     * @param currentShift den nuværende vagt.
+     * @return
+     */
+    public ArrayList<TimeInvestment> getEmpTimeInvestments(ArrayList<TimeInvestment> timeInvestments,
+            TimeInvestment currentShift) {
+        ArrayList<TimeInvestment> employeeShifts = new ArrayList<>();
+
+        for (TimeInvestment timeInvestment : timeInvestments) {
+            if (timeInvestment.getEmployee().getId() == currentShift.getEmployee().getId()) {
+                employeeShifts.add(timeInvestment);
+            }
+        }
+
+        return employeeShifts;
+    }
+
+    /**
+     * Tilføjer en liste af roomAssignmentCounters til den givne employee's
+     * counters felt.
+     *
+     * @param employee employee hvis liste af counters skal opdateres.
+     * @throws DatabaseException
+     */
+    public void createCounters(Employee employee) throws DatabaseException {
+
+        ArrayList<Room> rooms;
+
+        rooms = roomControl.getRooms();
+
+        employee.getCounters().clear();
+        for (Room room : rooms) {
+            employee.addCounter(new RoomAssignmentCounter(room, 0));
+        }
+    }
+
+    /**
+     * Returnerer en liste over alle de rum som ikke har opnået sine
+     * begrænsninger, baseret på en liste af limitQualifications.
+     *
+     * @param employee
+     * @param limitQualifications
+     * @return en liste over alle de rum som ikke har opnået sine begrænsninger.
+     */
     private ArrayList<Room> getRoomsLimitNotReached(Employee employee,
             ArrayList<LimitQualification> limitQualifications) {
 
@@ -360,7 +437,6 @@ public class Xray {
                                 //Hvis begrænsningen endnu ikke er nået så tilføj
                                 //til roomsLimitNotReached.
                                 if (limitRoom.getCount() < limitQualifications.get(i).getLimit()) {
-                                    System.out.println("X " + limitRooms.get(k).getRoomName() + " count: " + limitRooms.get(k).getCount());
                                     roomsLimitNotReached.add(limitRoom);
                                 }
 
@@ -373,56 +449,115 @@ public class Xray {
         return roomsLimitNotReached;
     }
 
-    public Room getRoomMinMaxCompared(ArrayList<Room> rooms) {
+    public Room getRoomMinMaxCompared(ArrayList<Room> rooms, TimeInvestment currentShift) {
         Room prioritizedRoom = null;
+
+        //Hent liste af tidsperioder som currentShift bliver påvirket af.
+        ArrayList<TimePeriod> timePeriods = timePeriodControl.getTimeperiods(currentShift);
+
+        //Initialiser en liste over rum, som skal indeholde alle de rum der har en
+        //tidsperiode-begrænsning.
+        ArrayList<Room> roomsWithConstraints = new ArrayList<>();
 
         //Initialiser en liste over rum, som skal indeholde alle de rum der har nået 
         //sine minimummer.
         ArrayList<Room> tempRoomsMinReached = new ArrayList<>();
 
         for (int i = 0; i < rooms.size(); i++) {
+            Room currentRoom = rooms.get(i);
             if (!rooms.isEmpty()) {
-                if (rooms.get(i).getMinOccupation() <= rooms.get(i).getCount()) {
-                    //Kontroller at det nuværende rum har nået sit minimum, tilføj det
-                    //til tempRoomsMinReached og fjern det fra rooms.
-                    tempRoomsMinReached.add(rooms.get(i));
+                if (timePeriodControl.hasPeriodConstraint(timePeriods, currentRoom)) {
+                    roomsWithConstraints.add(currentRoom);
+
                     rooms.remove(i);
 
                     i--;
-                }
-            }
-        }
-
-        if (!rooms.isEmpty()) {
-            rooms.sort(new RoomMinimumComparator());
-
-            //Prioriter det rum der er blevet tildelt færrest gange. (højest prioritet
-            //må være på plads 0).
-            prioritizedRoom = rooms.get(0);
-        } else {
-            for (int i = 0; i < tempRoomsMinReached.size(); i++) {
-                if (!tempRoomsMinReached.isEmpty()) {
-                    if (tempRoomsMinReached.get(i).getMaxOccupation() <= tempRoomsMinReached.get(i).getCount()) {
-                        tempRoomsMinReached.remove(i);
+                } else {
+                    if (currentRoom.getMinOccupation() <= currentRoom.getCount()) {
+                        //Kontroller at det nuværende rum har nået sit minimum, tilføj det
+                        //til tempRoomsMinReached og fjern det fra rooms.
+                        tempRoomsMinReached.add(currentRoom);
+                        rooms.remove(i);
 
                         i--;
                     }
                 }
             }
-            tempRoomsMinReached.sort(new RoomMaximumComparator());
+        }
 
-            if (!tempRoomsMinReached.isEmpty()) {
-                prioritizedRoom = tempRoomsMinReached.get(0);
+        boolean isMinReached = true;
 
+        //Hvis der er rum med begrænsninger i form af timePeriods så gå dem igennem.
+        if (!roomsWithConstraints.isEmpty()) {
+            ArrayList<TimePeriod> periodsForEmp = timePeriodControl.
+                    getTimePeriodsForEmp(timePeriods, currentShift);
+
+            for (TimePeriod period : periodsForEmp) {
+                //rsc giver mulighed for at vide hvor mange gange currentShift's
+                //person er blevet tildelt det rum, iterationen er nået til.
+                RoomAssignmentCounter rsc = currentShift.getEmployee().
+                        getRoomAssignmentCounter(period.getRoom());
+
+                //Fjern fra listen hvis maximummet er opnået.
+                if (period.getMax() <= rsc.getCount()) {
+                    periodsForEmp.remove(period);
+                }
+
+            }
+
+            //Sorter listen af tidsperioder, sådan at det vigtigste rum refererer
+            //den første tidsperiode i listen.
+            periodsForEmp.sort(new PeriodMinComparator(currentShift.getEmployee()));
+
+            prioritizedRoom = periodsForEmp.get(0).getRoom();
+
+            isMinReached = isMinReached(periodsForEmp, currentShift);
+        }
+        
+        if (isMinReached) {
+            if (!rooms.isEmpty()) {
+                rooms.sort(new RoomMinimumComparator(currentShift.getEmployee()));
+
+            //Prioriter det rum der er blevet tildelt færrest gange. (højest prioritet
+                //må være på plads 0).
+                prioritizedRoom = rooms.get(0);
+            } else {
+                for (int i = 0; i < tempRoomsMinReached.size(); i++) {
+                    if (!tempRoomsMinReached.isEmpty()) {
+                        if (tempRoomsMinReached.get(i).getMaxOccupation() <= tempRoomsMinReached.get(i).getCount()) {
+                            tempRoomsMinReached.remove(i);
+
+                            i--;
+                        }
+                    }
+                }
+                tempRoomsMinReached.sort(new RoomMaximumComparator());
+
+                if (!tempRoomsMinReached.isEmpty()) {
+                    prioritizedRoom = tempRoomsMinReached.get(0);
+
+                }
             }
         }
 
         return prioritizedRoom;
     }
 
+    public boolean isMinReached(ArrayList<TimePeriod> timePeriods, TimeInvestment currentShift) {
+        boolean minReached = true;
+        for (TimePeriod timePeriod : timePeriods) {
+            Employee thisEmp = currentShift.getEmployee();
+            RoomAssignmentCounter thisRac = thisEmp.getRoomAssignmentCounter(timePeriod.getRoom());
+            if (timePeriod.getMin() > thisRac.getCount()) {
+                minReached = false;
+            }
+        }
+        return minReached;
+    }
+
     /**
-     * Metode til at finde vagter på en given dato og i en given tidsperiode, 
-     * i en given liste.
+     * Metode til at finde vagter på en given dato og i en given tidsperiode, i
+     * en given liste.
      *
      * @param date dato der skal søges efter.
      * @param shifts liste af vagter der skal søges i.
@@ -432,59 +567,38 @@ public class Xray {
      * @param periodLengthMinute Hvor lang tid perioden tager i minutter.
      * @return en liste af alle vagter i en given tidsperiode på en given dato.
      */
+    public ArrayList<TimeInvestment> getShiftsInPeriod(
+            ArrayList<TimeInvestment> shifts, LocalDateTime periodStart,
+            LocalDateTime periodEnd) {
+        ArrayList<TimeInvestment> shiftsInPeriod = new ArrayList<>();
 
-    public ArrayList<TimeInvestment> getShiftsInPeriod(LocalDateTime date, 
-            ArrayList<TimeInvestment> shifts,
-            int startHour, int startMinute, int periodLengthHour, int periodLengthMinute) {
-        ArrayList<TimeInvestment> shiftsOnDate = new ArrayList<>();
-
-        date = date.withField(DateTimeFieldType.hourOfDay(), 0);
-        date = date.withField(DateTimeFieldType.minuteOfHour(), 0);
-
-        LocalDateTime dateEndOfDay = date.plusHours(23).plusMinutes(59);
-
-        for (int i = 0; i < shifts.size(); i++) {
-            if (shifts.get(i).getStartTime().isAfter(date) && shifts.get(i).
-                    getStartTime().isBefore(dateEndOfDay)) {
-                shiftsOnDate.add(shifts.get(i));
+        for (int j = 0; j < shifts.size(); j++) {
+            boolean isInPeriod = Xray.getInstance().isDateInPeriod(shifts.get(j).getStartTime(),
+                    periodStart, periodEnd);
+            if (isInPeriod) {
+                shiftsInPeriod.add(shifts.get(j));
             }
         }
-        
-        for (int j = 0; j < shiftsOnDate.size(); j++) {
-                boolean isInPeriod = Xray.getInstance().isDateInPeriod(shiftsOnDate.get(j).getStartTime(), 
-                        startHour, startMinute, periodLengthHour, periodLengthMinute);
-                if(!isInPeriod){
-                    shiftsOnDate.remove(j);
-                    if(shiftsOnDate.size() > 0){
-                        j--;
-                    }
-                }
-            }
-            
-        return shiftsOnDate;
+
+        return shiftsInPeriod;
     }
 
     /**
      * Tjekker om en given dato er i en given tidsperiode.
-     * @param date Dato der skal være i den givne periode hvis betingelsen skal
-     * blive sand.
-     * @param startHour Hvornår perioden starter i timer.
-     * @param startMinute Hvornår perioden starter i minutter.
-     * @param periodLengthHour Hvor lang tid perioden tager i timer.
-     * @param periodLengthMinute Hvor lang tid perioden tager i minutter.
-     * @return En boolean som er sand hvis den givne dato er i den givne tidsperiode.
+     *
+     * @param dateTime metoden returnerer sand, hvis denne parameter ligger i
+     * den givne periode.
+     * @param periodStart definerer periodens start.
+     * @param periodEnd definerer periodens slutning.
+     * @return
      */
-    public boolean isDateInPeriod(LocalDateTime date,
-            int startHour, int startMinute, int periodLengthHour, int periodLengthMinute) {
+    public boolean isDateInPeriod(LocalDateTime dateTime, LocalDateTime periodStart,
+            LocalDateTime periodEnd) {
         boolean inPeriod = false;
 
-        LocalDateTime dateStartOfPeriod = date.withField(DateTimeFieldType.hourOfDay(), startHour);
-        dateStartOfPeriod = dateStartOfPeriod.withField(DateTimeFieldType.minuteOfHour(), startMinute);
-        LocalDateTime dateEndOfPeriod = dateStartOfPeriod.plusHours(periodLengthHour)
-                .plusMinutes(periodLengthMinute);
-        if (date.isEqual(dateStartOfPeriod)
-                || (date.isBefore(dateEndOfPeriod)
-                && date.isAfter(dateStartOfPeriod))) {
+        if (dateTime.isEqual(periodStart)
+                || (dateTime.isBefore(periodEnd)
+                && dateTime.isAfter(periodStart))) {
             inPeriod = true;
         }
 

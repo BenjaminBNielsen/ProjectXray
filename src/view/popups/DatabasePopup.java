@@ -7,6 +7,7 @@ package view.popups;
 
 
 import dbc.DatabaseConnection;
+import exceptions.DatabaseException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -93,13 +94,9 @@ public class DatabasePopup extends PopupWindow {
             
             try {   
                 DatabaseConnection.getInstance().createConnection();
-            } catch (FileNotFoundException ex) {
-                exceptionPopup.display("Der er ingen tekstfil med oplysninger til databasen");
-            } catch (SQLException ex) {
-                exceptionPopup.display("Der er sket en fejl i forbindelse med databasen, kontakt systemadministrator");
-            } catch (ClassNotFoundException ex) {
-                exceptionPopup.display("Der mangler en database driver, kontakt systemadministrator");
-            }
+            } catch (DatabaseException ex) {
+                exceptionPopup.display(ex.getMessage());
+            } 
             if (DatabaseConnection.getInstance().hasConnection() == true) {
                 
                super.getStage().close();
