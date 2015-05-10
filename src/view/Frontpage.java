@@ -22,6 +22,8 @@ import static javafx.application.Application.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
+import javafx.print.PageLayout;
+import javafx.print.PrinterJob;
 import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -30,6 +32,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Scale;
 import javafx.stage.*;
 import javafx.util.Callback;
 import model.Employee;
@@ -41,6 +44,7 @@ import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDateTime;
 import techincalServices.printing.PrinterThread;
 import view.buttons.PopupMenuButton;
+import view.popups.PrintReviewPopup;
 import view.popups.RoomQualificationPopup;
 import view.popups.StudentPopup;
 import view.popups.shift.ShiftPopup;
@@ -252,7 +256,10 @@ public class Frontpage extends Application {
 
         printButton = new Button("Print skema");
         printButton.setOnAction(e -> {
-            printer.print(schedule);
+            PrintReviewPopup printPopup = new PrintReviewPopup();
+            printPopup.setNode(new Schedule(assigned, new LocalDateTime(chosenMonday)));
+            printPopup.display("Print Menu");
+           
         });
         
         hWeekPicker.getChildren().addAll(jumpBackWeek, jumpForwardWeek, printButton);
@@ -261,7 +268,7 @@ public class Frontpage extends Application {
     private void initCombobox() {
         cWeek = new ComboBox();
         cWeek.setPrefWidth(170);
-        
+
         //Her definere vi hvordan hver celle i en comboBox's ListView bliver "omdannet"
         //eller bygget op. Callback er et interface i JavaFX, der gøre det lettere
         //at definere udformningen/handlingen for (i det her tilfælde) comboBoxens
