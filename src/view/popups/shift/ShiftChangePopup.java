@@ -19,7 +19,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import javax.swing.text.DateFormatter;
 import model.Room;
 import model.TimeInvestment;
 import org.joda.time.Hours;
@@ -30,7 +29,6 @@ import view.buttons.PopupMenuButton;
 import view.popups.ExceptionPopup;
 import view.popups.PopupWindow;
 
-
 /**
  *
  * @author Mads
@@ -38,10 +36,11 @@ import view.popups.PopupWindow;
 public class ShiftChangePopup extends PopupWindow {
 
     private PopupMenuButton changeShift;
-    private Label lCurrentShiftEmployee, lCurrentShiftDate, lCurrentShiftTime, lCurrentShiftRoom, lChangeShift, /*lChangeToRoom,*/ lChangeToDate, lChangeStartTime, lChangeEndTime, lShiftChanged;
+    private Label lCurrentShiftEmployee, lCurrentShiftDate, lCurrentShiftTime, lCurrentShiftRoom, lChangeShift, lChangeToDate, lChangeStartTime, lChangeEndTime, lShiftChanged;
     private ComboBox cChangeRoom, cChangeYear, cChangeMonth, cChangeDay, cChangeStartHour, cChangeStartMinute, cChangeEndHour, cChangeEndMinute;
-    private TextField tChangeStartHour, tChangeStartMinute, tChangeEndHour, tChangeEndMinute, tChangeYear, tChangeMonth, tChangeDay;
+//    private TextField tChangeStartHour, tChangeStartMinute, tChangeEndHour, tChangeEndMinute, tChangeYear, tChangeMonth, tChangeDay;
     private ExceptionPopup exceptionPopup = new ExceptionPopup();
+    private boolean hasFailed;
 
     public ShiftChangePopup() {
 
@@ -78,7 +77,6 @@ public class ShiftChangePopup extends PopupWindow {
 //        tChangeStartMinute = new TextField("Minutantal");
 //        tChangeEndHour = new TextField("Timeantal");
 //        tChangeEndMinute = new TextField("Minutantal");
-
         try {
             cChangeRoom.setPrefWidth(120);
             ArrayList<Room> rooms;
@@ -92,67 +90,64 @@ public class ShiftChangePopup extends PopupWindow {
         } catch (DatabaseException ex) {
 
         }
-        
+
         for (int i = 1; i <= 31; i++) {
             cChangeDay.getItems().add(i);
         }
         cChangeDay.setPrefWidth(400);
         cChangeDay.setValue("Vælg en dag");
-        
+
         for (int i = 1; i <= 12; i++) {
             cChangeMonth.getItems().add(i);
         }
         cChangeMonth.setPrefWidth(400);
         cChangeMonth.setValue("Vælg en måned");
-        
-         for (int i = 2015; i <= 2025 ; i++) {
+
+        for (int i = 2015; i <= 2025; i++) {
             cChangeYear.getItems().add(i);
         }
         cChangeYear.setPrefWidth(400);
         cChangeYear.setValue("Vælg et år");
-        
-         for (int i = 0; i <= 23; i++) {
+
+        for (int i = 0; i <= 23; i++) {
             cChangeStartHour.getItems().add(i);
         }
         cChangeStartHour.setPrefWidth(400);
         cChangeStartHour.setValue("Vælg starttime");
-        
-         for (int i = 0; i <= 59; i = i+5) {
+
+        for (int i = 0; i <= 59; i = i + 5) {
             cChangeStartMinute.getItems().add(i);
         }
         cChangeStartMinute.setPrefWidth(400);
         cChangeStartMinute.setValue("Vælg startminut");
-        
+
         for (int i = 0; i <= 23; i++) {
             cChangeEndHour.getItems().add(i);
         }
         cChangeEndHour.setPrefWidth(400);
         cChangeEndHour.setValue("Vælg sluttime");
-        
-         for (int i = 00; i <= 59; i = i +5) {
+
+        for (int i = 00; i <= 59; i = i + 5) {
             cChangeEndMinute.getItems().add(i);
         }
         cChangeEndMinute.setPrefWidth(400);
-        cChangeEndMinute.setValue("Vælg slutminut");
-        
-        
+        cChangeEndMinute.getSelectionModel().select(1);
 
         VBox vBox = new VBox(15);
         vBox.setAlignment(Pos.BOTTOM_CENTER);
         vBox.setPadding(new Insets(0, 0, 15, 0));
 
         /*vBox.getChildren().addAll(lCurrentShiftEmployee,
-                lCurrentShiftDate,
-                lCurrentShiftTime,
-                lCurrentShiftRoom,
-                lChangeShift,
-                cChangeRoom,
-                lChangeToDate, tChangeDay, tChangeMonth, tChangeYear,
-                lChangeStartTime, tChangeStartHour, tChangeStartMinute,
-                lChangeEndTime, tChangeEndHour, tChangeEndMinute,
-                lShiftChanged*/
-                
-                vBox.getChildren().addAll(lCurrentShiftEmployee,
+         lCurrentShiftDate,
+         lCurrentShiftTime,
+         lCurrentShiftRoom,
+         lChangeShift,
+         cChangeRoom,
+         lChangeToDate, tChangeDay, tChangeMonth, tChangeYear,
+         lChangeStartTime, tChangeStartHour, tChangeStartMinute,
+         lChangeEndTime, tChangeEndHour, tChangeEndMinute,
+         lShiftChanged*/
+        vBox.getChildren().addAll(lCurrentShiftEmployee,
                 lCurrentShiftDate,
                 lCurrentShiftTime,
                 lCurrentShiftRoom,
@@ -160,8 +155,8 @@ public class ShiftChangePopup extends PopupWindow {
                 cChangeRoom,
                 lChangeToDate, cChangeDay, cChangeMonth, cChangeYear,
                 lChangeStartTime, cChangeStartHour, cChangeStartMinute,
-                lChangeEndTime,cChangeEndHour , cChangeEndMinute,
-                lShiftChanged 
+                lChangeEndTime, cChangeEndHour, cChangeEndMinute,
+                lShiftChanged
         );
         changeShift = new PopupMenuButton("Ændre vagt");
 
@@ -178,64 +173,81 @@ public class ShiftChangePopup extends PopupWindow {
 //            } else if (Integer.parseInt(tChangeEndMinute.getText()) >= 60 || Integer.parseInt(tChangeStartMinute.getText()) >= 60) {
 //                exceptionPopup.display("Minutantal skal være under 60");
 //            } else {
-
-                Room changedRoom = (Room) cChangeRoom.getSelectionModel().getSelectedItem();
-                shift.setRoom(changedRoom);
-                
-                int changedHours = (cChangeEndHour.getSelectionModel().getSelectedIndex()- cChangeStartHour.getSelectionModel().getSelectedIndex());
-                Hours changedHour = Hours.hours(changedHours);
-                shift.setHours(changedHour);
-                
-                int changedMinutes = (cChangeEndMinute.getSelectionModel().getSelectedIndex() - cChangeStartMinute.getSelectionModel().getSelectedIndex());
-                Minutes changedMinute = Minutes.minutes(changedMinutes);
-                shift.setMinutes(changedMinute);
-                
-                int yearChanged = Integer.parseInt(cChangeYear.getValue().toString());
-                int monthChanged = Integer.parseInt(cChangeMonth.getValue().toString());
-                int dayChanged = Integer.parseInt(cChangeDay.getValue().toString());
-                int hourChanged = Integer.parseInt(cChangeStartHour.getValue().toString());
-                int minuteChanged = Integer.parseInt(cChangeStartMinute.getValue().toString());
-                LocalDateTime changedDate = new LocalDateTime(yearChanged, monthChanged, dayChanged, hourChanged, minuteChanged);
-                shift.setStartTime(changedDate);
-                
-                System.out.println(shift.toString());
-//            try {
-//                int changedHours = Integer.parseInt(tChangeEndHour.getText()) - Integer.parseInt(tChangeStartHour.getText());
+//                Room changedRoom = (Room) cChangeRoom.getSelectionModel().getSelectedItem();
+//                shift.setRoom(changedRoom);
+//                int changedHours = (cChangeEndHour.getSelectionModel().getSelectedIndex()- cChangeStartHour.getSelectionModel().getSelectedIndex());
 //                Hours changedHour = Hours.hours(changedHours);
 //                shift.setHours(changedHour);
-//            } catch (NumberFormatException ex) {
-//                exceptionPopup.display("Timer skal skrives med tal.");
-//            }
-//            try {
-//                int changedMinutes = Integer.parseInt(tChangeEndMinute.getText()) - Integer.parseInt(tChangeStartMinute.getText());
+//                
+//                int changedMinutes = (cChangeEndMinute.getSelectionModel().getSelectedIndex() - cChangeStartMinute.getSelectionModel().getSelectedIndex());
 //                Minutes changedMinute = Minutes.minutes(changedMinutes);
 //                shift.setMinutes(changedMinute);
-//            } catch (NumberFormatException ex) {
-//                exceptionPopup.display("Minutter skal skrives med tal.");
-//            }
-//            try {
-//                int yearChanged = Integer.parseInt(tChangeYear.getText());
-//                int monthChanged = Integer.parseInt(tChangeMonth.getText());
-//                int dayChanged = Integer.parseInt(tChangeDay.getText());
-//                int hourChanged = Integer.parseInt(tChangeStartHour.getText());
-//                int minuteChanged = Integer.parseInt(tChangeStartMinute.getText());
+//                int yearChanged = Integer.parseInt(cChangeYear.getValue().toString());
+//                int monthChanged = Integer.parseInt(cChangeMonth.getValue().toString());
+//                int dayChanged = Integer.parseInt(cChangeDay.getValue().toString());
+//                int hourChanged = Integer.parseInt(cChangeStartHour.getValue().toString());
+//                int minuteChanged = Integer.parseInt(cChangeStartMinute.getValue().toString());
 //                LocalDateTime changedDate = new LocalDateTime(yearChanged, monthChanged, dayChanged, hourChanged, minuteChanged);
 //                shift.setStartTime(changedDate);
-//            } catch (NumberFormatException ex) {
-//                exceptionPopup.display("Datoen skal skrives ind med tal.");
-//            }
+            hasFailed = false;
+            if (!hasFailed) {
+                try {
+                    Room changedRoom = (Room) cChangeRoom.getSelectionModel().getSelectedItem();
+                    shift.setRoom(changedRoom);
 
+                } catch (Exception ex) {
+                    hasFailed = true;
+                    exceptionPopup.display("Der skal vælges et nyt rum");
+                }
+            }
+            if (!hasFailed) {
+                try {
+                    int changedHours = (Integer.parseInt(cChangeEndHour.getValue().toString())) - (Integer.parseInt(cChangeStartHour.getValue().toString()));
+                    Hours changedHour = Hours.hours(changedHours);
+                    shift.setHours(changedHour);
 
-            try {
-                TimeInvestmentHandler.getInstance().updateTimeInvestment(shift);
-                lShiftChanged.setVisible(true);
-                Frontpage.getLastCreatedFrontpage().updateSchedule();
-                
+                } catch (NumberFormatException ex) {
+                    hasFailed = true;
+                    exceptionPopup.display("Der skal vælges timer");
+                }
+            }
+            if (!hasFailed) {
+                try {
+                    int changedMinutes = (Integer.parseInt(cChangeEndMinute.getValue().toString())) - (Integer.parseInt(cChangeStartMinute.getValue().toString()));
+                    Minutes changedMinute = Minutes.minutes(changedMinutes);
+                    shift.setMinutes(changedMinute);
 
-            } catch (DatabaseException ex) {
-                Logger.getLogger(ShiftChangePopup.class.getName()).log(Level.SEVERE, null, ex);
-            } 
-            
+                } catch (NumberFormatException ex) {
+                    hasFailed = true;
+                    exceptionPopup.display("Der skal vælges minutter.");
+                }
+            }
+            if (!hasFailed) {
+                try {
+                    int yearChanged = Integer.parseInt(cChangeYear.getValue().toString());
+                    int monthChanged = Integer.parseInt(cChangeMonth.getValue().toString());
+                    int dayChanged = Integer.parseInt(cChangeDay.getValue().toString());
+                    int hourChanged = Integer.parseInt(cChangeStartHour.getValue().toString());
+                    int minuteChanged = Integer.parseInt(cChangeStartMinute.getValue().toString());
+                    LocalDateTime changedDate = new LocalDateTime(yearChanged, monthChanged, dayChanged, hourChanged, minuteChanged);
+                    shift.setStartTime(changedDate);
+                } catch (NumberFormatException ex) {
+                    hasFailed = true;
+                    exceptionPopup.display("Datoen skal vælges");
+                }
+            }
+
+            if (!hasFailed) {
+                try {
+                    TimeInvestmentHandler.getInstance().updateTimeInvestment(shift);
+                    lShiftChanged.setVisible(true);
+                    Frontpage.getLastCreatedFrontpage().updateSchedule();
+
+                } catch (DatabaseException ex) {
+                    Logger.getLogger(ShiftChangePopup.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                super.getStage().close();
+            }
 
         });
 
