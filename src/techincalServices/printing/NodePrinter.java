@@ -5,30 +5,30 @@
  */
 package techincalServices.printing;
 
-import java.util.ArrayList;
-import javafx.geometry.Bounds;
 import javafx.print.PageLayout;
 import javafx.print.PrinterJob;
 import javafx.scene.Node;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Scale;
-import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
+import javafx.stage.Window;
 
 /**
  *
- * @author Benjamin
+ * @author Yousef
  */
-public class PrinterThread extends Thread {
+public class NodePrinter {
+    
+        public boolean print(PrinterJob job, Node node) {
+            System.out.println("Ostemad");
+            
+            Window window;
 
-    /**
-     * Printer det givne Node-objekt. Node objektets bredde strækkes så det
-     * passer til papirets bredde. Og højden bestemmer antallet af sider. Det
-     * vil sige, Node-objektet vil ikke blive strukket på højden.
-     *
-     * @param node Den node der skal printes ud.
-     */
-    public boolean print(PrinterJob job, Node node) {
+        if (node.getScene() != null) {
+            window = node.getScene().getWindow();
+        } else {
+            window = null;
+        }
 
         PageLayout pageLayout = job.getJobSettings().getPageLayout();
         double pagePrintableHeight = pageLayout.getPrintableHeight();
@@ -83,4 +83,5 @@ public class PrinterThread extends Thread {
         }
         return print;
     }
+    
 }
