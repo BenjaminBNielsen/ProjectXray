@@ -31,7 +31,7 @@ public class AssignedRoomRow extends HBox implements HasChildren {
     private Room room;
     private LocalDateTime startTime;
     private ArrayList<TimeInvestment> shifts;
-    private LabelTile roomLabel;
+    private RoomTile roomLabel;
 
     public AssignedRoomRow(Room room, ArrayList<TimeInvestment> shifts, LocalDateTime startTime,
             int startHour, int startMinute, int periodLengthHour, int periodLengthMinute) {
@@ -39,7 +39,7 @@ public class AssignedRoomRow extends HBox implements HasChildren {
         this.room = room;
         this.shifts = shifts;
 
-        roomLabel = new LabelTile(room.getRoomName());
+        roomLabel = new RoomTile(room.getRoomName());
 
         //Tilføj rumnavn til venstre.
         this.getChildren().add(roomLabel);

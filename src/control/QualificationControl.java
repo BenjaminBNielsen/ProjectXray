@@ -10,11 +10,13 @@ import technicalServices.persistence.QualificationHandler;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javafx.collections.ObservableList;
+import model.CourseQualification;
 import model.Employee;
 import model.Qualification;
 import model.Room;
 import model.RoomQualification;
 import model.LimitQualification;
+import org.joda.time.LocalDateTime;
 
 /**
  *
@@ -31,6 +33,10 @@ public class QualificationControl {
     
     public ArrayList<LimitQualification> getLimitQualifications() throws DatabaseException{
         return QualificationHandler.getInstance().getLimitQualifications();
+    }
+    
+    public ArrayList<CourseQualification> getLimitCourseQualification() throws DatabaseException{
+        return QualificationHandler.getInstance().getCourseQualifications();
     }
     
    
@@ -74,4 +80,8 @@ public class QualificationControl {
         QualificationHandler.getInstance().addLimitQualification(observableRooms, observableEmployees, type, limit);
     }
     
+    public void addCourseQualification(ObservableList<Room> observableRooms, ObservableList<Employee> observableEmployees, String type, int limit, LocalDateTime localDateStart, LocalDateTime localDateEnd) throws DatabaseException {
+        QualificationHandler.getInstance().addLimitCourseQualification(observableRooms, observableEmployees, type, limit, localDateStart, localDateEnd);
+    }
+            
 }

@@ -21,7 +21,7 @@ import org.joda.time.LocalDateTime;
 public class AssignedAllRoomsRow extends TilePane implements HasChildren {
 
     private ArrayList<TimeInvestment> shifts;
-    private LabelTile shiftTypeLabel;
+    private RoomTile shiftTypeLabel;
     private LocalDateTime startTime;
 
     public AssignedAllRoomsRow(String shiftName, LocalDateTime startTime,
@@ -30,7 +30,7 @@ public class AssignedAllRoomsRow extends TilePane implements HasChildren {
 
         this.shifts = shifts;
         this.startTime = startTime;
-        shiftTypeLabel = new LabelTile(shiftName);
+        shiftTypeLabel = new RoomTile(shiftName);
 
         this.setOrientation(Orientation.HORIZONTAL);
 

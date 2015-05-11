@@ -13,33 +13,41 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.RadialGradient;
 import javafx.scene.text.TextAlignment;
+import javafx.util.Callback;
 import model.Employee;
 import model.Room;
+import org.joda.time.LocalDateTime;
 import view.buttons.AddButton;
 import view.buttons.AddButtonV2;
 import view.buttons.PopupMenuButton;
 import view.buttons.SettingsButton;
+import view.schema.ScheduleHeader;
 
 /**
  *
  * @author Jonas
  */
 public class RoomQualificationPopup extends PopupWindow {
-    private ComboBox cBRoomBox, cBEmployeeBox;
+
+    private ComboBox cBRoomBox, cBEmployeeBox, cBStartDate, cBEndDate;
     private ArrayList<Room> rooms, roomsInsert;
     private ArrayList<Employee> employees, employeesInsert;
+    private ArrayList<LocalDateTime> dateTimeListStart, dateTimeListEnd;
     private ObservableList<Room> observableListRooms;
     private ObservableList<Employee> observableListEmployees;
+    private LocalDateTime localDateTimeObject, localDateStart, localDateEnd;
     private TextField tFType, tFLimit;
     private String type, typeInsert;
     private ListView listViewRoom, listViewEmployee;
@@ -50,44 +58,67 @@ public class RoomQualificationPopup extends PopupWindow {
             lRoomListView, lEmployeeListView;
     private Room roomInsert;
     private Employee employeeInsert;
-    private RadioButton rButton;
-    private boolean limitCheck;
+    private RadioButton rButtonLimitqual, rButtonCourse;
+    private boolean limitCheck, course;
     private int limit;
-    
+
     public RoomQualificationPopup(ArrayList<Room> rooms, ArrayList<Employee> employees) {
         this.rooms = rooms;
         this.employees = employees;
     }
-    
+
     @Override
     public void display(String title) {
         ExceptionPopup exceptionPopup = new ExceptionPopup(); //Til exceptionhandling.
 
-        lType = new Label("Skriv navn her");
+        lType = new Label("Skriv hvilken type kvalifikation det er");
         lEmployeeLabel = new Label("Vælg ansat der skal bearbejdes");
         lRoomLabel = new Label("Vælg rum der skal bearbejdes");
         lRoomListView = new Label("Her lægges alle rum:");
         lEmployeeListView = new Label("Her lægges alle ansatte:");
+        localDateTimeObject = LocalDateTime.now();
         tFType = new TextField();
         tFLimit = new TextField();
         tFLimit.setDisable(true);
         cBRoomBox = new ComboBox();
         cBEmployeeBox = new ComboBox();
+        cBStartDate = new ComboBox();
+        cBStartDate.setDisable(true);
+        cBEndDate = new ComboBox();
+        cBEndDate.setDisable(true);
 
-        rButton = new RadioButton("Universel kvalifikation");
+        rButtonCourse = new RadioButton("Kursus");
+        course = false;
+        rButtonCourse.setDisable(true);
+
+        rButtonCourse.setOnAction(e -> {
+            if (rButtonCourse.isSelected()) {
+                course = true;
+                cBStartDate.setDisable(false);
+                cBEndDate.setDisable(false);
+            } else {
+                course = false;
+                cBStartDate.setDisable(true);
+                cBEndDate.setDisable(true);
+            }
+        });
+
+        rButtonLimitqual = new RadioButton("Universel kvalifikation");
         limitCheck = false;
-        rButton.setOnAction(e -> {
+        rButtonLimitqual.setOnAction(e -> {
 
-            if (rButton.isSelected()) {
+            if (rButtonLimitqual.isSelected()) {
                 limitCheck = true;
                 tFLimit.setDisable(false);
-
+                rButtonCourse.setDisable(false);
             } else {
                 limitCheck = false;
                 tFLimit.setDisable(true);
-
+                cBStartDate.setDisable(true);
+                cBEndDate.setDisable(true);
+                rButtonCourse.setDisable(true);
+                rButtonCourse.setSelected(false);
             }
-            System.out.println(limitCheck);
         });
 
         // Der skal lægges elementer ind i vores combobokse.
@@ -108,6 +139,78 @@ public class RoomQualificationPopup extends PopupWindow {
             cBEmployeeBox.getItems().add(employees.get(i));
         }
         cBEmployeeBox.setValue(employees.get(0));
+
+        Callback<ListView<LocalDateTime>, ListCell<LocalDateTime>> cellFactory = new Callback<ListView<LocalDateTime>, ListCell<LocalDateTime>>() {
+            @Override
+            public ListCell<LocalDateTime> call(ListView<LocalDateTime> param) {
+
+                return new ListCell<LocalDateTime>() {
+                    @Override
+                    public void updateItem(LocalDateTime item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (!empty) {
+
+                            String value = ScheduleHeader.WEEK_DAY_NAMES[item.getDayOfWeek() - 1];
+                            value = value.replaceFirst(value.substring(1, value.length()),
+                                    value.substring(1, value.length()).toLowerCase());
+
+                            setText("Uge " + item.getWeekOfWeekyear() + " den " + item.getDayOfMonth() + "/" + item.getMonthOfYear() + " - " + value);
+                        }
+                    }
+
+                };
+            }
+        };
+
+        cBStartDate.setButtonCell(cellFactory.call(null));
+        cBStartDate.setCellFactory(cellFactory);
+
+        Callback<ListView<LocalDateTime>, ListCell<LocalDateTime>> cellFactory2 = new Callback<ListView<LocalDateTime>, ListCell<LocalDateTime>>() {
+            @Override
+            public ListCell<LocalDateTime> call(ListView<LocalDateTime> param) {
+
+                return new ListCell<LocalDateTime>() {
+                    @Override
+                    public void updateItem(LocalDateTime item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (!empty) {
+                            String value = ScheduleHeader.WEEK_DAY_NAMES[item.getDayOfWeek() - 1];
+                            value = value.replaceFirst(value.substring(1, value.length()),
+                                    value.substring(1, value.length()).toLowerCase());
+                            setText("Uge " + item.getWeekOfWeekyear() + " den " + item.getDayOfMonth() + "/" + item.getMonthOfYear() + " - " + value);
+                        }
+                    }
+
+                };
+            }
+        };
+
+        cBEndDate.setButtonCell(cellFactory2.call(null));
+        cBEndDate.setCellFactory(cellFactory2);
+
+        dateTimeListStart = new ArrayList<>();
+        dateTimeListEnd = new ArrayList<>();
+
+        for (int i = 30; i >= 1; i--) {
+            LocalDateTime date = localDateTimeObject.minusDays(i);
+            dateTimeListStart.add(date);
+        }
+
+        for (int i = 0; i < 30; i++) {
+            LocalDateTime date = localDateTimeObject.plusDays(i);
+            dateTimeListStart.add(date);
+        }
+
+        cBStartDate.getItems().addAll(dateTimeListStart);
+        cBStartDate.setValue(dateTimeListStart.get(30));
+
+        for (int i = 0; i < 365; i++) {
+            LocalDateTime date = localDateTimeObject.plusDays(i);
+            dateTimeListEnd.add(date);
+        }
+
+        cBEndDate.getItems().addAll(dateTimeListEnd);
+        cBEndDate.setValue(dateTimeListEnd.get(0));
 
         //cBEmployeeBox.setValue(observableEmployees.get(0));
         lType.setTextAlignment(TextAlignment.CENTER);
@@ -139,7 +242,9 @@ public class RoomQualificationPopup extends PopupWindow {
 
         vBoxRight.getChildren().addAll(lEmployeeListView, listViewEmployee,
                 lRoomListView, listViewRoom);
-        vBoxCenter.getChildren().addAll(addButtonEmployee, settingsButton, addButtonRoom, rButton, tFLimit);
+        vBoxCenter.getChildren().addAll(addButtonEmployee, settingsButton,
+                addButtonRoom, rButtonLimitqual, tFLimit, rButtonCourse,
+                cBStartDate, cBEndDate);
 
         addButtonRoom.setOnAction(e -> {
             roomInsert = (Room) cBRoomBox.getSelectionModel().getSelectedItem();
@@ -191,12 +296,24 @@ public class RoomQualificationPopup extends PopupWindow {
                     exceptionPopup.display(ex.getMessage());
                 }
             } else if (limitCheck == true) {
-                try {
-                    typeInsert = tFType.getText();
-                    limit = Integer.parseInt(tFLimit.getText());
-                    Xray.getInstance().getQualificationControl().addLimitQualification(observableListRooms, observableListEmployees, typeInsert, limit);
-                } catch (DatabaseException ex) {
-                    exceptionPopup.display(ex.getMessage());
+                if (course != true) {
+                    try {
+
+                        typeInsert = tFType.getText();
+                        limit = Integer.parseInt(tFLimit.getText());
+                        Xray.getInstance().getQualificationControl().addLimitQualification(observableListRooms, observableListEmployees, typeInsert, limit);
+                    } catch (DatabaseException ex) {
+                        exceptionPopup.display(ex.getMessage());
+                    }
+                } else if (course == true) {
+                    try {
+                        typeInsert = tFType.getText();
+                        localDateStart = (LocalDateTime) cBStartDate.getSelectionModel().getSelectedItem();
+                        localDateEnd = (LocalDateTime) cBEndDate.getSelectionModel().getSelectedItem();
+                        Xray.getInstance().getQualificationControl().addCourseQualification(observableListRooms, observableListEmployees, typeInsert, limit, localDateStart, localDateEnd);
+                    } catch (DatabaseException ex) {
+                        exceptionPopup.display(ex.getMessage());
+                    }
                 }
             }
         });
