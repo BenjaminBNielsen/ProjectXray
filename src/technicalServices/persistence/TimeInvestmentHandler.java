@@ -112,9 +112,8 @@ public class TimeInvestmentHandler {
                 Employee emp = EmployeeHandler.getInstance().getEmployee(rs.getInt("employeeNr"));
                 Hours hours = Hours.hours(rs.getInt("hours"));
                 Minutes minutes = Minutes.minutes(rs.getInt("minutes"));
-                LocalDateTime startTime = LocalDateTime.parse(rs.getString("startTime"));
+               LocalDateTime startTime = LocalDateTime.parse(rs.getString("startTime"));
                 Room room = RoomHandler.getInstance().getRoom(rs.getString("roomName"));
-
                 timeInvestments.add(new TimeInvestment(id, hours, minutes, startTime, emp, room));
             }
 

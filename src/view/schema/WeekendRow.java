@@ -32,7 +32,8 @@ public class WeekendRow extends HBox implements HasChildren {
         this.date = date;
         this.shifts = shifts;
 
-        shifts = Xray.getInstance().getShiftsInPeriod(date, shifts, 0, 0, 23, 59);
+        shifts = Xray.getInstance().getShiftsInPeriod(shifts, date, date.plusHours(23)
+                .plusMinutes(59));
 
         labelTile = new RoomTile(dayName);
         shiftTile = new ShiftTile(shifts);

@@ -12,6 +12,7 @@ import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.layout.TilePane;
 import model.TimeInvestment;
+import org.joda.time.DateTimeFieldType;
 import org.joda.time.LocalDateTime;
 
 /**
@@ -38,10 +39,18 @@ public class AssignedAllRoomsRow extends TilePane implements HasChildren {
 
         //Tilføj vagter til dagene på ugen. i0 = mandag, i6 = søndag.
         for (int i = 0; i < 5; i++) {
-            LocalDateTime dayOfWeek = startTime.plusDays(i);
+            LocalDateTime date = startTime.plusDays(i);
+            date = date.withField(DateTimeFieldType.hourOfDay(), startHour);
+            date = date.withField(DateTimeFieldType.minuteOfHour(), startMinute);
+                        //Nulstil sekunder og millisekunder (vigtigt).
+            date = date.withSecondOfMinute(0);
+            date = date.withMillisOfSecond(0);
+
+            LocalDateTime endDate = new LocalDateTime(date);
+            endDate = endDate.plusHours(periodLengthHour).plusMinutes(periodLengthMinute);
+            
             ShiftTile shiftTile = new ShiftTile(Xray.getInstance().
-                    getShiftsInPeriod(dayOfWeek, shifts, startHour, startMinute,
-                            periodLengthHour, periodLengthMinute));
+                    getShiftsInPeriod(shifts, date, endDate));
             this.getChildren().add(shiftTile);
 
         }

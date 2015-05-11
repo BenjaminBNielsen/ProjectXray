@@ -144,4 +144,13 @@ public class Schedule extends ScrollPane {
         this.timeInvestments = timeInvestments;
         this.startTime = startTime;
     }
+    
+        public GridPane getGrid() {
+        return grid;
+    }
+
+    public void setGrid(GridPane grid) {
+        this.grid = grid;
+    }
+
 }
