@@ -173,7 +173,7 @@ public class Xray {
         //i currentShift's tidsperiode, vil denne RoomAssignmentCounter blive 5,
         //og have rum reference til rumX.
         countDateAssignmentsOfRoomForEmp(rooms, currentShift, timeInvestments);
-        
+
         ArrayList<RoomAssignmentCounter> rac = currentShift.getEmployee().getCounters();
 //        for (RoomAssignmentCounter rac1 : rac) {
 //            System.out.println("room: " + rac1.getRoom().getRoomName() + " count: " + rac1.getCount());
@@ -351,13 +351,13 @@ public class Xray {
         if (timeInvestments.size() > 0) {
             for (int i = 0; i < empTimeInvestments.size(); i++) {
                 String roomName = empTimeInvestments.get(i).getRoom().getRoomName();
-                
+
                 //Lineær søgning. Hvis det givne rum findes så skal dets tæller,
                 //i den passende roomCounter på employee tælle én op.
                 for (int j = 0; j < rooms.size(); j++) {
                     if (roomName.equals(rooms.get(j).getRoomName())) {
-                            employee.increment(rooms.get(j));
-                            break; //break OK i søgning for optimering.
+                        employee.increment(rooms.get(j));
+                        break; //break OK i søgning for optimering.
                     }
                 }
             }
@@ -466,59 +466,64 @@ public class Xray {
         for (int i = 0; i < rooms.size(); i++) {
             Room currentRoom = rooms.get(i);
             if (!rooms.isEmpty()) {
-                if (timePeriodControl.hasPeriodConstraint(timePeriods, currentRoom)) {
-                    roomsWithConstraints.add(currentRoom);
+                if (timePeriods.size() > 0) {
+                    if (timePeriodControl.hasPeriodConstraint(timePeriods, currentRoom)) {
+                        roomsWithConstraints.add(currentRoom);
 
-                    rooms.remove(i);
-
-                    i--;
-                } else {
-                    if (currentRoom.getMinOccupation() <= currentRoom.getCount()) {
-                        //Kontroller at det nuværende rum har nået sit minimum, tilføj det
-                        //til tempRoomsMinReached og fjern det fra rooms.
-                        tempRoomsMinReached.add(currentRoom);
                         rooms.remove(i);
 
                         i--;
+                    } else {
+                        if (currentRoom.getMinOccupation() <= currentRoom.getCount()) {
+                            //Kontroller at det nuværende rum har nået sit minimum, tilføj det
+                            //til tempRoomsMinReached og fjern det fra rooms.
+                            tempRoomsMinReached.add(currentRoom);
+                            rooms.remove(i);
+
+                            i--;
+                        }
                     }
                 }
             }
         }
 
         boolean isMinReached = true;
+        boolean isMaxReached = false;
 
-        //Hvis der er rum med begrænsninger i form af timePeriods så gå dem igennem.
-        if (!roomsWithConstraints.isEmpty()) {
-            ArrayList<TimePeriod> periodsForEmp = timePeriodControl.
-                    getTimePeriodsForEmp(timePeriods, currentShift);
+        ArrayList<TimePeriod> periodsForEmp = timePeriodControl.
+                getTimePeriodsForEmp(timePeriods, currentShift);
 
-            for (TimePeriod period : periodsForEmp) {
+        for (int i = 0; i < periodsForEmp.size(); i++) {
+            TimePeriod period = periodsForEmp.get(i);
                 //rsc giver mulighed for at vide hvor mange gange currentShift's
-                //person er blevet tildelt det rum, iterationen er nået til.
-                RoomAssignmentCounter rsc = currentShift.getEmployee().
-                        getRoomAssignmentCounter(period.getRoom());
+            //person er blevet tildelt det rum, iterationen er nået til.
+            RoomAssignmentCounter rsc = currentShift.getEmployee().
+                    getRoomAssignmentCounter(period.getRoom());
 
-                //Fjern fra listen hvis maximummet er opnået.
-                if (period.getMax() <= rsc.getCount()) {
-                    periodsForEmp.remove(period);
-                }
-
+            //Fjern fra listen hvis maximummet er opnået.
+            if (period.getMax() <= rsc.getCount()) {
+                periodsForEmp.remove(period);
             }
 
+        }
+        ArrayList<RoomAssignmentCounter> racs = currentShift.getEmployee().getCounters();
+        
+        //Hvis der er rum med begrænsninger i form af timePeriods så gå dem igennem.
+        if (!periodsForEmp.isEmpty()) {
             //Sorter listen af tidsperioder, sådan at det vigtigste rum refererer
             //den første tidsperiode i listen.
             periodsForEmp.sort(new PeriodMinComparator(currentShift.getEmployee()));
-
             prioritizedRoom = periodsForEmp.get(0).getRoom();
 
             isMinReached = isMinReached(periodsForEmp, currentShift);
+            isMaxReached(periodsForEmp, currentShift);
         }
-        
-        if (isMinReached) {
+
+        if (isMinReached && !isMaxReached) {
             if (!rooms.isEmpty()) {
                 rooms.sort(new RoomMinimumComparator(currentShift.getEmployee()));
 
-            //Prioriter det rum der er blevet tildelt færrest gange. (højest prioritet
+                //Prioriter det rum der er blevet tildelt færrest gange. (højest prioritet
                 //må være på plads 0).
                 prioritizedRoom = rooms.get(0);
             } else {
@@ -553,6 +558,18 @@ public class Xray {
             }
         }
         return minReached;
+    }
+
+    public boolean isMaxReached(ArrayList<TimePeriod> timePeriods, TimeInvestment currentShift) {
+        boolean maxReached = false;
+        for (TimePeriod timePeriod : timePeriods) {
+            Employee thisEmp = currentShift.getEmployee();
+            RoomAssignmentCounter thisRac = thisEmp.getRoomAssignmentCounter(timePeriod.getRoom());
+            if (timePeriod.getMax() <= thisRac.getCount()) {
+                maxReached = true;
+            }
+        }
+        return maxReached;
     }
 
     /**

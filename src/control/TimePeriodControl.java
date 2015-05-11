@@ -29,17 +29,20 @@ public class TimePeriodControl {
      */
     public ArrayList<TimePeriod> getTimeperiods(TimeInvestment currentShift) {
         ArrayList<TimePeriod> timePeriods = new ArrayList<>();
-        try{
-        Employee mie = EmployeeHandler.getInstance().getEmployee(31);
-        Room mr2 = RoomHandler.getInstance().getRoom("MR 2");
+        try {
+            Employee mie = EmployeeHandler.getInstance().getEmployee(31);
+            Room mr2 = RoomHandler.getInstance().getRoom("MR 2");
+            Room ctA = RoomHandler.getInstance().getRoom("CT A");
+            Room ctB = RoomHandler.getInstance().getRoom("CT B");
             LocalDateTime start = new LocalDateTime(2015, 4, 12, 0, 0);
             LocalDateTime end = new LocalDateTime(2015, 4, 18, 0, 0);
-        
-        timePeriods.add(new TimePeriod(start, end, 1, 10, mr2, mie));
-        timePeriods.add(new TimePeriod(start, end, 1, 10, mr2, mie));
-        }catch(DatabaseException ex){}
-        
-        for (int i = 0; i < timePeriods.size(); i++){
+
+            timePeriods.add(new TimePeriod(start, end, 1, 3, mr2, mie));
+            timePeriods.add(new TimePeriod(start, end, 1, 3, ctA, mie));
+            timePeriods.add(new TimePeriod(start, end, 1, 3, ctB, mie));
+        } catch (DatabaseException ex) {
+        }
+        for (int i = 0; i < timePeriods.size(); i++) {
             boolean shiftInPeriod = Xray.getInstance().isDateInPeriod(currentShift.getStartTime(),
                     timePeriods.get(i).getStartTime(), timePeriods.get(i).getEndTime());
             if (!(shiftInPeriod) || timePeriods.get(i).getEmployee().getId() != currentShift.getEmployee().getId()) {

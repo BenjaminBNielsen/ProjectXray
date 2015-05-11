@@ -27,7 +27,7 @@ public class PeriodMinComparator implements Comparator<TimePeriod> {
         Room t1Room = t1.getRoom();
         RoomAssignmentCounter t1Rac = employee.getRoomAssignmentCounter(t1Room);
 
-        Room t2Room = t1.getRoom();
+        Room t2Room = t2.getRoom();
         RoomAssignmentCounter t2Rac = employee.getRoomAssignmentCounter(t2Room);
         
         //Sammenlign først på forskellen mellem t1 og t2 minimum, i forhold til
@@ -39,7 +39,6 @@ public class PeriodMinComparator implements Comparator<TimePeriod> {
         //Hvis minimum ikke er opnået for en af de to forskelle:
         if (t1Difference > 0 && t2Difference > 0) {
             r = t2Difference - t1Difference;
-
             if (r == 0) {
                 r = t2Rac.getCount() - t1Rac.getCount();
 
