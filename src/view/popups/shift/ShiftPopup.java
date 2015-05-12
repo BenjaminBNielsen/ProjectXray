@@ -18,8 +18,11 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 import model.Employee;
 import model.TimeInvestment;
 import org.joda.time.LocalDateTime;
@@ -89,6 +92,25 @@ public class ShiftPopup extends PopupWindow {
     private void initComboboxes() {
         cDate = new ComboBox();
         cDate.setPrefWidth(170);
+        Callback<ListView<LocalDateTime>, ListCell<LocalDateTime>> cellFactory = new Callback<ListView<LocalDateTime>, ListCell<LocalDateTime>>() {
+            @Override
+            public ListCell<LocalDateTime> call(ListView<LocalDateTime> param) {
+
+                return new ListCell<LocalDateTime>() {
+                    @Override
+                    public void updateItem(LocalDateTime item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (!empty) {
+                            setText(item.toString("dd/MM/yyyy"));
+                        }
+                    }
+
+                };
+            }
+        };
+
+        cDate.setButtonCell(cellFactory.call(null));
+        cDate.setCellFactory(cellFactory);
 
         //testdata
         LocalDateTime ldt1 = new LocalDateTime(2015, 3, 23, 0, 0);
@@ -122,6 +144,11 @@ public class ShiftPopup extends PopupWindow {
             } catch (DatabaseException ex) {
                 System.out.println(ex.getMessage());
             } 
+        });
+        
+        shiftManual = new ShiftManualButton("Manuel vagt");
+        shiftManual.setOnAction(e -> {
+            shiftManual.setOnActionCode();
         });
     }
 

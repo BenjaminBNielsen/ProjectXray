@@ -20,11 +20,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 import model.Employee;
 import model.Room;
 import model.TimeInvestment;
@@ -35,6 +38,7 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 import org.joda.time.Minutes;
+import view.buttons.ImageButton;
 import view.buttons.PopupMenuButton;
 import view.popups.ExceptionPopup;
 import view.popups.PopupWindow;
@@ -61,7 +65,7 @@ public class ShiftManualPopup extends PopupWindow {
     //Knapper
     private PopupMenuButton addShifts;
 
-    private Button dayShift, eveningShift, nightShift;
+    private ImageButton dayShift, eveningShift, nightShift;
     LocalTime dayTime, eveningTime, nightTime;
 
     //Checkbokse
@@ -129,6 +133,26 @@ public class ShiftManualPopup extends PopupWindow {
         for (int i = 0; i < mondays.size(); i++) {
             cWeek.getItems().add(mondays.get(i));
         }
+        Callback<ListView<LocalDateTime>, ListCell<LocalDateTime>> cellFactory = new Callback<ListView<LocalDateTime>, ListCell<LocalDateTime>>() {
+            @Override
+            public ListCell<LocalDateTime> call(ListView<LocalDateTime> param) {
+
+                return new ListCell<LocalDateTime>() {
+                    @Override
+                    public void updateItem(LocalDateTime item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (!empty) {
+                            setText("Uge " + item.getWeekOfWeekyear() + " " + item.toString("/yy"));
+                        }
+                    }
+
+                };
+            }
+        };
+
+        cWeek.setButtonCell(cellFactory.call(null));
+        cWeek.setCellFactory(cellFactory);
+        
 
         cEmployee = new ComboBox();
         cEmployee.setPrefWidth(170);
@@ -246,24 +270,33 @@ public class ShiftManualPopup extends PopupWindow {
             }
         });
 
-        dayShift = new Button("Morgen");
+        dayShift = new ImageButton("pictures/morgen 60.png","pictures/morgen 60 dark.png");
         dayShift.setOnAction(e -> {
+            eveningShift.setUnPressed();
+            nightShift.setUnPressed();
+            
             tStartHH.setText("7");
             tStartMM.setText("30");
             tEndHH.setText("15");
             tEndMM.setText("15");
         });
 
-        eveningShift = new Button("Aftenvagt");
+        eveningShift = new ImageButton("pictures/aften 60.png", "pictures/aften 60 dark.png");
         eveningShift.setOnAction(e -> {
+            dayShift.setUnPressed();
+            nightShift.setUnPressed();
+            
             tStartHH.setText("15");
             tStartMM.setText("15");
             tEndHH.setText("23");
             tEndMM.setText("30");
         });
 
-        nightShift = new Button("Nattevagt");
+        nightShift = new ImageButton("pictures/nat 60.png", "pictures/nat 60 dark.png");
         nightShift.setOnAction(e -> {
+            dayShift.setUnPressed();
+            eveningShift.setUnPressed();
+            
             tStartHH.setText("23");
             tStartMM.setText("30");
             tEndHH.setText("7");

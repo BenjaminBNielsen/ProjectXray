@@ -26,13 +26,10 @@ public class PopupWindow {
         roomBorderPane = new BorderPane();
         roomScene = new Scene(roomBorderPane);
         bottomHBox = new HBox(15);
-    }
-
-    public void display(String title) {
+        window.initModality(Modality.APPLICATION_MODAL);
+        
         bottomHBox.setAlignment(Pos.CENTER);
 
-        window.initModality(Modality.APPLICATION_MODAL);
-        window.setTitle(title);
 
         roomBorderPane.setPadding(new Insets(15, 15, 15, 15));
         roomBorderPane.setBottom(bottomHBox);
@@ -44,6 +41,10 @@ public class PopupWindow {
 
         bottomHBox.getChildren().addAll(tilbageTilHovedmenu);
         window.setScene(roomScene);
+    }
+
+    public void display(String title) {
+        window.setTitle(title);
         window.showAndWait();
     }
     /* Vi har flere metoder som kan tilføje data til vores popupwindow,
