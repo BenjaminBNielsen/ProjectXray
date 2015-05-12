@@ -90,6 +90,43 @@ public class ShiftChangePopup extends PopupWindow {
         } catch (DatabaseException ex) {
 
         }
+        
+        for (int i = 1; i <= 31; i++) {
+            cChangeDay.getItems().add(i);
+        }
+        cChangeDay.setValue("Vælg en dag");
+        
+        for (int i = 1; i <= 12; i++) {
+            cChangeMonth.getItems().add(i);
+        }
+        cChangeMonth.setValue("Vælg en måned");
+        
+         for (int i = 2015; i <= 2025 ; i++) {
+            cChangeYear.getItems().add(i);
+        }
+        cChangeYear.setValue("Vælg et år");
+        
+         for (int i = 0; i <= 23; i++) {
+            cChangeStartHour.getItems().add(i);
+        }
+        cChangeStartHour.setValue("Vælg starttime");
+        
+         for (int i = 0; i <= 59; i = i+5) {
+            cChangeStartMinute.getItems().add(i);
+        }
+        cChangeStartMinute.setValue("Vælg startminut");
+        
+        for (int i = 0; i <= 23; i++) {
+            cChangeEndHour.getItems().add(i);
+        }
+        cChangeEndHour.setValue("Vælg sluttime");
+        
+         for (int i = 00; i <= 59; i = i +5) {
+            cChangeEndMinute.getItems().add(i);
+        }
+        cChangeEndMinute.setValue("Vælg slutminut");
+        
+        
 
         for (int i = 1; i <= 31; i++) {
             cChangeDay.getItems().add(i);

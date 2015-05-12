@@ -22,7 +22,7 @@ public class ScheduleHeader extends HBox implements HasChildren{
 
     //Opslagstabel til at få navne på ugedagene.
     public static final String[] WEEK_DAY_NAMES
-            = {"MANDAG", "TIRSDAG", "ONSDAG", "TORSDAG", "FREDAG"};
+            = {"MANDAG", "TIRSDAG", "ONSDAG", "TORSDAG", "FREDAG", "LØRDAG", "SØNDAG"};
 
     public ScheduleHeader(int week) {
 

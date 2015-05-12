@@ -6,6 +6,7 @@
 package control.comparators;
 
 import java.util.Comparator;
+import model.Employee;
 import model.Room;
 
 /**
@@ -14,6 +15,12 @@ import model.Room;
  */
 public class RoomMinimumComparator implements Comparator<Room> {
 
+    private Employee employee;
+    
+    public RoomMinimumComparator(Employee employee){
+        this.employee = employee;
+    }
+    
     @Override
     public int compare(Room r1, Room r2) {
         int result = 0;
