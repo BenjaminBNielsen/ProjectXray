@@ -13,7 +13,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 /**
- *
+ *test
  * @author Benjamin
  */
 public class LabelTile extends HBox{

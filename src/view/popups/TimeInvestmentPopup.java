@@ -10,6 +10,7 @@ import exceptions.DatabaseException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.geometry.Insets;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -29,13 +30,14 @@ public class TimeInvestmentPopup extends PopupWindow {
     private PopupMenuButton assignButton;
 
     public TimeInvestmentPopup() {
-        HBox mainHbox = new HBox();
+        HBox mainHbox = new HBox(15);
+        mainHbox.setPadding(new Insets(0,0,15,0));
 
         cStart = new ComboBox();
-        cStart.setPrefWidth(assignButton.getPrefWidth());
         cEnd = new ComboBox();
-        cEnd.setPrefWidth(assignButton.getPrefWidth());
         assignButton = new PopupMenuButton("Tildel vagter");
+        cStart.setPrefWidth(assignButton.getPrefWidth());
+        cEnd.setPrefWidth(assignButton.getPrefWidth());
         
         mainHbox.getChildren().addAll(cStart, cEnd);
         super.addToTop(mainHbox);
