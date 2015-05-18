@@ -77,7 +77,7 @@ public class TimeInvestmentPopup extends PopupWindow {
             }
         };
 
-        Xray.getInstance().fillDatesInEndDate(cEnd, cStart);
+        Xray.getInstance().fillDatesInEndDate(cEnd, cStart, 12);
 
         cStart.setButtonCell(cellFactory.call(null));
         cStart.setCellFactory(cellFactory);
@@ -89,7 +89,7 @@ public class TimeInvestmentPopup extends PopupWindow {
     private void initListeners() {
 
         cStart.setOnAction(e -> {
-            Xray.getInstance().fillDatesInEndDate(cEnd, cStart);
+            Xray.getInstance().fillDatesInEndDate(cEnd, cStart, 12);
         });
         
         assignButton.setOnAction(e -> {
@@ -97,6 +97,7 @@ public class TimeInvestmentPopup extends PopupWindow {
             LocalDateTime endDate = cEnd.getValue();
             try {
                 Xray.getInstance().getTimeInvestmentControl().assignRooms(startDate, endDate);
+                
             } catch (DatabaseException ex) {
                 ExceptionPopup ep = new ExceptionPopup();
                 ep.display(ex.getMessage());
