@@ -44,9 +44,11 @@ import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDateTime;
 import techincalServices.printing.PrinterThread;
 import view.buttons.PopupMenuButton;
+import view.popups.ExceptionPopup;
 import view.popups.PrintReviewPopup;
 import view.popups.RoomQualificationPopup;
 import view.popups.StudentPopup;
+import view.popups.TimeInvestmentPopup;
 import view.popups.timePeriod.AddTimePeriodPopup;
 import view.popups.shift.ShiftPopup;
 
@@ -128,15 +130,13 @@ public class Frontpage extends Application {
         if (DatabaseConnection.getInstance().hasConnection()) {
             initNodes(window);
         }
-
-        //Tildeling af rum til ansatte for uge 16/2015:
-        //Kør 'Røntgen projekt\DB\Script 3a - insert_shifts_week16-2015.sql'.
-        try {
-
-            assigned = Xray.getInstance().getTimeInvestmentControl().assignRooms();
+        
+                try {
+            assigned = Xray.getInstance().getTimeInvestmentControl().getAssignedTimeInvestments();
         } catch (DatabaseException ex) {
-            System.out.println("LORT1");
-        } 
+            ExceptionPopup ep = new ExceptionPopup();
+            ep.display("Der blev ikke hentet vagter fra databasen.");
+        }
 
         //tildel via assign rooms metode:
         //Opsætning af skema.
@@ -227,7 +227,8 @@ public class Frontpage extends Application {
 
         assignRoomsButton = new PopupMenuButton("Tildel vagter");
         assignRoomsButton.setOnAction(e -> {
-
+            TimeInvestmentPopup tip = new TimeInvestmentPopup();
+            tip.display("Tildel vagter");
         });
 
         menuButtons.add(assignRoomsButton);

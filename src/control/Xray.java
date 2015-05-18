@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.control.ComboBox;
 import javafx.stage.Screen;
 import model.Employee;
 import model.LimitQualification;
@@ -136,20 +137,32 @@ public class Xray {
 
         return inPeriod;
     }
-    
+
     public ArrayList<LocalDateTime> getDatesInPeriod(LocalDateTime startTime,
-            LocalDateTime endTime){
+            LocalDateTime endTime) {
         ArrayList<LocalDateTime> dates = new ArrayList<>();
         LocalDateTime currentDate = new LocalDateTime(startTime);
         currentDate = currentDate.withHourOfDay(0);
         currentDate = currentDate.withMinuteOfHour(0);
 
-        while(currentDate.isBefore(endTime)){
+        while (currentDate.isBefore(endTime)) {
             dates.add(currentDate);
             currentDate = currentDate.plusDays(1);
         }
-        
+
         return dates;
+    }
+
+    public void fillDatesInEndDate(ComboBox cEnd, ComboBox cStart) {
+        //Fyld datoer ind i comboboks til start og slutdato:
+        LocalDateTime now = new LocalDateTime(cStart.getValue());
+        LocalDateTime oneMonthForward = now.plusMonths(1);
+        ArrayList<LocalDateTime> startDates = Xray.getInstance().getDatesInPeriod(now.plusDays(1), oneMonthForward);
+        cEnd.getItems().clear();
+        for (int i = 0; i < startDates.size(); i++) {
+            cEnd.getItems().add(startDates.get(i));
+        }
+        cEnd.getSelectionModel().selectFirst();
     }
 
 }

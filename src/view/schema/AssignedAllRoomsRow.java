@@ -37,18 +37,18 @@ public class AssignedAllRoomsRow extends TilePane implements HasChildren {
 
         this.getChildren().add(shiftTypeLabel);
 
-        //Tilføj vagter til dagene på ugen. i0 = mandag, i6 = søndag.
+        //Tilføj vagter til dagene på ugen. i0 = mandag, i4 = fredag.
         for (int i = 0; i < 5; i++) {
             LocalDateTime date = startTime.plusDays(i);
             date = date.withField(DateTimeFieldType.hourOfDay(), startHour);
             date = date.withField(DateTimeFieldType.minuteOfHour(), startMinute);
-                        //Nulstil sekunder og millisekunder (vigtigt).
+            //Nulstil sekunder og millisekunder (vigtigt).
             date = date.withSecondOfMinute(0);
             date = date.withMillisOfSecond(0);
 
             LocalDateTime endDate = new LocalDateTime(date);
             endDate = endDate.plusHours(periodLengthHour).plusMinutes(periodLengthMinute);
-            
+
             ShiftTile shiftTile = new ShiftTile(Xray.getInstance().getTimeInvestmentControl().
                     getShiftsInPeriod(shifts, date, endDate));
             this.getChildren().add(shiftTile);
@@ -56,15 +56,15 @@ public class AssignedAllRoomsRow extends TilePane implements HasChildren {
         }
     }
 
-     @Override
-    public Node[] getChildrenList(){
+    @Override
+    public Node[] getChildrenList() {
         ObservableList<Node> sliChildren = this.getChildren();
 
-            Node[] childrenAsArray = new Node[sliChildren.size()];
+        Node[] childrenAsArray = new Node[sliChildren.size()];
 
-            for (int i = 0; i < sliChildren.size(); i++) {
-                childrenAsArray[i] = sliChildren.get(i);
-            }
+        for (int i = 0; i < sliChildren.size(); i++) {
+            childrenAsArray[i] = sliChildren.get(i);
+        }
         return childrenAsArray;
     }
 }
