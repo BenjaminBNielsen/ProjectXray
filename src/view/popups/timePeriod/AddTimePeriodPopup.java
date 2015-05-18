@@ -101,8 +101,6 @@ public class AddTimePeriodPopup extends PopupWindow {
         Label roomLabel = new Label("Vælg rum");
         Label minMaxLabel = new Label("Maksimum & minimum");
         Label repeatLabel = new Label("Gentag regel?");
-        //leftVBox.getChildren().addAll(startDateLabel, cStart, endDateLabel, cEnd,
-        //roomLabel, cRoom, minMaxLabel, minMax, repeatLabel, leftHboxRepeat);
 
         GridPane.setRowSpan(lEmp, 6);
         gridPane.setPadding(new Insets(0, 0, 10, 0));
@@ -180,7 +178,7 @@ public class AddTimePeriodPopup extends PopupWindow {
             }
         };
 
-        fillDatesInEndDate(cEnd);
+        Xray.getInstance().fillDatesInEndDate(cEnd, cStart);
 
         cStart.setButtonCell(cellFactory.call(null));
         cStart.setCellFactory(cellFactory);
@@ -199,7 +197,7 @@ public class AddTimePeriodPopup extends PopupWindow {
         });
 
         cStart.setOnAction(e -> {
-            fillDatesInEndDate(cEnd);
+            Xray.getInstance().fillDatesInEndDate(cEnd, cStart);
         });
 
         empAddButton.setOnAction(e -> {
@@ -308,18 +306,6 @@ public class AddTimePeriodPopup extends PopupWindow {
                 amountRepeat.selectAll();
             }
         });
-    }
-
-    private void fillDatesInEndDate(ComboBox cb) {
-        //Fyld datoer ind i comboboks til start og slutdato:
-        LocalDateTime now = new LocalDateTime(cStart.getValue());
-        LocalDateTime oneMonthForward = now.plusMonths(1);
-        ArrayList<LocalDateTime> startDates = Xray.getInstance().getDatesInPeriod(now.plusDays(1), oneMonthForward);
-        cb.getItems().clear();
-        for (int i = 0; i < startDates.size(); i++) {
-            cb.getItems().add(startDates.get(i));
-        }
-        cb.getSelectionModel().selectFirst();
     }
 
     /**

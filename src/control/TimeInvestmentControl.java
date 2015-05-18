@@ -39,13 +39,17 @@ public class TimeInvestmentControl {
     /**
      * Denne metode tildeler rum til medarbejdere.
      *
+     * @param periodStart
+     * @param periodEnd
      * @return Returnerer en liste af timeInvestments der har fået sine rum
      * tildelt.
      * @throws exceptions.DatabaseException
      */
-    public ArrayList<TimeInvestment> assignRooms() throws DatabaseException {
+    public ArrayList<TimeInvestment> assignRooms(LocalDateTime periodStart, 
+            LocalDateTime periodEnd) throws DatabaseException {
         ArrayList<TimeInvestment> unassignedShifts = TimeInvestmentHandler.getInstance().
                 getUnassignedTimeInvestments();
+        unassignedShifts = getShiftsInPeriod(unassignedShifts, periodStart, periodEnd);
         ArrayList<RoomQualification> roomQualifications = Xray.getInstance().
                 getQualificationControl().getRoomQualifications();
         ArrayList<LimitQualification> limitQualifications = Xray.getInstance().
@@ -479,6 +483,10 @@ public class TimeInvestmentControl {
             }
         }
         return allreadyInList;
+    }
+    
+    public ArrayList<TimeInvestment> getAssignedTimeInvestments() throws DatabaseException{
+        return TimeInvestmentHandler.getInstance().getAssignedTimeInvestments();
     }
 
 }
