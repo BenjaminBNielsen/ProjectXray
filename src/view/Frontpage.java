@@ -386,13 +386,16 @@ public class Frontpage extends Application {
         } catch (DatabaseException ex) {
             
         } 
-        
-        
-        
     }
     public void updateSchedule(){
         
         vMainLayout.getChildren().remove(2);
+        try {
+            assigned = Xray.getInstance().getTimeInvestmentControl().getAssignedTimeInvestments();
+        } catch (DatabaseException ex) {
+            ExceptionPopup ep = new ExceptionPopup();
+            ep.display(ex.getMessage());
+        }
         Schedule schedule = new Schedule(assigned, new LocalDateTime(chosenMonday));
         vMainLayout.getChildren().add(2, schedule);
     

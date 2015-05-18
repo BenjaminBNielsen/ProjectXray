@@ -114,7 +114,7 @@ public class Xray {
     public void setTimeInvestmentControl(TimeInvestmentControl timeInvestmentControl) {
         this.timeInvestmentControl = timeInvestmentControl;
     }
-
+    
     /**
      * Tjekker om en given dato er i en given tidsperiode.
      *
@@ -152,10 +152,10 @@ public class Xray {
         return dates;
     }
 
-    public void fillDatesInEndDate(ComboBox cEnd, ComboBox cStart) {
+    public void fillDatesInEndDate(ComboBox cEnd, ComboBox cStart, int monthsforward) {
         //Fyld datoer ind i comboboks til start og slutdato:
         LocalDateTime now = new LocalDateTime(cStart.getValue());
-        LocalDateTime oneMonthForward = now.plusMonths(1);
+        LocalDateTime oneMonthForward = now.plusMonths(monthsforward);
         ArrayList<LocalDateTime> startDates = Xray.getInstance().getDatesInPeriod(now.plusDays(1), oneMonthForward);
         cEnd.getItems().clear();
         for (int i = 0; i < startDates.size(); i++) {

@@ -178,7 +178,7 @@ public class AddTimePeriodPopup extends PopupWindow {
             }
         };
 
-        Xray.getInstance().fillDatesInEndDate(cEnd, cStart);
+        Xray.getInstance().fillDatesInEndDate(cEnd, cStart, 1);
 
         cStart.setButtonCell(cellFactory.call(null));
         cStart.setCellFactory(cellFactory);
@@ -197,7 +197,7 @@ public class AddTimePeriodPopup extends PopupWindow {
         });
 
         cStart.setOnAction(e -> {
-            Xray.getInstance().fillDatesInEndDate(cEnd, cStart);
+            Xray.getInstance().fillDatesInEndDate(cEnd, cStart, 1);
         });
 
         empAddButton.setOnAction(e -> {

@@ -45,10 +45,9 @@ public class TimeInvestmentControl {
      * tildelt.
      * @throws exceptions.DatabaseException
      */
-    public ArrayList<TimeInvestment> assignRooms(LocalDateTime periodStart, 
+    public ArrayList<TimeInvestment> assignRooms(LocalDateTime periodStart,
             LocalDateTime periodEnd) throws DatabaseException {
-        ArrayList<TimeInvestment> unassignedShifts = TimeInvestmentHandler.getInstance().
-                getUnassignedTimeInvestments();
+        ArrayList<TimeInvestment> unassignedShifts = getUnassignedTimeInvestments();
         unassignedShifts = getShiftsInPeriod(unassignedShifts, periodStart, periodEnd);
         ArrayList<RoomQualification> roomQualifications = Xray.getInstance().
                 getQualificationControl().getRoomQualifications();
@@ -78,6 +77,7 @@ public class TimeInvestmentControl {
             }
         }
 
+        updateShifts(assignedShifts);
         return assignedShifts;
     }
 
@@ -484,9 +484,16 @@ public class TimeInvestmentControl {
         }
         return allreadyInList;
     }
-    
-    public ArrayList<TimeInvestment> getAssignedTimeInvestments() throws DatabaseException{
+
+    public ArrayList<TimeInvestment> getAssignedTimeInvestments() throws DatabaseException {
         return TimeInvestmentHandler.getInstance().getAssignedTimeInvestments();
+    }
+
+    private void updateShifts(ArrayList<TimeInvestment> assignedShifts) throws DatabaseException {
+        for (int i = 0; i < assignedShifts.size(); i++) {
+            System.out.println(assignedShifts.get(i));
+            TimeInvestmentHandler.getInstance().updateTimeInvestment(assignedShifts.get(i));
+        }
     }
 
 }
