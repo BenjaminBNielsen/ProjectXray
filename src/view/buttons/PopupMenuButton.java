@@ -18,6 +18,9 @@ public class PopupMenuButton extends Button{
     public PopupMenuButton(String text){
         super(text);
         this.setPrefSize(PREFERRED_WIDTH,PREFERRED_HEIGHT);
+        this.setStyle("-fx-font-family: Arial;"
+                + "-fx-font-size: 14;");
+        this.setFocusTraversable(false);
     }
     
     public PopupMenuButton(){

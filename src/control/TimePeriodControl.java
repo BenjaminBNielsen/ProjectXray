@@ -14,6 +14,7 @@ import model.TimePeriod;
 import org.joda.time.LocalDateTime;
 import technicalServices.persistence.EmployeeHandler;
 import technicalServices.persistence.RoomHandler;
+import technicalServices.persistence.TimePeriodHandler;
 
 /* @author Benjamin */
 public class TimePeriodControl {
@@ -37,7 +38,7 @@ public class TimePeriodControl {
             LocalDateTime start = new LocalDateTime(2015, 4, 12, 0, 0);
             LocalDateTime end = new LocalDateTime(2015, 4, 18, 0, 0);
 
-            timePeriods.add(new TimePeriod(start, end, 1, 3, mr2, mie));
+            timePeriods.add(new TimePeriod(start, end, 0, 1, mr2, mie));
             timePeriods.add(new TimePeriod(start, end, 1, 3, ctA, mie));
             timePeriods.add(new TimePeriod(start, end, 1, 3, ctB, mie));
         } catch (DatabaseException ex) {
@@ -79,6 +80,10 @@ public class TimePeriodControl {
         }
 
         return timePeriodsForEmp;
+    }
+
+    public void addTimePeriods(ArrayList<TimePeriod> timePeriods) throws DatabaseException {
+        TimePeriodHandler.getInstance().addTimePeriods(timePeriods);
     }
 
 }
