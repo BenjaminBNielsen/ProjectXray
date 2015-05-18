@@ -238,13 +238,14 @@ public class RoomQualificationPopup extends PopupWindow {
         vBoxLeft.getChildren().addAll(
                 lType, tFType,
                 lEmployeeLabel, cBEmployeeBox,
-                lRoomLabel, cBRoomBox);
+                lRoomLabel, cBRoomBox, 
+                rButtonLimitqual, tFLimit, rButtonCourse,
+                cBStartDate, cBEndDate);
 
         vBoxRight.getChildren().addAll(lEmployeeListView, listViewEmployee,
                 lRoomListView, listViewRoom);
         vBoxCenter.getChildren().addAll(addButtonEmployee, settingsButton,
-                addButtonRoom, rButtonLimitqual, tFLimit, rButtonCourse,
-                cBStartDate, cBEndDate);
+                addButtonRoom);
 
         addButtonRoom.setOnAction(e -> {
             roomInsert = (Room) cBRoomBox.getSelectionModel().getSelectedItem();

@@ -44,6 +44,7 @@ import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDateTime;
 import techincalServices.printing.PrinterThread;
 import view.buttons.PopupMenuButton;
+import view.popups.AssignRoomsPopup;
 import view.popups.PrintReviewPopup;
 import view.popups.RoomQualificationPopup;
 import view.popups.StudentPopup;
@@ -225,7 +226,8 @@ public class Frontpage extends Application {
 
         assignRoomsButton = new PopupMenuButton("Tildel vagter");
         assignRoomsButton.setOnAction(e -> {
-
+            AssignRoomsPopup assignRoomsPopup = new AssignRoomsPopup();
+            assignRoomsPopup.display("Tildel vagter");
         });
 
         menuButtons.add(assignRoomsButton);
