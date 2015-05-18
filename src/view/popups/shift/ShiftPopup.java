@@ -118,10 +118,15 @@ public class ShiftPopup extends PopupWindow {
 
             //TimeInvestmenthandler skal indsætte dem i databasen.
             try {
-                Xray.getInstance().addTimeInvestments(shifts);
+                Xray.getInstance().getTimeInvestmentControl().addTimeInvestments(shifts);
             } catch (DatabaseException ex) {
                 System.out.println(ex.getMessage());
             } 
+        });
+        
+        shiftManual = new ShiftManualButton("Manuel vagt");
+        shiftManual.setOnAction(e -> {
+            shiftManual.setOnActionCode();
         });
     }
 

@@ -8,15 +8,15 @@ package control.comparators;
 import java.util.Comparator;
 import model.Employee;
 import model.Room;
-import model.RoomAssignmentCounter;
+import control.RoomAssignmentCounter;
 import model.TimePeriod;
 
 /* @author Benjamin */
-public class PeriodMinComparator implements Comparator<TimePeriod> {
+public class PeriodComparator implements Comparator<TimePeriod> {
 
     private Employee employee;
     
-    public PeriodMinComparator(Employee employee){
+    public PeriodComparator(Employee employee){
         this.employee = employee;
     }
     
