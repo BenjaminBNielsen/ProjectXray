@@ -43,10 +43,13 @@ import model.TimeInvestment;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDateTime;
 import view.buttons.PopupMenuButton;
+import view.popups.ExceptionPopup;
 import view.popups.PrintReviewPopup;
 import view.popups.PrintApplication;
 import view.popups.QualificationPopup;
 import view.popups.StudentPopup;
+import view.popups.TimeInvestmentPopup;
+import view.popups.timePeriod.AddTimePeriodPopup;
 import view.popups.shift.ShiftPopup;
 
 public class Frontpage extends Application {
@@ -75,7 +78,7 @@ public class Frontpage extends Application {
 
     //buttons:
     private PopupMenuButton createEmployee, createQualificationButton, createRoomButton,
-            createStudent, createShift, assignRoomsButton;
+            createStudent, createShift, assignRoomsButton, addRuleButton;
 
     private Button jumpForwardWeek, jumpBackWeek, printButton;
 
@@ -124,15 +127,13 @@ public class Frontpage extends Application {
         if (DatabaseConnection.getInstance().hasConnection()) {
             initNodes(window);
         }
-
-        //Tildeling af rum til ansatte for uge 16/2015:
-        //Kør 'Røntgen projekt\DB\Script 3a - insert_shifts_week16-2015.sql'.
-        try {
-
-            assigned = Xray.getInstance().assignRooms();
+        
+                try {
+            assigned = Xray.getInstance().getTimeInvestmentControl().getAssignedTimeInvestments();
         } catch (DatabaseException ex) {
-            System.out.println("LORT1");
-        } 
+            ExceptionPopup ep = new ExceptionPopup();
+            ep.display("Der blev ikke hentet vagter fra databasen.");
+        }
 
         //tildel via assign rooms metode:
         //Opsætning af skema.
@@ -146,6 +147,7 @@ public class Frontpage extends Application {
     private void initNodes(Stage window) {
         //initialiser felter:
         this.window = window;
+        
         vMainLayout = new VBox(STANDARD_PADDING);
 
         hMenuLayout = new HBox(STANDARD_PADDING);
@@ -197,7 +199,7 @@ public class Frontpage extends Application {
         });
         menuButtons.add(createStudent);
 
-        createQualificationButton = new PopupMenuButton("Opret kvalifikation");
+        createQualificationButton = new PopupMenuButton("Opret rum kvalifikation");
         createQualificationButton.setOnAction(e -> {
             QualificationPopup roomQualificationWindow = 
                     new QualificationPopup(rooms, employees);
@@ -222,16 +224,26 @@ public class Frontpage extends Application {
 
         assignRoomsButton = new PopupMenuButton("Tildel vagter");
         assignRoomsButton.setOnAction(e -> {
-
+            TimeInvestmentPopup tip = new TimeInvestmentPopup();
+            tip.display("Tildel vagter");
         });
 
         menuButtons.add(assignRoomsButton);
+        
+        addRuleButton = new PopupMenuButton("Opret regel");
+        addRuleButton.setOnAction(e -> {
+            AddTimePeriodPopup tpp = new AddTimePeriodPopup();
+            tpp.display("Regler");
+        });
+        
+        menuButtons.add(addRuleButton);
 
         for (PopupMenuButton menuButton : menuButtons) {
             hMenuLayout.getChildren().add(menuButton);
         }
 
         jumpForwardWeek = new Button("Frem >");
+        jumpForwardWeek.setFocusTraversable(false);
         jumpForwardWeek.setOnAction(e -> {
             cWeek.getSelectionModel().selectNext();
             chosenMonday = (LocalDateTime) cWeek.getSelectionModel().getSelectedItem();
@@ -242,6 +254,7 @@ public class Frontpage extends Application {
         });
 
         jumpBackWeek = new Button("< Tilbage");
+        jumpBackWeek.setFocusTraversable(false);
         jumpBackWeek.setOnAction(e -> {
             cWeek.getSelectionModel().selectPrevious();
             chosenMonday = (LocalDateTime) cWeek.getSelectionModel().getSelectedItem();
@@ -252,6 +265,7 @@ public class Frontpage extends Application {
         });
 
         printButton = new Button("Print skema");
+        printButton.setFocusTraversable(false);
         printButton.setOnAction(e -> {
          PrintApplication printApplication = new PrintApplication(new PrintReviewPopup());
             printApplication.getPrintReviewPopup().setNode(new Schedule(assigned, new LocalDateTime(chosenMonday)));
@@ -264,6 +278,7 @@ public class Frontpage extends Application {
 
     private void initCombobox() {
         cWeek = new ComboBox();
+        cWeek.setFocusTraversable(false);
         cWeek.setPrefWidth(170);
 
         //Her definere vi hvordan hver celle i en comboBox's ListView bliver "omdannet"
@@ -368,13 +383,16 @@ public class Frontpage extends Application {
         } catch (DatabaseException ex) {
             
         } 
-        
-        
-        
     }
     public void updateSchedule(){
         
         vMainLayout.getChildren().remove(2);
+        try {
+            assigned = Xray.getInstance().getTimeInvestmentControl().getAssignedTimeInvestments();
+        } catch (DatabaseException ex) {
+            ExceptionPopup ep = new ExceptionPopup();
+            ep.display(ex.getMessage());
+        }
         Schedule schedule = new Schedule(assigned, new LocalDateTime(chosenMonday));
         vMainLayout.getChildren().add(2, schedule);
     

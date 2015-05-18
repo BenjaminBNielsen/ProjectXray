@@ -38,6 +38,7 @@ public class ShiftTile extends BorderPane {
         this.setStyle("-fx-border-color: black;"
                 + "-fx-border-width: 0.5px;");        
         initLabels();
+        //this.setOnMouseEntered(e -> System.out.println("earewr"));
     }
 
     private void initLabels() {

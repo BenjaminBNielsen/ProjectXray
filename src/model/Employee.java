@@ -5,6 +5,7 @@
  */
 package model;
 
+import control.RoomAssignmentCounter;
 import java.util.ArrayList;
 
 /* @author Benjamin */

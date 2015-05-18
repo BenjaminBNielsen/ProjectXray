@@ -25,6 +25,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
+import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Window;
 import view.buttons.PopupMenuButton;
@@ -51,6 +52,8 @@ public class PrintReviewPopup extends PopupWindow{
         initLayouts();
         initSchedule();
         initButtons();
+        
+        super.getStage().initModality(Modality.NONE);
 
         super.display(title);
 
