@@ -53,6 +53,8 @@ public class ShiftPopup extends PopupWindow {
 
     //ExceptionPopup
     private ExceptionPopup exceptionPopup = new ExceptionPopup();
+    
+    //ArryListe med
 
     //Liste af ShiftPaneler
     private ShiftPanel[] shiftPanels;
@@ -101,7 +103,7 @@ public class ShiftPopup extends PopupWindow {
                     public void updateItem(LocalDateTime item, boolean empty) {
                         super.updateItem(item, empty);
                         if (!empty) {
-                            setText(item.toString("dd/MM/yyyy"));
+                            setText(item.toString("dd / MM - yyyy"));
                         }
                     }
 
@@ -112,11 +114,16 @@ public class ShiftPopup extends PopupWindow {
         cDate.setButtonCell(cellFactory.call(null));
         cDate.setCellFactory(cellFactory);
 
-        //testdata
-        LocalDateTime ldt1 = new LocalDateTime(2015, 3, 23, 0, 0);
-        LocalDateTime ldt2 = new LocalDateTime(2015, 3, 30, 0, 0);
-        LocalDateTime ldt3 = new LocalDateTime(2015, 4, 6, 0, 0);
-        cDate.getItems().addAll(ldt1, ldt2, ldt3);
+        
+        LocalDateTime today = LocalDateTime.now();
+        ArrayList<LocalDateTime> threeMonthsForward = new ArrayList<>();
+        
+        for (int i = 1; i < 92; i++) {
+            threeMonthsForward.add(today.plusDays(i));
+            
+        }
+        
+        cDate.getItems().addAll(threeMonthsForward);
 
         cEmployee = new ComboBox();
         cEmployee.setPrefWidth(170);

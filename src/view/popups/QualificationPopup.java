@@ -32,7 +32,7 @@ import view.buttons.SettingsButton;
  *
  * @author Jonas
  */
-public class RoomQualificationPopup extends PopupWindow {
+public class QualificationPopup extends PopupWindow {
 
     private ComboBox cBRoomBox, cBEmployeeBox;
     private ArrayList<Room> rooms, roomsInsert;
@@ -50,7 +50,7 @@ public class RoomQualificationPopup extends PopupWindow {
     private Room roomInsert;
     private Employee employeeInsert;
 
-    public RoomQualificationPopup(ArrayList<Room> rooms, ArrayList<Employee> employees) {
+    public QualificationPopup(ArrayList<Room> rooms, ArrayList<Employee> employees) {
         this.rooms = rooms;
         this.employees = employees;
     }

@@ -42,10 +42,10 @@ import model.RoomQualification;
 import model.TimeInvestment;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDateTime;
-import techincalServices.printing.PrinterThread;
 import view.buttons.PopupMenuButton;
 import view.popups.PrintReviewPopup;
-import view.popups.RoomQualificationPopup;
+import view.popups.PrintApplication;
+import view.popups.QualificationPopup;
 import view.popups.StudentPopup;
 import view.popups.shift.ShiftPopup;
 
@@ -57,7 +57,6 @@ public class Frontpage extends Application {
 
     private Schedule schedule;
 
-    private PrinterThread printer = new PrinterThread();
 
     private double screenWidth;
     private double screenHeight;
@@ -107,8 +106,6 @@ public class Frontpage extends Application {
     //Hovedmetoden der bliver kørt i gui'en.
     @Override
     public void start(Stage window) {
-        printer.start();
-
         //Initialisere datoer
         thisMonday = today.withDayOfWeek(DateTimeConstants.MONDAY);
 
@@ -202,8 +199,8 @@ public class Frontpage extends Application {
 
         createQualificationButton = new PopupMenuButton("Opret kvalifikation");
         createQualificationButton.setOnAction(e -> {
-            RoomQualificationPopup roomQualificationWindow = 
-                    new RoomQualificationPopup(rooms, employees);
+            QualificationPopup roomQualificationWindow = 
+                    new QualificationPopup(rooms, employees);
             roomQualificationWindow.display("Kvalifikationer");
 
         });
@@ -256,9 +253,9 @@ public class Frontpage extends Application {
 
         printButton = new Button("Print skema");
         printButton.setOnAction(e -> {
-            PrintReviewPopup printPopup = new PrintReviewPopup();
-            printPopup.setNode(new Schedule(assigned, new LocalDateTime(chosenMonday)));
-            printPopup.display("Print Menu");
+         PrintApplication printApplication = new PrintApplication(new PrintReviewPopup());
+            printApplication.getPrintReviewPopup().setNode(new Schedule(assigned, new LocalDateTime(chosenMonday)));
+            printApplication.getPrintReviewPopup().display("Print Menu");
            
         });
         
