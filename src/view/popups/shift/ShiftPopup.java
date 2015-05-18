@@ -123,6 +123,11 @@ public class ShiftPopup extends PopupWindow {
                 System.out.println(ex.getMessage());
             } 
         });
+        
+        shiftManual = new ShiftManualButton("Manuel vagt");
+        shiftManual.setOnAction(e -> {
+            shiftManual.setOnActionCode();
+        });
     }
 
     private void initShiftPanels() {

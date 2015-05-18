@@ -202,11 +202,11 @@ public class Frontpage extends Application {
         });
         menuButtons.add(createStudent);
 
-        createQualificationButton = new PopupMenuButton("Opret kvalifikation");
+        createQualificationButton = new PopupMenuButton("Opret rum kvalifikation");
         createQualificationButton.setOnAction(e -> {
             RoomQualificationPopup roomQualificationWindow = 
                     new RoomQualificationPopup(rooms, employees);
-            roomQualificationWindow.display("Kvalifikationer");
+            roomQualificationWindow.display("Rum kvalifikationer");
 
         });
         menuButtons.add(createQualificationButton);

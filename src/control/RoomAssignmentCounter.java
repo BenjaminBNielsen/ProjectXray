@@ -4,7 +4,9 @@
  * and open the template in the editor.
  */
 
-package model;
+package control;
+
+import model.Room;
 
 /* @author Benjamin */
 

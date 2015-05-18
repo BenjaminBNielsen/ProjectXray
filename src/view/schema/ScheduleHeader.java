@@ -26,13 +26,13 @@ public class ScheduleHeader extends HBox implements HasChildren{
 
     public ScheduleHeader(int week) {
 
-        LabelTile weekLabel = new LabelTile("UGE " + week);
+        RoomTile weekLabel = new RoomTile("UGE " + week);
 
         this.getChildren().add(weekLabel);
 
         //Tilføj labels for hver dag på ugen mandag-fredag:
         for (int i = 0; i < 5; i++) {
-            this.getChildren().add(new LabelTile(WEEK_DAY_NAMES[i]));
+            this.getChildren().add(new RoomTile(WEEK_DAY_NAMES[i]));
         }
         
     }

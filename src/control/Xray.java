@@ -23,7 +23,6 @@ import javafx.stage.Screen;
 import model.Employee;
 import model.LimitQualification;
 import model.Room;
-import model.RoomAssignmentCounter;
 import model.RoomQualification;
 import model.TimeInvestment;
 import model.TimePeriod;

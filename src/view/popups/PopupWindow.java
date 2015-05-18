@@ -26,12 +26,13 @@ public class PopupWindow {
         roomBorderPane = new BorderPane();
         roomScene = new Scene(roomBorderPane);
         bottomHBox = new HBox(15);
+        window.initModality(Modality.APPLICATION_MODAL);
     }
 
     public void display(String title) {
         bottomHBox.setAlignment(Pos.CENTER);
 
-        window.initModality(Modality.APPLICATION_MODAL);
+        
         window.setTitle(title);
 
         roomBorderPane.setPadding(new Insets(15, 15, 15, 15));

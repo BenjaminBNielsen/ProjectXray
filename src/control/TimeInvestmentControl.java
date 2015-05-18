@@ -5,7 +5,7 @@
  */
 package control;
 
-import control.comparators.PeriodMinComparator;
+import control.comparators.PeriodComparator;
 import control.comparators.RoomAmountComparator;
 import control.comparators.RoomMaximumComparator;
 import control.comparators.RoomMinimumComparator;
@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import model.Employee;
 import model.LimitQualification;
 import model.Room;
-import model.RoomAssignmentCounter;
 import model.RoomQualification;
 import model.TimeInvestment;
 import model.TimePeriod;
@@ -391,7 +390,7 @@ public class TimeInvestmentControl {
         if (!periodsForEmp.isEmpty()) {
             //Sorter listen af tidsperioder, sådan at det vigtigste rum refererer
             //den første tidsperiode i listen.
-            periodsForEmp.sort(new PeriodMinComparator(currentShift.getEmployee()));
+            periodsForEmp.sort(new PeriodComparator(currentShift.getEmployee()));
             prioritizedRoom = periodsForEmp.get(0).getRoom();
 
             isMinReached = isMinReached(periodsForEmp, currentShift);
