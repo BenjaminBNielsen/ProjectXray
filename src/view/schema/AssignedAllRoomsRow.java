@@ -49,7 +49,7 @@ public class AssignedAllRoomsRow extends TilePane implements HasChildren {
             LocalDateTime endDate = new LocalDateTime(date);
             endDate = endDate.plusHours(periodLengthHour).plusMinutes(periodLengthMinute);
             
-            ShiftTile shiftTile = new ShiftTile(Xray.getInstance().
+            ShiftTile shiftTile = new ShiftTile(Xray.getInstance().getTimeInvestmentControl().
                     getShiftsInPeriod(shifts, date, endDate));
             this.getChildren().add(shiftTile);
 

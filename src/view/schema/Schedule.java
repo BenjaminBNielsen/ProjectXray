@@ -47,6 +47,7 @@ public class Schedule extends ScrollPane {
     private LocalDateTime startTime;
     private ExceptionPopup exceptionPopup = new ExceptionPopup();
     private GridPane grid = new GridPane();
+    private ArrayList<Node[]> gridLayoutlist = new ArrayList<>();
 
     public Schedule(ArrayList<TimeInvestment> timeInvestments, LocalDateTime startTime) {
         this.timeInvestments = timeInvestments;
@@ -54,26 +55,29 @@ public class Schedule extends ScrollPane {
         this.setFocusTraversable(false);
 
         //Tilføj headeren med ugens dage fra mandag til fredag:
-        scheduleListItems.add(new ScheduleHeader(startTime.getWeekOfWeekyear()));
+        ScheduleHeader sh = new ScheduleHeader(startTime.getWeekOfWeekyear());
+        scheduleListItems.add(sh);
+        gridLayoutlist.add(sh.getChildrenList());
 
         try {
             addShiftTiles();
         } catch (DatabaseException ex) {
             exceptionPopup.display(ex.getMessage());
         }
-//            exceptionPopup.display("I forbindelse med indhentning af rum fra databasen"
-//                    + " er der sket en fejl, kontakt din systemadministrator. SQL gav"
-//                    + " følgende fejlbesked: " + ex.getMessage());
-//        } catch (ClassNotFoundException ex) {
-//            exceptionPopup.display("Der er ikke oprettet forbindelse til databasen, "
-//                    + "fordi der mangler en driver.");
-//        }
 
-        scheduleListItems.add(new AssignedAllRoomsRow("Eftermiddag", startTime, timeInvestments, 15, 15, 5, 0));
-        scheduleListItems.add(new AssignedAllRoomsRow("Nat", startTime, timeInvestments, 23, 15, 5, 0));
+        AssignedAllRoomsRow arAfternoon = new AssignedAllRoomsRow("Eftermiddag", startTime, timeInvestments, 15, 15, 5, 0);
+        scheduleListItems.add(arAfternoon);
+        gridLayoutlist.add(arAfternoon.getChildrenList());
+        AssignedAllRoomsRow arNight = new AssignedAllRoomsRow("Nat", startTime, timeInvestments, 23, 15, 5, 0);
+        scheduleListItems.add(arNight);
+        gridLayoutlist.add(arNight.getChildrenList());
 
-        scheduleListItems.add(new WeekendRow("Lørdag", startTime.plusDays(5), timeInvestments));
-        scheduleListItems.add(new WeekendRow("Søndag", startTime.plusDays(6), timeInvestments));
+        WeekendRow wrSaturday = new WeekendRow("Lørdag", startTime.plusDays(5), timeInvestments);
+        WeekendRow wrSunday = new WeekendRow("Søndag", startTime.plusDays(6), timeInvestments);
+        scheduleListItems.add(wrSaturday);
+        scheduleListItems.add(wrSunday);
+        gridLayoutlist.add(wrSaturday.getChildrenList());
+        gridLayoutlist.add(wrSunday.getChildrenList());
 
         this.setContent(grid);
 
@@ -91,7 +95,7 @@ public class Schedule extends ScrollPane {
         }
 
         VBox.setVgrow(this, Priority.ALWAYS);
-        
+
         this.setFitToWidth(true);
     }
 
@@ -103,8 +107,10 @@ public class Schedule extends ScrollPane {
 
         for (int i = 0; i < rooms.size(); i++) {
             ArrayList<TimeInvestment> shiftsOnRoom = getShiftsOnRoom(rooms.get(i), timeInvestments);
+            AssignedRoomRow arr = new AssignedRoomRow(rooms.get(i), shiftsOnRoom, startTime, 7, 30, 5, 0);
+            scheduleListItems.add(arr);
 
-            scheduleListItems.add(new AssignedRoomRow(rooms.get(i), shiftsOnRoom, startTime, 7, 30, 5, 0));
+            gridLayoutlist.add(arr.getChildrenList());
         }
 
     }
@@ -140,12 +146,12 @@ public class Schedule extends ScrollPane {
         }
     }
 
-    public void updateSchedule(ArrayList<TimeInvestment> timeInvestements, LocalDateTime startTime){
+    public void updateSchedule(ArrayList<TimeInvestment> timeInvestements, LocalDateTime startTime) {
         this.timeInvestments = timeInvestments;
         this.startTime = startTime;
     }
-    
-        public GridPane getGrid() {
+
+    public GridPane getGrid() {
         return grid;
     }
 
@@ -153,4 +159,12 @@ public class Schedule extends ScrollPane {
         this.grid = grid;
     }
 
+    public ArrayList<Node[]> getGridLayoutlist() {
+        return gridLayoutlist;
+    }
+
+    public void setGridLayoutlist(ArrayList<Node[]> gridLayoutlist) {
+        this.gridLayoutlist = gridLayoutlist;
+    }
+    
 }

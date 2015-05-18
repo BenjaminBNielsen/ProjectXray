@@ -19,37 +19,29 @@ import view.Frontpage;
  *
  * @author Jonas
  */
-public class WeekendRow extends HBox implements HasChildren {
+public class WeekendRow implements HasChildren {
 
-    private String dayName;
-    private ArrayList<TimeInvestment> shifts;
-    private RoomTile labelTile;
-    private ShiftTile shiftTile;
-    private LocalDateTime date;
+    private ArrayList<Node> children = new ArrayList<>();
 
     public WeekendRow(String dayName, LocalDateTime date, ArrayList<TimeInvestment> shifts) {
-        this.dayName = dayName;
-        this.date = date;
-        this.shifts = shifts;
 
-        shifts = Xray.getInstance().getShiftsInPeriod(shifts, date, date.plusHours(23)
-                .plusMinutes(59));
+        shifts = Xray.getInstance().getTimeInvestmentControl().
+                getShiftsInPeriod(shifts, date, date.plusHours(23).plusMinutes(59));
 
-        labelTile = new RoomTile(dayName);
-        shiftTile = new ShiftTile(shifts);
+        LabelTile labelTile = new LabelTile(dayName);
+        ShiftTile shiftTile = new ShiftTile(shifts);
 
-        this.getChildren().addAll(labelTile, shiftTile);
-
+        children.add(labelTile);
+        children.add(shiftTile);
     }
 
     @Override
     public Node[] getChildrenList(){
-        ObservableList<Node> sliChildren = this.getChildren();
 
-            Node[] childrenAsArray = new Node[sliChildren.size()];
+            Node[] childrenAsArray = new Node[children.size()];
 
-            for (int i = 0; i < sliChildren.size(); i++) {
-                childrenAsArray[i] = sliChildren.get(i);
+            for (int i = 0; i < children.size(); i++) {
+                childrenAsArray[i] = children.get(i);
             }
         return childrenAsArray;
     }

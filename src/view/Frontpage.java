@@ -48,6 +48,7 @@ import view.popups.AssignRoomsPopup;
 import view.popups.PrintReviewPopup;
 import view.popups.RoomQualificationPopup;
 import view.popups.StudentPopup;
+import view.popups.timePeriod.AddTimePeriodPopup;
 import view.popups.shift.ShiftPopup;
 
 public class Frontpage extends Application {
@@ -77,7 +78,7 @@ public class Frontpage extends Application {
 
     //buttons:
     private PopupMenuButton createEmployee, createQualificationButton, createRoomButton,
-            createStudent, createShift, assignRoomsButton;
+            createStudent, createShift, assignRoomsButton, addRuleButton;
 
     private Button jumpForwardWeek, jumpBackWeek, printButton;
 
@@ -133,7 +134,7 @@ public class Frontpage extends Application {
         //Kør 'Røntgen projekt\DB\Script 3a - insert_shifts_week16-2015.sql'.
         try {
 
-            assigned = Xray.getInstance().assignRooms();
+            assigned = Xray.getInstance().getTimeInvestmentControl().assignRooms();
         } catch (DatabaseException ex) {
             System.out.println("LORT1");
         } 
@@ -150,6 +151,7 @@ public class Frontpage extends Application {
     private void initNodes(Stage window) {
         //initialiser felter:
         this.window = window;
+        
         vMainLayout = new VBox(STANDARD_PADDING);
 
         hMenuLayout = new HBox(STANDARD_PADDING);
@@ -231,12 +233,21 @@ public class Frontpage extends Application {
         });
 
         menuButtons.add(assignRoomsButton);
+        
+        addRuleButton = new PopupMenuButton("Opret regel");
+        addRuleButton.setOnAction(e -> {
+            AddTimePeriodPopup tpp = new AddTimePeriodPopup();
+            tpp.display("Regler");
+        });
+        
+        menuButtons.add(addRuleButton);
 
         for (PopupMenuButton menuButton : menuButtons) {
             hMenuLayout.getChildren().add(menuButton);
         }
 
         jumpForwardWeek = new Button("Frem >");
+        jumpForwardWeek.setFocusTraversable(false);
         jumpForwardWeek.setOnAction(e -> {
             cWeek.getSelectionModel().selectNext();
             chosenMonday = (LocalDateTime) cWeek.getSelectionModel().getSelectedItem();
@@ -247,6 +258,7 @@ public class Frontpage extends Application {
         });
 
         jumpBackWeek = new Button("< Tilbage");
+        jumpBackWeek.setFocusTraversable(false);
         jumpBackWeek.setOnAction(e -> {
             cWeek.getSelectionModel().selectPrevious();
             chosenMonday = (LocalDateTime) cWeek.getSelectionModel().getSelectedItem();
@@ -257,6 +269,7 @@ public class Frontpage extends Application {
         });
 
         printButton = new Button("Print skema");
+        printButton.setFocusTraversable(false);
         printButton.setOnAction(e -> {
             PrintReviewPopup printPopup = new PrintReviewPopup();
             printPopup.setNode(new Schedule(assigned, new LocalDateTime(chosenMonday)));
@@ -269,6 +282,7 @@ public class Frontpage extends Application {
 
     private void initCombobox() {
         cWeek = new ComboBox();
+        cWeek.setFocusTraversable(false);
         cWeek.setPrefWidth(170);
 
         //Her definere vi hvordan hver celle i en comboBox's ListView bliver "omdannet"

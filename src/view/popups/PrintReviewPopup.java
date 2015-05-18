@@ -6,6 +6,7 @@
 package view.popups;
 
 import java.util.ArrayList;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
 import javafx.print.PageLayout;
@@ -15,6 +16,8 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Scale;
@@ -76,15 +79,15 @@ public class PrintReviewPopup extends PopupWindow {
 
     private void printSchema() {
 
-        Node node = schedule.getGrid();
-        node.setStyle("-fx-border-color: black;"
+        GridPane scheduleGrid = schedule.getGrid();
+        scheduleGrid.setStyle("-fx-border-color: black;"
                 + "-fx-border-width: 0.5px;");
         PrinterJob job = PrinterJob.createPrinterJob();
 
         Window window;
 
-        if (node.getScene() != null) {
-            window = node.getScene().getWindow();
+        if (scheduleGrid.getScene() != null) {
+            window = scheduleGrid.getScene().getWindow();
         } else {
             window = null;
             System.out.println("ostemad");
@@ -96,40 +99,92 @@ public class PrintReviewPopup extends PopupWindow {
             double pagePrintableHeight = pageLayout.getPrintableHeight();
             double pagePrintableWidth = pageLayout.getPrintableWidth();
 
-            Node clip = node.getClip();
-            ArrayList<Transform> transformations = new ArrayList<>(node.getTransforms());
+            Node clip = scheduleGrid.getClip();
+            ArrayList<Transform> transformations = new ArrayList<>(scheduleGrid.getTransforms());
 
             //Clipping rektangel
             Rectangle clipRect = new Rectangle();
 
-            clipRect.setWidth(pagePrintableWidth);
-            clipRect.setHeight(pagePrintableHeight);
-            //node.setClip(new Rectangle(clipRect.getX(), clipRect.getY(),
-            //clipRect.getWidth(), pagePrintableHeight));
             //Faktor til nodeskalering
-            double scaleX = pagePrintableWidth / node.getBoundsInParent().getWidth();
-            double scaleY = pagePrintableHeight / node.getBoundsInParent().getHeight();
+            double scaleX = pagePrintableWidth / scheduleGrid.getBoundsInParent().getWidth();
+            double scaleY = pagePrintableHeight / scheduleGrid.getBoundsInParent().getHeight();
 
-            node.getTransforms().add(new Scale(scaleX, scaleX));
-            node.getTransforms().add(new Translate(-clipRect.getX(), -clipRect.getY()));
+            scheduleGrid.getTransforms().add(new Scale(scaleX, scaleX));
 
             Translate grid = new Translate();
-            node.getTransforms().add(grid);
-
-            int rows = (int) (node.getLayoutBounds().getHeight() / pagePrintableHeight);
+            scheduleGrid.getTransforms().add(grid);
+            double rows = Math.ceil((scheduleGrid.getLayoutBounds().getHeight() * scaleX) / pagePrintableHeight);
             boolean success = true;
+            double computedHeight = 0;
+            double heightCounter = 0;
+            Rectangle r = new Rectangle(0, 0,
+                    scheduleGrid.getLayoutBounds().getWidth(), computedHeight);
+            scheduleGrid.setClip(r);
             for (int row = 0; row < rows; row++) {
-                grid.setY(-row * pagePrintableHeight / scaleX);
+                //Håndter højde på det der skal printes på en side, sådan at der ikke
+                //forekommer afskårne rækker.
+
+                computedHeight = computeHeight(schedule, heightCounter + (pagePrintableHeight / scaleX), heightCounter);
+
+                grid.setY(-(heightCounter));
+
+                r.setHeight(computedHeight);
 
                 if (success) {
-                    success &= job.printPage(pageLayout, node);
+                    success &= job.printPage(pageLayout, scheduleGrid);
                 }
+                r.setY(heightCounter + computedHeight);
+                heightCounter += computedHeight;
 
             }
 
             job.endJob();
 
-            node.getTransforms().clear();
+            scheduleGrid.setClip(new Rectangle(clipRect.getX(), clipRect.getY(),
+                    scheduleGrid.getLayoutBounds().getWidth(), pagePrintableHeight / scaleX));
+            scheduleGrid.getTransforms().clear();
         }
+    }
+
+    private double computeHeight(Schedule schedule, double printRange, double startingPoint) {
+        ArrayList<Node[]> gridLayoutNodes = schedule.getGridLayoutlist();
+        GridPane pane = schedule.getGrid();
+
+        double computedHeight = 0;
+        double tempHeight = 0;
+        int index = 0;
+        int rows = getRowCount(pane);
+        for (int i = 0; i < rows + 1; i++) {
+
+            Node child = pane.getChildren().get(index);
+            if (child.isManaged()) {
+
+                double rowHeight = child.getLayoutBounds().getHeight();
+                if (tempHeight + rowHeight < printRange) {
+                    if (tempHeight + rowHeight > startingPoint) {
+                        computedHeight += rowHeight;
+                    }
+                    tempHeight += rowHeight;
+
+                } else {
+                    return computedHeight;
+                }
+
+            }
+            index += gridLayoutNodes.get(i).length;
+
+        }
+        return computedHeight;
+    }
+
+    private int getRowCount(GridPane pane) {
+        int rowIndex = 0;
+        for (int i = 0; i < pane.getChildren().size(); i++) {
+            Node child = pane.getChildren().get(i);
+            if (child.isManaged()) {
+                rowIndex = GridPane.getRowIndex(child);
+            }
+        }
+        return rowIndex;
     }
 }
