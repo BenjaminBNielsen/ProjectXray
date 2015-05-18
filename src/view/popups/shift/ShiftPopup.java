@@ -18,8 +18,11 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 import model.Employee;
 import model.TimeInvestment;
 import org.joda.time.LocalDateTime;
@@ -27,6 +30,7 @@ import view.buttons.PopupMenuButton;
 import view.buttons.ShiftManualButton;
 import view.popups.ExceptionPopup;
 import view.popups.PopupWindow;
+import view.schema.ScheduleHeader;
 
 /**
  *
@@ -87,9 +91,33 @@ public class ShiftPopup extends PopupWindow {
     }
 
     private void initComboboxes() {
+        
         cDate = new ComboBox();
         cDate.setPrefWidth(170);
+        
+        Callback<ListView<LocalDateTime>, ListCell<LocalDateTime>> cellFactory = new Callback<ListView<LocalDateTime>, ListCell<LocalDateTime>>() {
+            @Override
+            public ListCell<LocalDateTime> call(ListView<LocalDateTime> param) {
 
+                return new ListCell<LocalDateTime>() {
+                    @Override
+                    public void updateItem(LocalDateTime item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (!empty) {
+                            String value = ScheduleHeader.WEEK_DAY_NAMES[item.getDayOfWeek() - 1];
+                            value = value.replaceFirst(value.substring(1, value.length()),
+                                    value.substring(1, value.length()).toLowerCase());
+                            setText("Uge " + item.getWeekOfWeekyear() + " den " + item.getDayOfMonth() + "/" + item.getMonthOfYear() + " - " + value);
+                        }
+                    }
+
+                };
+            }
+        };
+
+        cDate.setButtonCell(cellFactory.call(null));
+        cDate.setCellFactory(cellFactory);
+        
         //testdata
         LocalDateTime ldt1 = new LocalDateTime(2015, 3, 23, 0, 0);
         LocalDateTime ldt2 = new LocalDateTime(2015, 3, 30, 0, 0);
