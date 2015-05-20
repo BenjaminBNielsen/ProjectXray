@@ -20,11 +20,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 import model.Employee;
 import model.Room;
 import model.TimeInvestment;
@@ -38,6 +41,7 @@ import org.joda.time.Minutes;
 import view.buttons.PopupMenuButton;
 import view.popups.ExceptionPopup;
 import view.popups.PopupWindow;
+import view.schema.ScheduleHeader;
 
 /**
  *
@@ -125,10 +129,34 @@ public class ShiftManualPopup extends PopupWindow {
     private void initComboboxes() {
         cWeek = new ComboBox();
         cWeek.setPrefWidth(170);
+        
         ArrayList<LocalDateTime> mondays = getTwelveMondays();
         for (int i = 0; i < mondays.size(); i++) {
             cWeek.getItems().add(mondays.get(i));
         }
+        
+        Callback<ListView<LocalDateTime>, ListCell<LocalDateTime>> cellFactory = new Callback<ListView<LocalDateTime>, ListCell<LocalDateTime>>() {
+            @Override
+            public ListCell<LocalDateTime> call(ListView<LocalDateTime> param) {
+
+                return new ListCell<LocalDateTime>() {
+                    @Override
+                    public void updateItem(LocalDateTime item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (!empty) {
+                            String value = ScheduleHeader.WEEK_DAY_NAMES[item.getDayOfWeek() - 1];
+                            value = value.replaceFirst(value.substring(1, value.length()),
+                                    value.substring(1, value.length()).toLowerCase());
+                            setText("Uge " + item.getWeekOfWeekyear() + " den " + item.getDayOfMonth() + "/" + item.getMonthOfYear() + " - " + value);
+                        }
+                    }
+
+                };
+            }
+        };
+
+        cWeek.setButtonCell(cellFactory.call(null));
+        cWeek.setCellFactory(cellFactory);
 
         cEmployee = new ComboBox();
         cEmployee.setPrefWidth(170);
