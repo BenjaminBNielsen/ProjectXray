@@ -47,8 +47,10 @@ public class TimeInvestmentControl {
      */
     public ArrayList<TimeInvestment> assignRooms(LocalDateTime periodStart,
             LocalDateTime periodEnd) throws DatabaseException {
+        
         ArrayList<TimeInvestment> unassignedShifts = getUnassignedTimeInvestments();
         unassignedShifts = getShiftsInPeriod(unassignedShifts, periodStart, periodEnd);
+        
         ArrayList<RoomQualification> roomQualifications = Xray.getInstance().
                 getQualificationControl().getRoomQualifications();
         ArrayList<LimitQualification> limitQualifications = Xray.getInstance().

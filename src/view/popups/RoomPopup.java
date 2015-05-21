@@ -93,14 +93,14 @@ public class RoomPopup extends PopupWindow {
             try {
                 roomMinInsert = Integer.parseInt(tFRoomMinOccupation.getText());
             } catch (NumberFormatException ex) {
-                exceptionPopup.display("Der må kun være tal i tekstfeldtet til minimum antal ansatte");
+                exceptionPopup.display("Der må kun være tal i tekstfeltet til minimum antal ansatte");
                 exceptionFejl = true;
             }
 
             try {
                 roomMaxInsert = Integer.parseInt(tFRoomMaxOccupation.getText());
             } catch (NumberFormatException ex) {
-                exceptionPopup.display("Der må kun være tal i tekstfeldtet til maximum antal ansatte");
+                exceptionPopup.display("Der må kun være tal i tekstfeltet til maximum antal ansatte");
                 exceptionFejl = true;
             }
 
