@@ -30,6 +30,7 @@ import view.buttons.PopupMenuButton;
 import view.buttons.ShiftManualButton;
 import view.popups.ExceptionPopup;
 import view.popups.PopupWindow;
+import view.schema.ScheduleHeader;
 
 /**
  *
@@ -92,8 +93,10 @@ public class ShiftPopup extends PopupWindow {
     }
 
     private void initComboboxes() {
+        
         cDate = new ComboBox();
         cDate.setPrefWidth(170);
+        
         Callback<ListView<LocalDateTime>, ListCell<LocalDateTime>> cellFactory = new Callback<ListView<LocalDateTime>, ListCell<LocalDateTime>>() {
             @Override
             public ListCell<LocalDateTime> call(ListView<LocalDateTime> param) {
@@ -103,7 +106,10 @@ public class ShiftPopup extends PopupWindow {
                     public void updateItem(LocalDateTime item, boolean empty) {
                         super.updateItem(item, empty);
                         if (!empty) {
-                            setText(item.toString("dd / MM - yyyy"));
+                            String value = ScheduleHeader.WEEK_DAY_NAMES[item.getDayOfWeek() - 1];
+                            value = value.replaceFirst(value.substring(1, value.length()),
+                                    value.substring(1, value.length()).toLowerCase());
+                            setText("Uge " + item.getWeekOfWeekyear() + " den " + item.getDayOfMonth() + "/" + item.getMonthOfYear() + " - " + value);
                         }
                     }
 
@@ -113,17 +119,12 @@ public class ShiftPopup extends PopupWindow {
 
         cDate.setButtonCell(cellFactory.call(null));
         cDate.setCellFactory(cellFactory);
-
         
-        LocalDateTime today = LocalDateTime.now();
-        ArrayList<LocalDateTime> threeMonthsForward = new ArrayList<>();
-        
-        for (int i = 1; i < 92; i++) {
-            threeMonthsForward.add(today.plusDays(i));
-            
-        }
-        
-        cDate.getItems().addAll(threeMonthsForward);
+        //testdata
+        LocalDateTime ldt1 = new LocalDateTime(2015, 3, 23, 0, 0);
+        LocalDateTime ldt2 = new LocalDateTime(2015, 3, 30, 0, 0);
+        LocalDateTime ldt3 = new LocalDateTime(2015, 4, 6, 0, 0);
+        cDate.getItems().addAll(ldt1, ldt2, ldt3);
 
         cEmployee = new ComboBox();
         cEmployee.setPrefWidth(170);

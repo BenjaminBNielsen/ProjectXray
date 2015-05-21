@@ -42,6 +42,7 @@ import view.buttons.ImageButton;
 import view.buttons.PopupMenuButton;
 import view.popups.ExceptionPopup;
 import view.popups.PopupWindow;
+import view.schema.ScheduleHeader;
 
 /**
  *
@@ -129,10 +130,12 @@ public class ShiftManualPopup extends PopupWindow {
     private void initComboboxes() {
         cWeek = new ComboBox();
         cWeek.setPrefWidth(170);
+        
         ArrayList<LocalDateTime> mondays = getTwelveMondays();
         for (int i = 0; i < mondays.size(); i++) {
             cWeek.getItems().add(mondays.get(i));
         }
+        
         Callback<ListView<LocalDateTime>, ListCell<LocalDateTime>> cellFactory = new Callback<ListView<LocalDateTime>, ListCell<LocalDateTime>>() {
             @Override
             public ListCell<LocalDateTime> call(ListView<LocalDateTime> param) {
@@ -142,7 +145,10 @@ public class ShiftManualPopup extends PopupWindow {
                     public void updateItem(LocalDateTime item, boolean empty) {
                         super.updateItem(item, empty);
                         if (!empty) {
-                            setText("Uge " + item.getWeekOfWeekyear() + " " + item.toString("/yy"));
+                            String value = ScheduleHeader.WEEK_DAY_NAMES[item.getDayOfWeek() - 1];
+                            value = value.replaceFirst(value.substring(1, value.length()),
+                                    value.substring(1, value.length()).toLowerCase());
+                            setText("Uge " + item.getWeekOfWeekyear() + " den " + item.getDayOfMonth() + "/" + item.getMonthOfYear() + " - " + value);
                         }
                     }
 
@@ -152,7 +158,6 @@ public class ShiftManualPopup extends PopupWindow {
 
         cWeek.setButtonCell(cellFactory.call(null));
         cWeek.setCellFactory(cellFactory);
-        
 
         cEmployee = new ComboBox();
         cEmployee.setPrefWidth(170);

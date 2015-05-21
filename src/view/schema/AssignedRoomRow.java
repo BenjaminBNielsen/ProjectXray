@@ -45,7 +45,7 @@ public class AssignedRoomRow extends HBox implements HasChildren {
         //Tilføj rumnavn til venstre.
         this.getChildren().add(roomLabel);
 
-        //Tilføj vagter til dagene på ugen. i0 = mandag, i6 = søndag.
+        //Tilføj vagter til dagene på ugen. i0 = mandag, i4 = fredag.
         for (int i = 0; i < 5; i++) {
             LocalDateTime date = startTime.plusDays(i);
             date = date.withField(DateTimeFieldType.hourOfDay(), startHour);
