@@ -6,6 +6,8 @@
 package view.popups;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
@@ -33,12 +35,13 @@ import view.schema.Schedule;
  *
  * @author Yousef
  */
-public class PrintReviewPopup extends PopupWindow {
+public class PrintReviewPopup extends PopupWindow{
 
     private VBox contentPane;
     private PopupMenuButton printButton;
     private Schedule schedule = null;
     private PrinterJob job = PrinterJob.createPrinterJob();
+    private ExceptionPopup exceptionPopup;
 
     public PrintReviewPopup() {
         super.maximizeScreen();
@@ -77,7 +80,7 @@ public class PrintReviewPopup extends PopupWindow {
         super.addToBottomHBox(printButton);
     }
 
-    private void printSchema() {
+    public void printSchema() {
 
         GridPane scheduleGrid = schedule.getGrid();
         scheduleGrid.setStyle("-fx-border-color: black;"
@@ -99,15 +102,11 @@ public class PrintReviewPopup extends PopupWindow {
             double pagePrintableHeight = pageLayout.getPrintableHeight();
             double pagePrintableWidth = pageLayout.getPrintableWidth();
 
-            Node clip = scheduleGrid.getClip();
-            ArrayList<Transform> transformations = new ArrayList<>(scheduleGrid.getTransforms());
-
             //Clipping rektangel
             Rectangle clipRect = new Rectangle();
 
             //Faktor til nodeskalering
             double scaleX = pagePrintableWidth / scheduleGrid.getBoundsInParent().getWidth();
-            double scaleY = pagePrintableHeight / scheduleGrid.getBoundsInParent().getHeight();
 
             scheduleGrid.getTransforms().add(new Scale(scaleX, scaleX));
 
@@ -139,11 +138,9 @@ public class PrintReviewPopup extends PopupWindow {
             }
 
             job.endJob();
-
-            scheduleGrid.setClip(new Rectangle(clipRect.getX(), clipRect.getY(),
-                    scheduleGrid.getLayoutBounds().getWidth(), pagePrintableHeight / scaleX));
-            scheduleGrid.getTransforms().clear();
-        }
+        }   
+        
+        super.getStage().close();
     }
 
     private double computeHeight(Schedule schedule, double printRange, double startingPoint) {
@@ -157,7 +154,6 @@ public class PrintReviewPopup extends PopupWindow {
         for (int i = 0; i < rows + 1; i++) {
 
             Node child = pane.getChildren().get(index);
-            if (child.isManaged()) {
 
                 double rowHeight = child.getLayoutBounds().getHeight();
                 if (tempHeight + rowHeight < printRange) {
@@ -170,7 +166,6 @@ public class PrintReviewPopup extends PopupWindow {
                     return computedHeight;
                 }
 
-            }
             index += gridLayoutNodes.get(i).length;
 
         }
@@ -187,4 +182,5 @@ public class PrintReviewPopup extends PopupWindow {
         }
         return rowIndex;
     }
+
 }

@@ -54,6 +54,8 @@ public class ShiftPopup extends PopupWindow {
 
     //ExceptionPopup
     private ExceptionPopup exceptionPopup = new ExceptionPopup();
+    
+    //ArryListe med
 
     //Liste af ShiftPaneler
     private ShiftPanel[] shiftPanels;
