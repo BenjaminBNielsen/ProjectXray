@@ -91,10 +91,23 @@ public class ShiftPopup extends PopupWindow {
     }
 
     private void initComboboxes() {
-        
+
         cDate = new ComboBox();
         cDate.setPrefWidth(170);
+
+        LocalDateTime now = new LocalDateTime();
+        now = now.withHourOfDay(0);
+        now = now.withMinuteOfHour(0);
+        LocalDateTime currentWeek = now;
         
+        LocalDateTime threeMonthsForward = now.plusMonths(3);
+        ArrayList<LocalDateTime> startDates = Xray.getInstance().getDatesInPeriod(currentWeek, threeMonthsForward);
+        for (int i = 0; i < startDates.size(); i++) {
+            if (startDates.get(i).getDayOfWeek() == 1) {
+                cDate.getItems().add(startDates.get(i));
+            }
+        }
+
         Callback<ListView<LocalDateTime>, ListCell<LocalDateTime>> cellFactory = new Callback<ListView<LocalDateTime>, ListCell<LocalDateTime>>() {
             @Override
             public ListCell<LocalDateTime> call(ListView<LocalDateTime> param) {
@@ -117,12 +130,6 @@ public class ShiftPopup extends PopupWindow {
 
         cDate.setButtonCell(cellFactory.call(null));
         cDate.setCellFactory(cellFactory);
-        
-        //testdata
-        LocalDateTime ldt1 = new LocalDateTime(2015, 3, 23, 0, 0);
-        LocalDateTime ldt2 = new LocalDateTime(2015, 3, 30, 0, 0);
-        LocalDateTime ldt3 = new LocalDateTime(2015, 4, 6, 0, 0);
-        cDate.getItems().addAll(ldt1, ldt2, ldt3);
 
         cEmployee = new ComboBox();
         cEmployee.setPrefWidth(170);
@@ -149,9 +156,9 @@ public class ShiftPopup extends PopupWindow {
                 Xray.getInstance().getTimeInvestmentControl().addTimeInvestments(shifts);
             } catch (DatabaseException ex) {
                 System.out.println(ex.getMessage());
-            } 
+            }
         });
-        
+
         shiftManual = new ShiftManualButton("Manuel vagt");
         shiftManual.setOnAction(e -> {
             shiftManual.setOnActionCode();
@@ -179,11 +186,11 @@ public class ShiftPopup extends PopupWindow {
     private void setup() {
         super.addToCenter(contentPane);
         contentPane.getChildren().addAll(manualDateEmployeePicker);
-        
+
         manualDateEmployeePicker.getChildren().addAll(dateEmployeePicker, shiftManual);
 
         dateEmployeePicker.getChildren().addAll(datePicker, employeePicker);
-        
+
         datePicker.getChildren().addAll(lDate, cDate);
         employeePicker.getChildren().addAll(lEmployee, cEmployee);
 
@@ -227,7 +234,7 @@ public class ShiftPopup extends PopupWindow {
 //                            String error = "Der kunne ikke hentes ansatte ind i drop-ned menuen"
 //                                    + " kontakt venligst systemadministrator.";
                             exceptionPopup.display(ex.getMessage());
-                        } 
+                        }
 //                            catch (ClassNotFoundException ex) {
 //                            String error = "Der kunne ikke oprettes forbindelse til databasen, kontakt venligst"
 //                                    + "din systemadministrator.";
