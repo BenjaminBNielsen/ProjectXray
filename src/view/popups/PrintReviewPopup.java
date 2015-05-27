@@ -102,9 +102,6 @@ public class PrintReviewPopup extends PopupWindow{
             double pagePrintableHeight = pageLayout.getPrintableHeight();
             double pagePrintableWidth = pageLayout.getPrintableWidth();
 
-            //Clipping rektangel
-            Rectangle clipRect = new Rectangle();
-
             //Faktor til nodeskalering
             double scaleX = pagePrintableWidth / scheduleGrid.getBoundsInParent().getWidth();
 

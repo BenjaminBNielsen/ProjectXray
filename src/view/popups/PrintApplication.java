@@ -24,8 +24,17 @@ public class PrintApplication extends Application{
         try {
             this.start(printReviewPopup.getStage());
         } catch (Exception ex) {
-            System.out.println("g");
+            System.out.println("");
         }
+        
+        printReviewPopup.getStage().setOnCloseRequest(e->{
+            try {
+                this.stop();
+            } catch (Exception ex) {
+                ExceptionPopup ep = new ExceptionPopup();
+                ep.display(ex.getMessage());
+            }
+        });
     }
     @Override
     public void start(Stage primaryStage) throws Exception {

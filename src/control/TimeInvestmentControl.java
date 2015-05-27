@@ -396,7 +396,7 @@ public class TimeInvestmentControl {
             prioritizedRoom = periodsForEmp.get(0).getRoom();
 
             isMinReached = isMinReached(periodsForEmp, currentShift);
-            isMaxReached(periodsForEmp, currentShift);
+            isMaxReached = isMaxReached(periodsForEmp, currentShift);
         }
 
         if (isMinReached && !isMaxReached) {
