@@ -106,8 +106,7 @@ public class DatabasePopup extends PopupWindow {
             }
          
         });
-
-        super.addToBottomHBox(createConnection);
+        super.getBottomHBox().getChildren().add(0, createConnection);
         super.display(title);
     }
 

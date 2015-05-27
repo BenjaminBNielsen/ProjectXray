@@ -87,7 +87,7 @@ public class AssignRoomsPopup extends PopupWindow {
         cBContainer.setPadding(new Insets(15,15,15,15));
         super.addToCenter(cBContainer);
         cBContainer.getChildren().addAll(cBDateTimeStart, cBDateTimeEnd);
-        super.addToBottomHBox(assignRooms);
+        super.getBottomHBox().getChildren().add(0, assignRooms);
         
         assignRooms.setOnAction(e -> {
             

@@ -328,7 +328,7 @@ public class TimeInvestmentControl {
         }
     }
 
-    public Room getRoomMinMaxCompared(ArrayList<Room> rooms, TimeInvestment currentShift) {
+    public Room getRoomMinMaxCompared(ArrayList<Room> rooms, TimeInvestment currentShift) throws DatabaseException {
         Room prioritizedRoom = null;
         TimePeriodControl timePeriodControl = Xray.getInstance().getTimePeriodControl();
 

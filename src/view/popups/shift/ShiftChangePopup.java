@@ -288,7 +288,7 @@ public class ShiftChangePopup extends PopupWindow {
 
         });
 
-        super.addToBottomHBox(changeShift);
+        super.getBottomHBox().getChildren().add(0, changeShift);
 
         super.addToCenter(vBox);
 

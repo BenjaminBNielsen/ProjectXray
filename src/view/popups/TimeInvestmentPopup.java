@@ -41,7 +41,7 @@ public class TimeInvestmentPopup extends PopupWindow {
         
         mainHbox.getChildren().addAll(cStart, cEnd);
         super.addToTop(mainHbox);
-        super.addToBottomHBox(assignButton);
+        super.getBottomHBox().getChildren().add(0, assignButton);
         
         fillContent();
         initListeners();
