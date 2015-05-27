@@ -89,7 +89,7 @@ public class StudentPopup extends PopupWindow{
             } catch (DatabaseException ex) {
             } 
         });
-        super.addToBottomHBox(addStudent);
+        super.getBottomHBox().getChildren().add(0, addStudent);
 
         addStuToList = new AddButton();
         addStuToList.setOnAction(e -> {

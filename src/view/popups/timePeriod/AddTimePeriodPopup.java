@@ -123,7 +123,7 @@ public class AddTimePeriodPopup extends PopupWindow {
 
         super.addToTop(gridPane);
 
-        super.addToBottomHBox(addButton);
+        super.getBottomHBox().getChildren().add(0, addButton);
     }
 
     private void fillContent() {

@@ -42,11 +42,11 @@ import model.RoomQualification;
 import model.TimeInvestment;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDateTime;
-import techincalServices.printing.PrinterThread;
 import view.buttons.PopupMenuButton;
 import view.popups.ExceptionPopup;
 import view.popups.PrintReviewPopup;
-import view.popups.RoomQualificationPopup;
+import view.popups.PrintApplication;
+import view.popups.QualificationPopup;
 import view.popups.StudentPopup;
 import view.popups.TimeInvestmentPopup;
 import view.popups.timePeriod.AddTimePeriodPopup;
@@ -60,7 +60,6 @@ public class Frontpage extends Application {
 
     private Schedule schedule;
 
-    private PrinterThread printer = new PrinterThread();
 
     private double screenWidth;
     private double screenHeight;
@@ -110,8 +109,6 @@ public class Frontpage extends Application {
     //Hovedmetoden der bliver kørt i gui'en.
     @Override
     public void start(Stage window) {
-        printer.start();
-
         //Initialisere datoer
         thisMonday = today.withDayOfWeek(DateTimeConstants.MONDAY);
 
@@ -202,11 +199,21 @@ public class Frontpage extends Application {
         });
         menuButtons.add(createStudent);
 
-        createQualificationButton = new PopupMenuButton("Opret rum kvalifikation");
+        createQualificationButton = new PopupMenuButton("Opret kvalifikation");
         createQualificationButton.setOnAction(e -> {
-            RoomQualificationPopup roomQualificationWindow = 
-                    new RoomQualificationPopup(rooms, employees);
-            roomQualificationWindow.display("Rum kvalifikationer");
+            ArrayList<Room> rooms = null;
+            ArrayList<Employee> employees = null;
+            try {
+                rooms = Xray.getInstance().getRoomControl().getRooms();
+                employees = Xray.getInstance().getPersonControl().getEmployees();
+            } catch (DatabaseException ex) {
+                ExceptionPopup exPopup = new ExceptionPopup();
+                exPopup.display(ex.getMessage());
+            }
+            
+            QualificationPopup roomQualificationWindow = 
+                    new QualificationPopup(rooms, employees);
+            roomQualificationWindow.display("Kvalifikationer");
 
         });
         menuButtons.add(createQualificationButton);
@@ -251,9 +258,7 @@ public class Frontpage extends Application {
             cWeek.getSelectionModel().selectNext();
             chosenMonday = (LocalDateTime) cWeek.getSelectionModel().getSelectedItem();
 
-            vMainLayout.getChildren().remove(2);
-            Schedule schedule1 = new Schedule(assigned, new LocalDateTime(chosenMonday));
-            vMainLayout.getChildren().add(2, schedule1);
+            updateSchedule();
         });
 
         jumpBackWeek = new Button("< Tilbage");
@@ -262,17 +267,15 @@ public class Frontpage extends Application {
             cWeek.getSelectionModel().selectPrevious();
             chosenMonday = (LocalDateTime) cWeek.getSelectionModel().getSelectedItem();
 
-            vMainLayout.getChildren().remove(2);
-            Schedule schedule1 = new Schedule(assigned, new LocalDateTime(chosenMonday));
-            vMainLayout.getChildren().add(2, schedule1);
+            updateSchedule();
         });
 
         printButton = new Button("Print skema");
         printButton.setFocusTraversable(false);
         printButton.setOnAction(e -> {
-            PrintReviewPopup printPopup = new PrintReviewPopup();
-            printPopup.setNode(new Schedule(assigned, new LocalDateTime(chosenMonday)));
-            printPopup.display("Print Menu");
+         PrintApplication printApplication = new PrintApplication(new PrintReviewPopup());
+            printApplication.getPrintReviewPopup().setNode(new Schedule(assigned, new LocalDateTime(chosenMonday)));
+            printApplication.getPrintReviewPopup().display("Print Menu");
            
         });
         
@@ -336,9 +339,7 @@ public class Frontpage extends Application {
         cWeek.setOnAction(e -> {
             chosenMonday = (LocalDateTime) cWeek.getSelectionModel().getSelectedItem();
 
-            vMainLayout.getChildren().remove(2);
-            Schedule schedule1 = new Schedule(assigned, new LocalDateTime(chosenMonday));
-            vMainLayout.getChildren().add(2, schedule1);
+            updateSchedule();
         });
 
     }

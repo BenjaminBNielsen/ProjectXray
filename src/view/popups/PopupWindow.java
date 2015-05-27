@@ -27,13 +27,7 @@ public class PopupWindow {
         roomScene = new Scene(roomBorderPane);
         bottomHBox = new HBox(15);
         window.initModality(Modality.APPLICATION_MODAL);
-    }
-
-    public void display(String title) {
         bottomHBox.setAlignment(Pos.CENTER);
-
-        
-        window.setTitle(title);
 
         roomBorderPane.setPadding(new Insets(15, 15, 15, 15));
         roomBorderPane.setBottom(bottomHBox);
@@ -45,18 +39,13 @@ public class PopupWindow {
 
         bottomHBox.getChildren().addAll(tilbageTilHovedmenu);
         window.setScene(roomScene);
+    }
+
+    public void display(String title) {
+
+        window.setTitle(title);
         window.showAndWait();
     }
-    
-    /* Vi har flere metoder som kan tilføje data til vores popupwindow,
-     det betyder at vi har en skabelon som alle popupwindows skal laves ud fra
-     i addToBottomHBox bruger vi parametren Nodes... som er var args(variable arguments)
-     det betyder at man kan tilføje så mange variable som man vil i parametrene*/
-
-    public void addToBottomHBox(Node... nodes) {
-        bottomHBox.getChildren().addAll(nodes);
-    }
-
     public void addToTop(Node node) {
         roomBorderPane.setTop(node);
     }
@@ -95,5 +84,9 @@ public class PopupWindow {
 
     public void maximizeScreen() {
         window.setMaximized(true);
+    }
+    
+    public HBox getBottomHBox() {
+        return bottomHBox;
     }
 }

@@ -319,7 +319,8 @@ public class QualificationHandler {
         stmt.execute(sql);
         stmt.close();
         } catch (SQLException ex) {
-            throw new DatabaseException("removefejejel");
+            throw new DatabaseException("Der kunne ikke fjernes en kvalifikation"
+                    + " med det ID");
         }
     }
     
@@ -330,7 +331,7 @@ public class QualificationHandler {
             stmt.execute(sql);
             stmt.close();
         } catch (SQLException ex) {
-            throw new DatabaseException("qualIdremove fejl");
+            throw new DatabaseException("Der kunne ikke fjernes noget data med det ID");
         }
     }
     
@@ -341,7 +342,7 @@ public class QualificationHandler {
             stmt.execute(sql);
             stmt.close();
         } catch (SQLException ex) {
-            throw new DatabaseException("qualempremove fejl");
+            throw new DatabaseException("Der kunne ikke fjernes noget data med det ID");
         }
     }
     
@@ -440,7 +441,7 @@ public class QualificationHandler {
             removeQualification(qualId);
             removeQualToRoom(qualId);
             removeQualToEmp(qualId);
-            throw new DatabaseException("");
+            throw new DatabaseException("Der kunne ikke indsættes en rum kvalifikation");
         }
    }
    
@@ -458,7 +459,7 @@ public class QualificationHandler {
             removeQualification(qualId);
             removeQualToRoom(qualId);
             removeQualToEmp(qualId);
-            throw new DatabaseException("sql3limitqual");
+            throw new DatabaseException("der kunne ikke indsættes en universel kvalifikation");
         }
    }
    
@@ -476,7 +477,7 @@ public class QualificationHandler {
             removeQualification(qualId);
             removeQualToRoom(qualId);
             removeQualToEmp(qualId);
-            throw new DatabaseException("sql3coursequal");
+            throw new DatabaseException("Der kunne ikke laves en kursus kvalifikation");
         }
    }
     
