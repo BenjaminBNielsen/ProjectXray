@@ -198,7 +198,7 @@ public class ShiftPopup extends PopupWindow {
 
         contentPane.getChildren().addAll(shiftPanels);
 
-        super.addToBottomHBox(addShifts);
+        super.getBottomHBox().getChildren().add(0, addShifts);
 
     }
 

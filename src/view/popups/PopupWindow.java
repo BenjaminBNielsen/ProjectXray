@@ -46,15 +46,6 @@ public class PopupWindow {
         window.setTitle(title);
         window.showAndWait();
     }
-
-    /* Vi har flere metoder som kan tilføje data til vores popupwindow,
-     det betyder at vi har en skabelon som alle popupwindows skal laves ud fra
-     i addToBottomHBox bruger vi parametren Nodes... som er var args(variable arguments)
-     det betyder at man kan tilføje så mange variable som man vil i parametrene*/
-    public void addToBottomHBox(Node... nodes) {
-        bottomHBox.getChildren().addAll(nodes);
-    }
-
     public void addToTop(Node node) {
         roomBorderPane.setTop(node);
     }
@@ -93,5 +84,9 @@ public class PopupWindow {
 
     public void maximizeScreen() {
         window.setMaximized(true);
+    }
+    
+    public HBox getBottomHBox() {
+        return bottomHBox;
     }
 }

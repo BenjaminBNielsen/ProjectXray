@@ -180,7 +180,7 @@ public class ShiftPanelConfig extends PopupWindow {
 
     private void setup() {
         super.addToTop(mainContent);
-        super.addToBottomHBox(changeButton);
+        super.getBottomHBox().getChildren().add(0, changeButton);
 
         mainContent.getChildren().addAll(leftPane, rightPane);
         leftPane.getChildren().addAll(lStartTime, leftTextboxes);

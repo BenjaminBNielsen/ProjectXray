@@ -77,7 +77,7 @@ public class PrintReviewPopup extends PopupWindow{
         printButton.setOnAction(e -> {
             printSchema();
         });
-        super.addToBottomHBox(printButton);
+        super.getBottomHBox().getChildren().add(0, printButton);
     }
 
     public void printSchema() {

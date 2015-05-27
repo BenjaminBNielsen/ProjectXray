@@ -136,8 +136,8 @@ public class RoomPopup extends PopupWindow {
                 exceptionPopup.display("Der er ingen rum i listen der skal indsættes");
             }
         });
-
-        super.addToBottomHBox(addRoom);
+        
+        super.getBottomHBox().getChildren().add(0, addRoom);
         super.display(title);
     }
 }

@@ -201,6 +201,16 @@ public class Frontpage extends Application {
 
         createQualificationButton = new PopupMenuButton("Opret kvalifikation");
         createQualificationButton.setOnAction(e -> {
+            ArrayList<Room> rooms = null;
+            ArrayList<Employee> employees = null;
+            try {
+                rooms = Xray.getInstance().getRoomControl().getRooms();
+                employees = Xray.getInstance().getPersonControl().getEmployees();
+            } catch (DatabaseException ex) {
+                ExceptionPopup exPopup = new ExceptionPopup();
+                exPopup.display(ex.getMessage());
+            }
+            
             QualificationPopup roomQualificationWindow = 
                     new QualificationPopup(rooms, employees);
             roomQualificationWindow.display("Kvalifikationer");
