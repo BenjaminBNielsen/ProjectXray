@@ -8,6 +8,8 @@ package view.popups.shift;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import model.Employee;
@@ -15,6 +17,7 @@ import model.TimeInvestment;
 import org.joda.time.Hours;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Minutes;
+import view.buttons.ImageButton;
 import view.buttons.SettingsButton;
 import view.popups.ExceptionPopup;
 
@@ -36,8 +39,11 @@ public class ShiftPanel extends HBox {
     private int dayOfWeek;
 
     //Buttons:
-    private Button dayShift, eveningShift, nightShift;
+    private ImageButton dayShift, eveningShift, nightShift;
     private SettingsButton settingsButton;
+    //CSS styles der viser nappen når den er trykket og normalt
+    private final String STYLE_NORMAL = "-fx-background-color: transparent; -fx-padding: 5, 5, 5, 5;";
+    private final String STYLE_PRESSED = "-fx-background-color: transparent; -fx-padding: 6 4 4 6;";
 
     //Label:
     private Label lDayName;
@@ -81,8 +87,10 @@ public class ShiftPanel extends HBox {
 
         });
 
-        dayShift = new Button("Dagvagt");
+        dayShift = new ImageButton("pictures/morgen 60.png","pictures/morgen 60 dark.png");
         dayShift.setOnAction(e -> {
+            eveningShift.setUnPressed();
+            nightShift.setUnPressed();
 
             //For at finde datoen og tiden på ugen skal der lægges nogle elementer til.
             //Først lægges dayOfWeek til en ny variabel d. Så hvis det fx er onsdag er
@@ -97,8 +105,11 @@ public class ShiftPanel extends HBox {
             settingsButton.setDisable(false);
         });
 
-        eveningShift = new Button("Aftenvagt");
+        eveningShift = new ImageButton("pictures/aften 60.png", "pictures/aften 60 dark.png");
         eveningShift.setOnAction(e -> {
+            dayShift.setUnPressed();
+            nightShift.setUnPressed();
+            
             LocalDateTime d = startTime.plusDays(dayOfWeek - 1);
             d = d.plusHours(15);
             d = d.plusMinutes(15);
@@ -107,8 +118,11 @@ public class ShiftPanel extends HBox {
             settingsButton.setDisable(false);
         });
 
-        nightShift = new Button("Nattevagt");
+        nightShift = new ImageButton("pictures/nat 60.png", "pictures/nat 60 dark.png");
         nightShift.setOnAction(e -> {
+            dayShift.setUnPressed();
+            eveningShift.setUnPressed();
+            
             int id = 1;
             LocalDateTime d = startTime.plusDays(dayOfWeek - 1);
             d = d.plusHours(23);

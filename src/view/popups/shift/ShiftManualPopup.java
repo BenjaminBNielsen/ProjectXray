@@ -38,6 +38,7 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 import org.joda.time.Minutes;
+import view.buttons.ImageButton;
 import view.buttons.PopupMenuButton;
 import view.popups.ExceptionPopup;
 import view.popups.PopupWindow;
@@ -65,7 +66,7 @@ public class ShiftManualPopup extends PopupWindow {
     //Knapper
     private PopupMenuButton addShifts;
 
-    private Button dayShift, eveningShift, nightShift;
+    private ImageButton dayShift, eveningShift, nightShift;
     LocalTime dayTime, eveningTime, nightTime;
 
     //Checkbokse
@@ -274,24 +275,33 @@ public class ShiftManualPopup extends PopupWindow {
             }
         });
 
-        dayShift = new Button("Morgen");
+        dayShift = new ImageButton("pictures/morgen 60.png","pictures/morgen 60 dark.png");
         dayShift.setOnAction(e -> {
+            eveningShift.setUnPressed();
+            nightShift.setUnPressed();
+            
             tStartHH.setText("7");
             tStartMM.setText("30");
             tEndHH.setText("15");
             tEndMM.setText("15");
         });
 
-        eveningShift = new Button("Aftenvagt");
+        eveningShift = new ImageButton("pictures/aften 60.png", "pictures/aften 60 dark.png");
         eveningShift.setOnAction(e -> {
+            dayShift.setUnPressed();
+            nightShift.setUnPressed();
+            
             tStartHH.setText("15");
             tStartMM.setText("15");
             tEndHH.setText("23");
             tEndMM.setText("30");
         });
 
-        nightShift = new Button("Nattevagt");
+        nightShift = new ImageButton("pictures/nat 60.png", "pictures/nat 60 dark.png");
         nightShift.setOnAction(e -> {
+            dayShift.setUnPressed();
+            eveningShift.setUnPressed();
+            
             tStartHH.setText("23");
             tStartMM.setText("30");
             tEndHH.setText("7");
