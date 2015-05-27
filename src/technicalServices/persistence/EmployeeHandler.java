@@ -172,7 +172,7 @@ public class EmployeeHandler {
         stmt.execute(sql);
         stmt.close();
         } catch(SQLException ex) {
-            throw new DatabaseException("Der findes allerede en person med det ID.");
+            throw new DatabaseException("Der findes allerede en ansat med det ID.");
         }
         
     }

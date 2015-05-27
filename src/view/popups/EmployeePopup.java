@@ -87,7 +87,7 @@ public class EmployeePopup extends PopupWindow {
             
             }
         });
-        super.addToBottomHBox(addEmployee);
+        super.getBottomHBox().getChildren().add(0, addEmployee);
 
         addEmpToList = new AddButton();
         addEmpToList.setOnAction(e -> {

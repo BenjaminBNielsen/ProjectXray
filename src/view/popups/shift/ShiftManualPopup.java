@@ -325,7 +325,7 @@ public class ShiftManualPopup extends PopupWindow {
         weekPicker.getChildren().addAll(lWeek, cWeek);
         contentPane.getChildren().addAll(weekPicker, employeePicker, roomPicker, shiftTypePicker, weekDayPicker, startEndTimePicker);
 
-        super.addToBottomHBox(addShifts);
+        super.getBottomHBox().getChildren().add(0, addShifts);
 
     }
 

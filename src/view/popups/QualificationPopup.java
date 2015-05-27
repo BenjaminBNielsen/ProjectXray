@@ -35,8 +35,8 @@ import view.buttons.SettingsButton;
 public class QualificationPopup extends PopupWindow {
 
     private ComboBox cBRoomBox, cBEmployeeBox;
-    private ArrayList<Room> rooms, roomsInsert;
-    private ArrayList<Employee> employees, employeesInsert;
+    private ArrayList<Room> roomsInsert;
+    private ArrayList<Employee>  employeesInsert;
     private ObservableList<Room> observableListRooms;
     private ObservableList<Employee> observableListEmployees;
     private TextField tFType;
@@ -51,12 +51,21 @@ public class QualificationPopup extends PopupWindow {
     private Employee employeeInsert;
 
     public QualificationPopup(ArrayList<Room> rooms, ArrayList<Employee> employees) {
-        this.rooms = rooms;
-        this.employees = employees;
+        
     }
 
     @Override
     public void display(String title) {
+        ArrayList<Room> rooms = null;
+        ArrayList<Employee> employees = null;
+        try {
+            rooms = Xray.getInstance().getRoomControl().getRooms();
+            employees = Xray.getInstance().getPersonControl().getEmployees();
+        } catch (DatabaseException ex) {
+            ExceptionPopup exPopup = new ExceptionPopup();
+            exPopup.display(ex.getMessage());
+        }
+        
         ExceptionPopup exceptionPopup = new ExceptionPopup(); //Til exceptionhandling.
 
         lType = new Label("Skriv navn her");
@@ -170,7 +179,7 @@ public class QualificationPopup extends PopupWindow {
             }
         });
 
-        super.addToBottomHBox(addQualification);
+        super.getBottomHBox().getChildren().add(0, addQualification);
         super.display(title);
 
     }

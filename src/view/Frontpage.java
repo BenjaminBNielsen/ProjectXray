@@ -201,6 +201,16 @@ public class Frontpage extends Application {
 
         createQualificationButton = new PopupMenuButton("Opret kvalifikation");
         createQualificationButton.setOnAction(e -> {
+            ArrayList<Room> rooms = null;
+            ArrayList<Employee> employees = null;
+            try {
+                rooms = Xray.getInstance().getRoomControl().getRooms();
+                employees = Xray.getInstance().getPersonControl().getEmployees();
+            } catch (DatabaseException ex) {
+                ExceptionPopup exPopup = new ExceptionPopup();
+                exPopup.display(ex.getMessage());
+            }
+            
             QualificationPopup roomQualificationWindow = 
                     new QualificationPopup(rooms, employees);
             roomQualificationWindow.display("Kvalifikationer");
@@ -248,9 +258,7 @@ public class Frontpage extends Application {
             cWeek.getSelectionModel().selectNext();
             chosenMonday = (LocalDateTime) cWeek.getSelectionModel().getSelectedItem();
 
-            vMainLayout.getChildren().remove(2);
-            Schedule schedule1 = new Schedule(assigned, new LocalDateTime(chosenMonday));
-            vMainLayout.getChildren().add(2, schedule1);
+            updateSchedule();
         });
 
         jumpBackWeek = new Button("< Tilbage");
@@ -259,9 +267,7 @@ public class Frontpage extends Application {
             cWeek.getSelectionModel().selectPrevious();
             chosenMonday = (LocalDateTime) cWeek.getSelectionModel().getSelectedItem();
 
-            vMainLayout.getChildren().remove(2);
-            Schedule schedule1 = new Schedule(assigned, new LocalDateTime(chosenMonday));
-            vMainLayout.getChildren().add(2, schedule1);
+            updateSchedule();
         });
 
         printButton = new Button("Print skema");
@@ -333,9 +339,7 @@ public class Frontpage extends Application {
         cWeek.setOnAction(e -> {
             chosenMonday = (LocalDateTime) cWeek.getSelectionModel().getSelectedItem();
 
-            vMainLayout.getChildren().remove(2);
-            Schedule schedule1 = new Schedule(assigned, new LocalDateTime(chosenMonday));
-            vMainLayout.getChildren().add(2, schedule1);
+            updateSchedule();
         });
 
     }

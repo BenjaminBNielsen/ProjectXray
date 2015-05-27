@@ -5,6 +5,7 @@
  */
 package control;
 
+import exceptions.ControlException;
 import exceptions.DatabaseException;
 import java.util.ArrayList;
 import model.Employee;
@@ -27,10 +28,10 @@ public class TimePeriodControl {
      * @param currentShift
      * @return Tidsperioder i currentShift's tidsperiode for currentShift's
      * medarbejder.
+     * @throws exceptions.ControlException
      */
-    public ArrayList<TimePeriod> getTimeperiods(TimeInvestment currentShift) {
+    public ArrayList<TimePeriod> getTimeperiods(TimeInvestment currentShift) throws DatabaseException{
         ArrayList<TimePeriod> timePeriods = new ArrayList<>();
-        try {
             Employee mie = EmployeeHandler.getInstance().getEmployee(31);
             Room mr2 = RoomHandler.getInstance().getRoom("MR 2");
             Room ctA = RoomHandler.getInstance().getRoom("CT A");
@@ -41,8 +42,7 @@ public class TimePeriodControl {
             timePeriods.add(new TimePeriod(start, end, 0, 1, mr2, mie));
             timePeriods.add(new TimePeriod(start, end, 1, 3, ctA, mie));
             timePeriods.add(new TimePeriod(start, end, 1, 3, ctB, mie));
-        } catch (DatabaseException ex) {
-        }
+        
         for (int i = 0; i < timePeriods.size(); i++) {
             boolean shiftInPeriod = Xray.getInstance().isDateInPeriod(currentShift.getStartTime(),
                     timePeriods.get(i).getStartTime(), timePeriods.get(i).getEndTime());
